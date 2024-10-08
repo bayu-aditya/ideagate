@@ -1,0 +1,83 @@
+// Endpoint
+{
+  "Id": "abc",
+  "ProjectId": "bizhub-staging",
+  "Method": "GET",
+  "Path": "/user/widget/main",
+  "Setting": {
+    "Name": "Main Widget Dashboard",
+    "Description": "Main Widget Dashboard",
+    "TimeoutMs": 60000,
+    "Request": {
+      "Query": {
+        "tenant_id": {
+          "Type": "int64",
+          "Required": true,
+        }
+      }
+    }
+  },
+  "Workflow": {
+    "Variables": {
+      "tenant_id": "{{.ctx.req.query.tenant_id}}"
+    },
+    "Entrypoint": "get-user-detail",
+    "Steps": [
+      {
+        "Id": "get-user-detail",
+        "Name": "Fetch User Detail",
+        "Actions": [
+          {
+            "Id": "fetch-user-detail",
+            "DataSourceId": "bizhub:staging:api",
+            "Path": "/user/profile",
+            "Method": "GET",
+            "Headers": {
+              "authorization": "{{.ctx.req.header.authorization}}"
+            }
+          }
+        ],
+        "Outputs": {
+          "user_id": {Value: "{{.ctx.step.get-user-detail.actions.fetch-user-detail.body.data.user.id}}"}
+        },
+        "Returns": [
+          {
+            "Id":  "invalid",
+            "Name": "Invalid User",
+            "IsFinishCondition": "{{if ne .ctx.step.get-user-detail.actions.fetch-user-detail.status_code 200}}",
+          },
+          {
+            "Id": "valid",
+            "Name": "Valid User",
+            "NextStepId": "check-registration-rule"
+          }
+        ]
+      },
+      {
+        "Id": "check-registration-rule",
+        "Name": "Check Registration Rule",
+        "Variables": {
+          "user_id": {"Value": "{{.ctx.step.get-user-detail.outputs.user_id}}"}
+        },
+        "Actions": [
+          {
+            "Id": "check-register-tkm-pemula",
+            "DataSourceId": "bizhub:staging:mysql",
+            "Query": "SELECT is_allow, message FROM ... WHERE user_id = {{.var.user_id}}",
+          },
+          {
+            "Id": "check-register-tkm-lanjutan",
+            "DataSourceId": "bizhub:staging:mysql",
+            "Query": "SELECT is_allow, message FROM ... WHERE user_id = {{.var.user_id}}",
+          }
+        ],
+        "Outputs": {
+          "is_allow_register_tkmp": {"Value": "{{.actions.check-register-tkm-pemula.body.is_allow"},
+          "is_allow_register_tkmp_msg": {"Value": "{{.actions.check-register-tkm-pemula.body.message"},
+          "is_allow_register_tkml": {"Value": "{{.actions.check-register-tkm-lanjutan.body.is_allow"},
+          "is_allow_register_tkml_msg": {"Value": "{{.actions.check-register-tkm-lanjutan.body.message"}
+        }
+      }
+    ]
+  }
+}
