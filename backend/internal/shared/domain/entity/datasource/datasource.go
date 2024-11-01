@@ -1,12 +1,18 @@
 package datasource
 
-import "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/constant"
+import (
+	"github.com/bayu-aditya/ideagate/backend/internal/shared/domain/constant"
+	"gorm.io/gorm"
+)
 
 // DataSource entity for table `datasource`
 type DataSource struct {
 	Id     string
 	Type   constant.DataSourceType // Ex: mysql, postgresql, redis, rest, etc
 	Config Config
+
+	// connection
+	MysqlConn *gorm.DB `json:"-"`
 }
 
 // Config entity for json struct DataSource.Config

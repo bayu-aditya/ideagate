@@ -63,19 +63,29 @@
           {
             "Id": "check-register-tkm-pemula",
             "DataSourceId": "bizhub:staging:mysql",
-            "Query": "SELECT is_allow, message FROM ... WHERE user_id = {{.var.user_id}}",
+            "Queries": [
+              {
+                "Query": "SELECT is_allow, message FROM ... WHERE user_id = ?",
+                "Parameters": [{"Value": "{{.ctx.step.check-registration-rule.var.user_id}}"}]
+              }
+            ]
           },
           {
             "Id": "check-register-tkm-lanjutan",
             "DataSourceId": "bizhub:staging:mysql",
-            "Query": "SELECT is_allow, message FROM ... WHERE user_id = {{.var.user_id}}",
+            "Queries": [
+              {
+                "Query": "SELECT is_allow, message FROM ... WHERE user_id = ?",
+                "Parameters": [{"Value": "{{.ctx.step.check-registration-rule.var.user_id}}"}]
+              }
+            ],
           }
         ],
         "Outputs": {
-          "is_allow_register_tkmp": {"Value": "{{.actions.check-register-tkm-pemula.body.is_allow"},
-          "is_allow_register_tkmp_msg": {"Value": "{{.actions.check-register-tkm-pemula.body.message"},
-          "is_allow_register_tkml": {"Value": "{{.actions.check-register-tkm-lanjutan.body.is_allow"},
-          "is_allow_register_tkml_msg": {"Value": "{{.actions.check-register-tkm-lanjutan.body.message"}
+          "is_allow_register_tkmp": {"Value": "{{.ctx.step.check-registration-rule.actions.check-register-tkm-pemula.body.is_allow"},
+          "is_allow_register_tkmp_msg": {"Value": "{{.ctx.step.check-registration-rule.actions.check-register-tkm-pemula.body.message"},
+          "is_allow_register_tkml": {"Value": "{{.ctx.step.check-registration-rule.actions.check-register-tkm-lanjutan.body.is_allow"},
+          "is_allow_register_tkml_msg": {"Value": "{{.ctx.step.check-registration-rule.actions.check-register-tkm-lanjutan.body.message"}
         }
       }
     ]
