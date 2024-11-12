@@ -1,10 +1,24 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import Root from './routes/root'
+import { DashboardLayout } from './layout/dashboard'
+import DataSourcePage from './pages/datasource'
+import Root from './pages/root'
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Root />,
+    element: (
+      <DashboardLayout>
+        <Root />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: '/datasource',
+    element: (
+      <DashboardLayout>
+        <DataSourcePage />
+      </DashboardLayout>
+    ),
   },
 ])
