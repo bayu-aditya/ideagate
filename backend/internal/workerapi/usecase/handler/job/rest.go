@@ -63,7 +63,7 @@ func (j *rest) Start() (StartOutput, error) {
 			return output, err
 		}
 	}
-	dataCtx.SetStepData(step.Id, respData)
+	dataCtx.SetStepDataBody(step.Id, respData)
 
 	// Determine next step
 	for _, returnItem := range step.Returns {

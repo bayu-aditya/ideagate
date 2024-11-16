@@ -36,15 +36,20 @@ func (v *Variable) GetValue(stepId string, ctxData *entityContext.ContextData) (
 		value = v.getValueFromTemplate(stepId, ctxData, valStr)
 	}
 
-	// check is value empty
-	if v.isEmptyValue(value) && v.Required {
-		value = v.Default
-	}
-
 	// parse value by type
 	value, err := v.parseValueByType(value, varType)
 	if err != nil {
 		return nil, err
+	}
+
+	// check is value empty
+	if v.isEmptyValue(value) && v.Required {
+		// set into default and parse the default value
+		value = v.Default
+		value, err = v.parseValueByType(value, varType)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return value, nil
@@ -59,46 +64,56 @@ func (v *Variable) GetValueString(stepId string, ctxData *entityContext.ContextD
 	return cast.ToStringE(value)
 }
 
-func (v *Variable) getValueFromTemplate(stepId string, ctxData *entityContext.ContextData, templateValue string) string {
+func (v *Variable) getValueFromTemplate(stepId string, ctxData *entityContext.ContextData, templateValue string) interface{} {
 	tmpl, err := template.New("").Parse(templateValue)
 
 	if err != nil {
-		return ""
+		return nil
 	}
 
 	type dataTemplateType struct {
-		Step entityContext.ContextStepData
-		Ctx  *entityContext.ContextData
 		Req  entityContext.ContextRequestData
+		Step map[string]entityContext.ContextStepData
+		Var  map[string]any
+		Data entityContext.ContextStepDataBody
 	}
 
 	data := dataTemplateType{
-		Step: ctxData.Step[stepId],
-		Ctx:  ctxData,
 		Req:  ctxData.Req,
+		Step: ctxData.Step,
+		Var:  ctxData.Step[stepId].Var,
+		Data: ctxData.Step[stepId].Data,
 	}
 
 	var resultBuffer bytes.Buffer
 	if err = tmpl.Execute(&resultBuffer, data); err != nil {
-		return ""
+		return nil
 	}
 
 	result := resultBuffer.String()
 	result = strings.ReplaceAll(result, "<no value>", "")
 
+	if result == "" {
+		return nil
+	}
+
 	return result
 }
 
 func (v *Variable) parseValueByType(value interface{}, varType VariableType) (interface{}, error) {
+	if value == nil {
+		return nil, nil
+	}
+
 	switch varType {
 	case VariableTypeString:
 		return cast.ToStringE(value)
 
 	case VariableTypeInt:
-		return cast.ToIntE(value)
+		return cast.ToInt64E(value)
 
 	case VariableTypeFloat:
-		return cast.ToFloat32E(value)
+		return cast.ToFloat64E(value)
 
 	case VariableTypeBool:
 		return cast.ToBoolE(value)
@@ -108,5 +123,9 @@ func (v *Variable) parseValueByType(value interface{}, varType VariableType) (in
 }
 
 func (v *Variable) isEmptyValue(value interface{}) bool {
+	if value == nil {
+		return true
+	}
+
 	return reflect.ValueOf(value).IsZero()
 }

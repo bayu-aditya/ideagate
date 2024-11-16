@@ -12,15 +12,21 @@ type ContextData struct {
 }
 
 type ContextRequestData struct {
-	Query map[string]any `json:",omitempty"` // map[queryVar]Value
-	Json  map[string]any `json:",omitempty"` // map[jsonVar]Value
+	Header map[string]any `json:",omitempty"`
+	Query  map[string]any `json:",omitempty"` // map[queryVar]Value
+	Json   map[string]any `json:",omitempty"` // map[jsonVar]Value
 }
 
 type ContextStepData struct {
-	Var        map[string]any `json:",omitempty"` // map[Var]Value. Data from step variables
-	StatusCode int            `json:",omitempty"` // status code for action rest type
-	Data       any            `json:",omitempty"` // body response. For database in JSON form
-	Output     map[string]any `json:",omitempty"` // map[OutputVar]Value
+	Var  map[string]any      `json:",omitempty"` // map[Var]Value. Data from step variables
+	Data ContextStepDataBody `json:",omitempty"` // body response. For database in JSON form
+	Out  map[string]any      `json:",omitempty"` // map[OutputVar]Value
+}
+
+type ContextStepDataBody struct {
+	Body       any            `json:",omitempty"`
+	Query      map[string]any `json:",omitempty"`
+	StatusCode int            `json:"status_code"`
 }
 
 func (ctxData *ContextData) SetRequestQuery(query map[string]any) {
@@ -47,15 +53,15 @@ func (ctxData *ContextData) GetStep(stepId string) ContextStepData {
 func (ctxData *ContextData) SetStepStatusCode(stepId string, statusCode int) {
 	ctxData.Lock()
 	stepData := ctxData.GetStep(stepId)
-	stepData.StatusCode = statusCode
+	stepData.Data.StatusCode = statusCode
 	ctxData.Step[stepId] = stepData
 	ctxData.Unlock()
 }
 
-func (ctxData *ContextData) SetStepData(stepId string, data any) {
+func (ctxData *ContextData) SetStepDataBody(stepId string, body any) {
 	ctxData.Lock()
 	stepData := ctxData.GetStep(stepId)
-	stepData.Data = data
+	stepData.Data.Body = body
 	ctxData.Step[stepId] = stepData
 	ctxData.Unlock()
 }
@@ -71,7 +77,7 @@ func (ctxData *ContextData) SetStepVariable(stepId string, data map[string]any) 
 func (ctxData *ContextData) SetStepOutput(stepId string, data map[string]any) {
 	ctxData.Lock()
 	stepData := ctxData.GetStep(stepId)
-	stepData.Output = data
+	stepData.Out = data
 	ctxData.Step[stepId] = stepData
 	ctxData.Unlock()
 }

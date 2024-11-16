@@ -53,7 +53,7 @@ func (j *mysql) Start() (output StartOutput, err error) {
 		}
 
 		// write into context data
-		ctxData.SetStepData(step.Id, rows)
+		ctxData.SetStepDataBody(step.Id, rows)
 	}
 
 	return
