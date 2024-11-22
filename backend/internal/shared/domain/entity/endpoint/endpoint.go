@@ -27,6 +27,7 @@ type SettingRequest struct {
 
 type Workflow struct {
 	Steps []Step `json:",omitempty"`
+	Edges []Edge `json:",omitempty"`
 }
 
 type Step struct {
@@ -36,7 +37,7 @@ type Step struct {
 	Variables map[string]Variable `json:",omitempty"`
 	Action    Action              `json:",omitempty"`
 	Outputs   map[string]Variable `json:",omitempty"`
-	Returns   []Return            `json:",omitempty"`
+	Returns   []Return            `json:",omitempty"` // deprecated instead using Workflow.Edges
 }
 
 type Action struct {
@@ -47,6 +48,7 @@ type Action struct {
 	Headers      map[string]Variable `json:",omitempty"` // for rest type
 	RequestType  string              `json:",omitempty"` // for rest type. Ex: application/json
 	RequestBody  string              `json:",omitempty"` // for rest body
+	TimeoutMs    int64               `json:",omitempty"` // for sleep
 }
 
 type Query struct {
@@ -59,4 +61,11 @@ type Return struct {
 	Name              string `json:",omitempty"`
 	IsFinishCondition string `json:",omitempty"`
 	NextStepId        string `json:",omitempty"`
+}
+
+type Edge struct {
+	Id          string `json:",omitempty"`
+	ConditionId string `json:",omitempty"`
+	Source      string `json:",omitempty"`
+	Dest        string `json:",omitempty"`
 }

@@ -1,0 +1,10 @@
+dir: "{{.InterfaceDir}}/_mock"
+outpkg: mockery
+mockname: "{{.InterfaceName}}"
+filename: "{{.InterfaceName}}.go"
+
+with-expecter: true
+packages:
+  github.com/bayu-aditya/ideagate/backend/internal/shared/adapter/endpoint:
+    interfaces:
+      IEndpointAdapter:

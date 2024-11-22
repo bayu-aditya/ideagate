@@ -51,21 +51,23 @@ func (j *start) Start() (output StartOutput, err error) {
 	return
 }
 
-func (j *start) parseReqQueryJson(c *gin.Context, setting entityEndpoint.SettingRequest) (dataQuery, dataJson map[string]interface{}, err error) {
+func (j *start) parseReqQueryJson(c *gin.Context, setting entityEndpoint.SettingRequest) (dataQuery, dataJson map[string]any, err error) {
 	// construct dataQuery parameters
-	dataQuery = map[string]interface{}{}
-	if err = c.BindQuery(&dataQuery); err != nil {
+	query := map[string]string{}
+	if err = c.BindQuery(&query); err != nil {
 		return
 	}
 
 	for fieldName, variable := range setting.Query {
-		dataQuery[fieldName], _ = variable.GetValue(j.Input.Step.Id, j.Input.DataCtx)
+		dataQuery[fieldName], _ = variable.GetValueString(j.Input.Step.Id, j.Input.DataCtx)
 	}
 
 	// construct body json
-	dataJson = map[string]interface{}{}
-	if err = c.BindJSON(&dataJson); err != nil {
-		return
+	dataJson = map[string]any{}
+	if c.Request.Body != nil {
+		if err = c.ShouldBindJSON(&dataJson); err != nil {
+			return
+		}
 	}
 
 	for fieldName, variable := range setting.Json {

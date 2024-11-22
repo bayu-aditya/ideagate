@@ -15,6 +15,12 @@ func New(jobType constant.JobType, input StartInput) (IJob, error) {
 	case constant.JobTypeStart:
 		return &start{Input: input}, nil
 
+	case constant.JobTypeEnd:
+		return &end{input: input}, nil
+
+	case constant.JobTypeSleep:
+		return &sleep{Input: input}, nil
+
 	case constant.JobTypeRest:
 		return &rest{Input: input}, nil
 
