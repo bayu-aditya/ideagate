@@ -118,10 +118,10 @@ func (m *manager) process() handlerResult {
 		jobFinishChan = make(chan jobFinishChanType) // value is based on latest step
 	)
 
-	//defer func() {
-	//	close(jobSeedsChan)
-	//	close(jobFinishChan)
-	//}()
+	defer func() {
+		close(jobSeedsChan)
+		close(jobFinishChan)
+	}()
 
 	if numWorkers == 0 {
 		numWorkers = 1
@@ -165,6 +165,7 @@ func (m *manager) process() handlerResult {
 
 	// Wait until finish channel is published
 	finishData := <-jobFinishChan
+
 	if finishData.err != nil {
 		return handlerResult{
 			errors: []error{finishData.err},
@@ -214,9 +215,10 @@ func (m *manager) stepWorker(stepId, workerName string) error {
 func (m *manager) waitAllDependencies(stepId, workerName string) {
 	stepsWait := make(map[string]bool) // key is list of step id must be waited
 
-	subscriberChan := m.pubSub.Subscribe(context.Background(), m.pubSubTopicStepStatus, pubsub.SubscribeSetting{
+	subscriber := m.pubSub.Subscribe(context.Background(), m.pubSubTopicStepStatus, workerName, pubsub.SubscribeSetting{
 		NumBufferChan: 100, // TODO bug if small, hypothesis is > num step * 3
 	})
+	defer subscriber.Close()
 
 	for _, prevStepId := range m.edgesPrev[stepId] {
 		stepStatus := m.getStepStatus(prevStepId)
@@ -228,7 +230,7 @@ func (m *manager) waitAllDependencies(stepId, workerName string) {
 	}
 
 	if len(stepsWait) > 0 {
-		for data := range subscriberChan {
+		for data := range subscriber.GetData() {
 			stepIdUpdated := data.(string)
 
 			if _, isExist := stepsWait[stepIdUpdated]; !isExist {
