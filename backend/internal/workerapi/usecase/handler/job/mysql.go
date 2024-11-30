@@ -12,21 +12,27 @@ func (j *mysql) Start() (output StartOutput, err error) {
 		ctxData    = j.Input.DataCtx
 		dataSource = j.Input.DataSource
 		step       = j.Input.Step
+		action     = j.Input.Step.Action.Mysql
 	)
 
-	if j.Input.DataSource.MysqlConn == nil {
+	if dataSource.MysqlConn == nil {
 		err = errors.New("empty mysql connection")
+		return
+	}
+
+	if action == nil {
+		err = &ErrActionConfigEmpty{jobType: step.Type, stepId: step.Id}
 		return
 	}
 
 	session := dataSource.MysqlConn.WithContext(ctx)
 
-	if len(step.Action.Queries) > 1 {
+	if len(action.Queries) > 1 {
 		session.Begin()
 		defer session.Commit()
 	}
 
-	for _, queryItem := range step.Action.Queries {
+	for _, queryItem := range action.Queries {
 		// run template for query template
 		query, errQuery := queryItem.Query.GetValueString(step.Id, ctxData)
 		if errQuery != nil {

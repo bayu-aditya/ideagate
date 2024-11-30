@@ -109,6 +109,7 @@ type handlerResult struct {
 func (m *manager) process() handlerResult {
 	type jobFinishChanType struct {
 		stepId string
+		data   any
 		err    error
 	}
 
@@ -140,13 +141,14 @@ func (m *manager) process() handlerResult {
 			for stepId := range jobSeedsChan {
 				workerName := fmt.Sprintf("worker-%d", i)
 
-				if err := m.stepWorker(stepId, workerName); err != nil {
+				data, err := m.stepWorker(stepId, workerName)
+				if err != nil {
 					jobFinishChan <- jobFinishChanType{stepId: stepId, err: err}
 					return
 				}
 
 				if m.steps[stepId].Type == constant.JobTypeEnd {
-					jobFinishChan <- jobFinishChanType{stepId: stepId}
+					jobFinishChan <- jobFinishChanType{stepId: stepId, data: data}
 					return
 				}
 
@@ -172,13 +174,15 @@ func (m *manager) process() handlerResult {
 		}
 	}
 
-	return handlerResult{}
+	return handlerResult{
+		data: finishData.data,
+	}
 }
 
-func (m *manager) stepWorker(stepId, workerName string) error {
+func (m *manager) stepWorker(stepId, workerName string) (any, error) {
 	step, isStepFound := m.steps[stepId]
 	if !isStepFound {
-		return fmt.Errorf("step id '%s' not found", stepId)
+		return nil, fmt.Errorf("step id '%s' not found", stepId)
 	}
 
 	m.setStepStatus(stepId, StepStatusInit)
@@ -198,25 +202,29 @@ func (m *manager) stepWorker(stepId, workerName string) error {
 
 	job, err := handlerJob.New(step.Type, jobInput)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// start job
 	m.setStepStatus(stepId, StepStatusProgress)
-	if _, err = job.Start(); err != nil {
+
+	output, err := job.Start()
+	if err != nil {
 		m.setStepStatus(stepId, StepStatusError)
-		return err
+		return nil, err
 	}
+
 	m.setStepStatus(stepId, StepStatusFinish)
 
-	return nil
+	return output.Data, nil
 }
 
 func (m *manager) waitAllDependencies(stepId, workerName string) {
-	stepsWait := make(map[string]bool) // key is list of step id must be waited
+	stepsWait := make(map[string]bool)                            // key is list of step id must be waited
+	numBufferChanSubscriber := len(m.endpoint.Workflow.Steps) * 3 // num step * 3
 
 	subscriber := m.pubSub.Subscribe(context.Background(), m.pubSubTopicStepStatus, workerName, pubsub.SubscribeSetting{
-		NumBufferChan: 100, // TODO bug if small, hypothesis is > num step * 3
+		NumBufferChan: numBufferChanSubscriber,
 	})
 	defer subscriber.Close()
 

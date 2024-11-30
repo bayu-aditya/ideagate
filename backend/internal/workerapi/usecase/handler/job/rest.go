@@ -10,42 +10,49 @@ type rest struct {
 	Input StartInput
 }
 
-func (j *rest) Start() (StartOutput, error) {
+func (j *rest) Start() (output StartOutput, err error) {
 	var (
 		ctx        = j.Input.Ctx
 		dataCtx    = j.Input.DataCtx
 		dataSource = j.Input.DataSource
 		step       = j.Input.Step
-		output     = StartOutput{}
+		actionRest = j.Input.Step.Action.Rest
 	)
 
+	if actionRest == nil {
+		err = &ErrActionConfigEmpty{jobType: step.Type, stepId: step.Id}
+		return
+	}
+
 	//construct request url, path is getting by template
-	path, err := step.Action.Path.GetValueString(step.Id, dataCtx)
+	path, err := actionRest.Path.GetValueString(step.Id, dataCtx)
 	if err != nil {
-		return output, err
+		return
 	}
 	reqUrl := dataSource.Config.Host + path
 
 	// doing request
-	req, err := http.NewRequestWithContext(ctx, step.Action.Method, reqUrl, nil)
+	req, err := http.NewRequestWithContext(ctx, actionRest.Method, reqUrl, nil)
 	if err != nil {
-		return output, err
+		return
 	}
 
 	// construct request header
-	for headerKey, headerVar := range step.Action.Headers {
-		headerVal, err := headerVar.GetValueString(step.Id, dataCtx)
+	for headerKey, headerVar := range actionRest.Headers {
+		var headerValue string
+
+		headerValue, err = headerVar.GetValueString(step.Id, dataCtx)
 		if err != nil {
-			return output, err
+			return
 		}
 
-		req.Header.Set(headerKey, headerVal)
+		req.Header.Set(headerKey, headerValue)
 	}
 
 	// doing http call
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return output, err
+		return
 	}
 
 	// set status code into context data
@@ -54,21 +61,16 @@ func (j *rest) Start() (StartOutput, error) {
 	// parse response json into context data
 	respBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return output, err
+		return
 	}
 
 	var respData any
 	if len(respBytes) > 0 {
 		if err = json.Unmarshal(respBytes, &respData); err != nil {
-			return output, err
+			return
 		}
 	}
 	dataCtx.SetStepDataBody(step.Id, respData)
 
-	// Determine next step
-	for _, returnItem := range step.Returns {
-		output.NextStepIds = append(output.NextStepIds, returnItem.NextStepId)
-	}
-
-	return output, nil
+	return
 }

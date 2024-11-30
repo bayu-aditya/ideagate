@@ -20,4 +20,5 @@ type StartInput struct {
 
 type StartOutput struct {
 	NextStepIds []string
+	Data        any
 }

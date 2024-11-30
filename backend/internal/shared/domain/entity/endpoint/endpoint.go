@@ -41,14 +41,32 @@ type Step struct {
 }
 
 type Action struct {
-	DataSourceId string              `json:",omitempty"` // reference datasource id
-	Queries      []Query             `json:",omitempty"` // for database type. This queries will run in transaction
-	Path         Variable            `json:",omitempty"` // for rest type. Text template supported. Ex: /user?id={{.var.user_id}}
-	Method       string              `json:",omitempty"` // for rest type. Ex: GET, POST, PUT, etc
-	Headers      map[string]Variable `json:",omitempty"` // for rest type
-	RequestType  string              `json:",omitempty"` // for rest type. Ex: application/json
-	RequestBody  string              `json:",omitempty"` // for rest body
-	TimeoutMs    int64               `json:",omitempty"` // for sleep
+	DataSourceId string `json:",omitempty"` // reference datasource id
+
+	End   *ActionEnd   `json:",omitempty"`
+	Mysql *ActionMysql `json:",omitempty"`
+	Rest  *ActionRest  `json:",omitempty"`
+	Sleep *ActionSleep `json:",omitempty"`
+}
+
+type ActionEnd struct {
+	ReturnDataFromStepIds []string `json:",omitempty"`
+}
+
+type ActionMysql struct {
+	Queries []Query `json:",omitempty"` // This queries will run in transaction
+}
+
+type ActionRest struct {
+	Path        Variable            `json:",omitempty"` // Text template supported. Ex: /user?id={{.Var.user_id}}
+	Method      string              `json:",omitempty"` // Ex: GET, POST, PUT, etc
+	Headers     map[string]Variable `json:",omitempty"` //
+	RequestType string              `json:",omitempty"` // Ex: application/json
+	RequestBody string              `json:",omitempty"` // REST body
+}
+
+type ActionSleep struct {
+	TimeoutMs int64 `json:",omitempty"`
 }
 
 type Query struct {

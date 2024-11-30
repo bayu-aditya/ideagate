@@ -7,7 +7,7 @@ import (
 )
 
 type IJob interface {
-	Start() (StartOutput, error)
+	Start() (StartOutput, error) // TODO rename to Process
 }
 
 func New(jobType constant.JobType, input StartInput) (IJob, error) {
@@ -19,7 +19,7 @@ func New(jobType constant.JobType, input StartInput) (IJob, error) {
 		return &end{input: input}, nil
 
 	case constant.JobTypeSleep:
-		return &sleep{Input: input}, nil
+		return &sleep{input: input}, nil
 
 	case constant.JobTypeRest:
 		return &rest{Input: input}, nil

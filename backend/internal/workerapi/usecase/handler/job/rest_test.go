@@ -55,8 +55,10 @@ func Test_rest_Start(t *testing.T) {
 					Step: entityEndpoint.Step{
 						Id: mockStepId,
 						Action: entityEndpoint.Action{
-							Method: "GET",
-							Path:   entityEndpoint.Variable{Value: "/user/detail"},
+							Rest: &entityEndpoint.ActionRest{
+								Method: "GET",
+								Path:   entityEndpoint.Variable{Value: "/user/detail"},
+							},
 						},
 					},
 				},
@@ -77,8 +79,10 @@ func Test_rest_Start(t *testing.T) {
 					Step: entityEndpoint.Step{
 						Id: mockStepId,
 						Action: entityEndpoint.Action{
-							Method: "unknown",
-							Path:   entityEndpoint.Variable{Value: "/user/detail"},
+							Rest: &entityEndpoint.ActionRest{
+								Method: "unknown",
+								Path:   entityEndpoint.Variable{Value: "/user/detail"},
+							},
 						},
 					},
 				},
@@ -107,8 +111,10 @@ func Test_rest_Start(t *testing.T) {
 					Step: entityEndpoint.Step{
 						Id: mockStepId,
 						Action: entityEndpoint.Action{
-							Method: "GET",
-							Path:   entityEndpoint.Variable{Value: "/user/detail?user_id={{.Step.Var.user_id}}"},
+							Rest: &entityEndpoint.ActionRest{
+								Method: "GET",
+								Path:   entityEndpoint.Variable{Value: "/user/detail?user_id={{.Var.user_id}}"},
+							},
 						},
 						Returns: []entityEndpoint.Return{
 							{NextStepId: mockNextStepId},
@@ -125,13 +131,12 @@ func Test_rest_Start(t *testing.T) {
 						Var: map[string]any{
 							"user_id": 123,
 						},
-						StatusCode: 200,
-						Data:       mockResponseMap,
+						Data: entityContext.ContextStepDataBody{
+							StatusCode: 200,
+							Body:       mockResponseMap,
+						},
 					},
 				},
-			},
-			wantOutput: StartOutput{
-				NextStepIds: []string{mockNextStepId},
 			},
 		},
 		{
@@ -154,8 +159,10 @@ func Test_rest_Start(t *testing.T) {
 					Step: entityEndpoint.Step{
 						Id: mockStepId,
 						Action: entityEndpoint.Action{
-							Method: "GET",
-							Path:   entityEndpoint.Variable{Value: "/user/detail?user_id={{.Step.Var.user_id}}"},
+							Rest: &entityEndpoint.ActionRest{
+								Method: "GET",
+								Path:   entityEndpoint.Variable{Value: "/user/detail?user_id={{.Var.user_id}}"},
+							},
 						},
 						Returns: []entityEndpoint.Return{
 							{NextStepId: mockNextStepId},
@@ -172,12 +179,11 @@ func Test_rest_Start(t *testing.T) {
 						Var: map[string]any{
 							"user_id": 123,
 						},
-						StatusCode: 500,
+						Data: entityContext.ContextStepDataBody{
+							StatusCode: 500,
+						},
 					},
 				},
-			},
-			wantOutput: StartOutput{
-				NextStepIds: []string{mockNextStepId},
 			},
 		},
 	}

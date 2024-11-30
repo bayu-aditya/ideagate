@@ -25,6 +25,7 @@ var (
 	VariableTypeInt    VariableType = "int"
 	VariableTypeFloat  VariableType = "float"
 	VariableTypeBool   VariableType = "bool"
+	VariableTypeObject VariableType = "object"
 )
 
 func (v *Variable) GetValue(stepId string, ctxData *entityContext.ContextData) (interface{}, error) {
@@ -117,6 +118,9 @@ func (v *Variable) parseValueByType(value interface{}, varType VariableType) (in
 
 	case VariableTypeBool:
 		return cast.ToBoolE(value)
+
+	case VariableTypeObject:
+		return value, nil
 	}
 
 	return value, nil
