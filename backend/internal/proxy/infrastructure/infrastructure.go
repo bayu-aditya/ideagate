@@ -1,6 +1,8 @@
 package infrastructure
 
 import (
+	"context"
+
 	"github.com/bayu-aditya/ideagate/backend/internal/proxy/config"
 	"github.com/redis/go-redis/v9"
 )
@@ -9,7 +11,7 @@ type Infrastructure struct {
 	Redis redis.UniversalClient
 }
 
-func NewInfrastructure(cfg *config.Config) Infrastructure {
+func NewInfrastructure(ctx context.Context, cfg *config.Config) (*Infrastructure, error) {
 	// Initialize redis
 	redisClient := redis.NewUniversalClient(&redis.UniversalOptions{
 		Addrs:    cfg.Redis.Addrs,
@@ -17,7 +19,11 @@ func NewInfrastructure(cfg *config.Config) Infrastructure {
 		DB:       cfg.Redis.DB,
 	})
 
-	return Infrastructure{
-		Redis: redisClient,
+	if err := redisClient.Ping(ctx).Err(); err != nil {
+		return nil, err
 	}
+
+	return &Infrastructure{
+		Redis: redisClient,
+	}, nil
 }

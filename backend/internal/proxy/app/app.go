@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,6 +14,8 @@ import (
 )
 
 func NewServer(configFileName string) {
+	ctx := context.Background()
+
 	// Initialize config
 	cfg, err := config.NewConfig(configFileName)
 	if err != nil {
@@ -20,7 +23,10 @@ func NewServer(configFileName string) {
 	}
 
 	// Initialize infrastructure
-	infra := infrastructure.NewInfrastructure(cfg)
+	infra, err := infrastructure.NewInfrastructure(ctx, cfg)
+	if err != nil {
+		log.Fatal("Failed to initialize infrastructure: %v", err)
+	}
 
 	// Initialize adapter
 	redisAdapter := redis.NewRedisAdapter(infra.Redis)
