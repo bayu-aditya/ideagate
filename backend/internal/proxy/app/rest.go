@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/bayu-aditya/ideagate/backend/internal/proxy/usecase"
 	entitypubsub "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/pubsub"
@@ -58,24 +59,61 @@ func sendEventHandler(pubSub pubsub.IPubSubAdapter) http.HandlerFunc {
 		}
 
 		// construct event
-		event := entitywebsocket.Event{
+		eventRequest := entitywebsocket.Event{
 			Id:        uuid.NewString(),
 			ProjectId: requestBody.ProjectId,
 			Data:      requestBody.Data,
 		}
 
-		eventBytes, err := json.Marshal(event)
+		eventRequestBytes, err := json.Marshal(eventRequest)
 		if err != nil {
 			http.Error(w, "Failed to marshal event", http.StatusInternalServerError)
 			return
 		}
 
-		if err = pubSub.Publish(ctx, entitypubsub.TopicEventRequest, eventBytes); err != nil {
+		// subscribe event from topic event response
+		subscriber, err := pubSub.Subscribe(ctx, entitypubsub.TopicEventResponse)
+		if err != nil {
+			http.Error(w, "Failed to subscribe event", http.StatusInternalServerError)
+			return
+		}
+		defer subscriber.Close()
+
+		// publish event to topic event request
+		if err = pubSub.Publish(ctx, entitypubsub.TopicEventRequest, eventRequestBytes); err != nil {
 			http.Error(w, "Failed to publish event", http.StatusInternalServerError)
 			return
 		}
 
-		w.WriteHeader(http.StatusOK)
+		timeoutChan := time.After(10 * time.Second)
+		for {
+			select {
+			case <-timeoutChan:
+				http.Error(w, "Request timed out", http.StatusGatewayTimeout)
+				return
+
+			case responseData := <-subscriber.Data(ctx):
+				eventResponse := entitywebsocket.Event{}
+				if err = json.Unmarshal(responseData, &eventResponse); err != nil {
+					logrus.Error("unmarshal event response", err)
+					continue
+				}
+				if eventResponse.Id != eventRequest.Id {
+					continue
+				}
+
+				responseBytes, err := json.Marshal(eventResponse)
+				if err != nil {
+					http.Error(w, "Failed to marshal response", http.StatusInternalServerError)
+					return
+				}
+
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				w.Write(responseBytes)
+				return
+			}
+		}
 	}
 }
 

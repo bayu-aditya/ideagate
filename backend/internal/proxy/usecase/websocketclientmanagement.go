@@ -132,6 +132,7 @@ func (c *WebsocketClient) SendEvent(event entitywebsocket.Event) {
 	if !isAllow {
 		return
 	}
+	_ = c.distributedLock.Unlock(context.Background(), lockKey)
 
 	// send to websocket client
 	eventBytes, err := json.Marshal(event)
