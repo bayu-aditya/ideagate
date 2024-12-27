@@ -3,10 +3,10 @@ module github.com/bayu-aditya/ideagate/backend/client/controller
 go 1.23.0
 
 require (
-	github.com/bayu-aditya/ideagate/backend v0.0.0-20241221125043-c45b0eefb5a6
 	github.com/bayu-aditya/ideagate/backend/client/controller-contract v0.0.0-20241227015918-7f64b4df3770
+	github.com/bayu-aditya/ideagate/backend/core v0.0.0-20241227065414-1ceeb27ac183
 	github.com/gorilla/websocket v1.5.3
-	google.golang.org/protobuf v1.36.0
+	google.golang.org/protobuf v1.36.1
 	k8s.io/api v0.32.0
 	k8s.io/apimachinery v0.32.0
 	k8s.io/client-go v0.32.0
@@ -36,11 +36,11 @@ require (
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
-	golang.org/x/net v0.30.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/oauth2 v0.23.0 // indirect
-	golang.org/x/sys v0.26.0 // indirect
-	golang.org/x/term v0.25.0 // indirect
-	golang.org/x/text v0.19.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/term v0.27.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/time v0.7.0 // indirect
 	gopkg.in/evanphx/json-patch.v4 v4.12.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect

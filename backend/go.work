@@ -1,7 +1,6 @@
-go 1.23.2
+go 1.23.0
 
 use (
-	.
 	./client/controller
 	./client/controller-contract
 	./client/worker-rest
