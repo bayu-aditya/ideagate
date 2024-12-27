@@ -2,7 +2,8 @@ package endpoint
 
 import (
 	"context"
-	"github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/endpoint"
+
+	"github.com/bayu-aditya/ideagate/backend/core/model/entity/endpoint"
 )
 
 type IEndpointAdapter interface {
