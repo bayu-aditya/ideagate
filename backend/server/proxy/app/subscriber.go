@@ -1,14 +1,14 @@
-package app
+package main
 
 import (
 	"context"
 	"encoding/json"
 
-	"github.com/bayu-aditya/ideagate/backend/internal/proxy/usecase"
 	entitypubsub "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/pubsub"
 	entitywebsocket "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/websocket"
 	"github.com/bayu-aditya/ideagate/backend/internal/shared/ports/pubsub"
 	"github.com/bayu-aditya/ideagate/backend/pkg/utils/log"
+	"github.com/bayu-aditya/ideagate/backend/server/proxy/usecase"
 	"github.com/sirupsen/logrus"
 )
 

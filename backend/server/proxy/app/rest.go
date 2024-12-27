@@ -1,14 +1,14 @@
-package app
+package main
 
 import (
 	"encoding/json"
 	"net/http"
 	"time"
 
-	"github.com/bayu-aditya/ideagate/backend/internal/proxy/usecase"
 	entitypubsub "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/pubsub"
 	entitywebsocket "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/websocket"
 	"github.com/bayu-aditya/ideagate/backend/internal/shared/ports/pubsub"
+	"github.com/bayu-aditya/ideagate/backend/server/proxy/usecase"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
