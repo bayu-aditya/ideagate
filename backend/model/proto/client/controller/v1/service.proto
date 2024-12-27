@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package v1;
+
+import "core/endpoint/endpoint.proto";
+
+service ControllerService {
+    rpc GetListEndpoint(GetListEndpointRequest) returns (GetListEndpointResponse);
+}
+
+message GetListEndpointRequest {}
+
+message GetListEndpointResponse {
+    repeated endpoint.Endpoint endpoints = 1;
+}

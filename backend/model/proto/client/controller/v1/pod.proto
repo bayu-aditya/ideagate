@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package v1;
+
+import "google/protobuf/timestamp.proto";
+
+enum PodStatus {
+    POD_STATUS_UNSPECIFIED = 0;
+    POD_STATUS_PENDING = 1;
+    POD_STATUS_RUNNING = 2;
+    POD_STATUS_SUCCEEDED = 3;
+    POD_STATUS_FAILED = 4;
+}
+
+message Pod {
+    string name = 1;
+    string namespace = 2;
+    google.protobuf.Timestamp created_at = 3;
+    PodStatus status = 4;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package v1;
+
+import "client/controller/v1/pod.proto";
+
+message GetListPodRequest {}
+
+message GetListPodResponse {
+  repeated Pod pods = 1;
+}
