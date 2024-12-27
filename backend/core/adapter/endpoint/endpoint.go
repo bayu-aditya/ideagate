@@ -2,7 +2,6 @@ package endpoint
 
 import (
 	"context"
-
 	"github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/endpoint"
 )
 

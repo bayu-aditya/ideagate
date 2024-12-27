@@ -5,5 +5,6 @@ use (
 	./client/controller
 	./client/controller-contract
 	./client/worker-rest
+	./core
 	./server/proxy
 )
