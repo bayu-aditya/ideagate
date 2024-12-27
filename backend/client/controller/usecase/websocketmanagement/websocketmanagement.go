@@ -1,6 +1,7 @@
 package websocketmanagement
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"time"
@@ -15,17 +16,21 @@ type IWebsocketManagementUsecase interface {
 	Close() error
 }
 
-func NewWebsocketManagement(wsConn *websocket.Conn) IWebsocketManagementUsecase {
+func NewWebsocketManagement(wsConn *websocket.Conn, router IRouter) IWebsocketManagementUsecase {
 	return &websocketManagement{
-		conn: wsConn,
+		conn:          wsConn,
+		usecaseRouter: router, // TODO
 	}
 }
 
 type websocketManagement struct {
-	conn *websocket.Conn
+	conn          *websocket.Conn
+	usecaseRouter IRouter
 }
 
 func (w *websocketManagement) WorkerSubscriber() {
+	ctx := context.Background()
+
 	for {
 		_, message, err := w.conn.ReadMessage()
 		if err != nil {
@@ -33,31 +38,24 @@ func (w *websocketManagement) WorkerSubscriber() {
 			continue
 		}
 
+		// unmarshal event request in JSON format
 		var eventRequest entitywebsocket.Event
 		if err = json.Unmarshal(message, &eventRequest); err != nil {
 			log.Println("unmarshal event request:", err)
 			continue
 		}
+		log.Printf("recv: %+v", eventRequest)
 
-		log.Printf("recv: %s", eventRequest)
-
-		// TODO switch usecase
-		//usecaseProcess := w.usecaseSwitcher(eventType)
-
-		// TODO handle by usecase
-		//result, err := usecaseProcess.Process(data)
-		//if err != nil {
-		//	// TODO handle error
-		//	log.Println("error:", err)
-		//	// TODO construct error into event response and send error to server
-		//}
-
-		// construct event response
-		eventResponse := entitywebsocket.Event{
-			Id:        eventRequest.Id,
-			ProjectId: eventRequest.ProjectId,
-			Data:      "hupla data response",
+		response, err := w.usecaseRouter.Switch(ctx, eventRequest.Type, eventRequest.Data)
+		if err != nil {
+			// TODO handle error
+			log.Println("error:", err)
+			// TODO construct error into event response and send error to server
 		}
+
+		// construct event response in JSON format
+		eventResponse := eventRequest
+		eventResponse.Data = response
 
 		eventResponseJson, err := json.Marshal(eventResponse)
 		if err != nil {

@@ -1,4 +1,4 @@
-package websocket
+package main
 
 import (
 	"net/http"
@@ -8,12 +8,14 @@ import (
 	"syscall"
 	"time"
 
-	usecasewebsocketmanagement "github.com/bayu-aditya/ideagate/backend/internal/controller/usecase/websocketmanagement"
+	"github.com/bayu-aditya/ideagate/backend/client/controller/adapter/kubernetes"
+	usecasewebsocketmanagement "github.com/bayu-aditya/ideagate/backend/client/controller/usecase/websocketmanagement"
+	"github.com/bayu-aditya/ideagate/backend/client/controller/usecase/workermanagement"
 	"github.com/bayu-aditya/ideagate/backend/pkg/utils/log"
 	"github.com/gorilla/websocket"
 )
 
-func NewClient() {
+func NewWebsocketClient() {
 	u := url.URL{Scheme: "ws", Host: "localhost:8080", Path: "/event/ws", RawQuery: "project_id=abc"}
 	log.Info("connecting to %s", u.String())
 
@@ -33,7 +35,16 @@ func NewClient() {
 	}
 	defer websocketConn.Close()
 
-	usecaseWebsocketManagement := usecasewebsocketmanagement.NewWebsocketManagement(websocketConn)
+	// Initialize Adapters
+	adapterKubernetes, err := kubernetes.New()
+	if err != nil {
+		log.Fatal("failed to create kubernetes adapter: %v", err)
+	}
+
+	// Initialize Usecases
+	usecaseWorkerManagement := workermanagement.New(adapterKubernetes)
+	usecaseRouter := usecasewebsocketmanagement.NewRouter(usecaseWorkerManagement)
+	usecaseWebsocketManagement := usecasewebsocketmanagement.NewWebsocketManagement(websocketConn, usecaseRouter)
 
 	done := make(chan struct{})
 
@@ -42,7 +53,7 @@ func NewClient() {
 			func() {
 				defer func() {
 					if r := recover(); r != nil {
-						log.Error("Recovered in WorkerSubscriber: %v", r)
+						log.Error("Recovered in WorkerSubscriber: %+v", r)
 					}
 				}()
 				usecaseWebsocketManagement.WorkerSubscriber()

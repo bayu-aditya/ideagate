@@ -2,6 +2,7 @@ package log
 
 import (
 	"fmt"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -17,8 +18,8 @@ func Warn(args ...interface{}) {
 	logrus.Warn(args...)
 }
 
-func Error(args ...interface{}) {
-	logrus.Error(args...)
+func Error(format string, args ...interface{}) {
+	logrus.Errorf(format, args...)
 }
 
 // ErrorP errors with prefix

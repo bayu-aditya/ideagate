@@ -1,6 +1,6 @@
 # Ideagate
 
-## Project Structure
+# Project Structure
 ```
 /backend
 │
@@ -51,8 +51,18 @@
 
 ```
 
-## Websocket Proxy
+# Websocket Proxy
 
+## Event
+### Models
+```json5
+// Event
+{
+    "ID": "string",
+    "ProjectID": "string",
+    "Data": {}
+}
+```
 ### Diagram
 ```mermaid
 sequenceDiagram
@@ -85,12 +95,14 @@ sequenceDiagram
     proxy_http ->> server: return response
 ```
 
-### Models
-```json5
-// Event
-{
-    "ID": "string",
-    "ProjectID": "string",
-    "Data": {}
-}
+---
+# Controller
+
+## Usecase Diagram
+```mermaid
+flowchart RL
+    websocket_management["Websocket <br/> Management"]
+    worker_management["Worker <br/> Management"]
+    
+    worker_management --> websocket_management
 ```

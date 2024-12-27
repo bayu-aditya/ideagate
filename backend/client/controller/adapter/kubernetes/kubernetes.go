@@ -3,6 +3,10 @@ package kubernetes
 import (
 	"context"
 	"fmt"
+	"os"
+	"strings"
+	"time"
+
 	"github.com/bayu-aditya/ideagate/backend/pkg/utils"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -10,7 +14,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
-	"time"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/client-go/util/homedir"
 )
 
 type IKubernetesAdapter interface {
@@ -21,21 +26,45 @@ type IKubernetesAdapter interface {
 }
 
 func New() (IKubernetesAdapter, error) {
-	// creates the in-cluster config
-	config, err := rest.InClusterConfig()
+	kubeConfig, err := getKubeConfig()
 	if err != nil {
 		return nil, err
 	}
+
 	// creates the clientSet
-	clientSet, err := kubernetes.NewForConfig(config)
+	clientSet, err := kubernetes.NewForConfig(kubeConfig)
 	if err != nil {
 		return nil, err
 	}
 
 	return &adapter{
-		namespace: "ideagate",
+		namespace: "staging",
 		client:    clientSet,
 	}, nil
+}
+
+func getKubeConfig() (*rest.Config, error) {
+	// Using in-cluster config
+	kubeConfig, err := rest.InClusterConfig()
+	if kubeConfig != nil && err == nil {
+		return kubeConfig, nil
+	}
+
+	// Using out-of-cluster config
+	kubeConfigPaths := os.Getenv("KUBECONFIG")
+	if kubeConfigPaths == "" {
+		kubeConfigPaths = fmt.Sprintf("%s/.kube/config", homedir.HomeDir())
+	}
+
+	kubeConfig, err = clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
+		&clientcmd.ClientConfigLoadingRules{Precedence: strings.Split(kubeConfigPaths, ":")},
+		&clientcmd.ConfigOverrides{},
+	).ClientConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	return kubeConfig, nil
 }
 
 type adapter struct {
@@ -57,7 +86,7 @@ func (a *adapter) ListPods(ctx context.Context, appName string) ([]corev1.Pod, e
 	podClient := a.client.CoreV1().Pods(a.namespace)
 
 	options := metav1.ListOptions{
-		LabelSelector: fmt.Sprintf("appName=%s", appName),
+		//LabelSelector: fmt.Sprintf("appName=%s", appName),
 	}
 	podList, err := podClient.List(ctx, options)
 	if err != nil {

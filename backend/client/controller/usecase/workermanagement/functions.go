@@ -2,7 +2,8 @@ package workermanagement
 
 import (
 	"context"
-	"github.com/bayu-aditya/ideagate/backend/internal/controller/adapter/kubernetes"
+
+	"github.com/bayu-aditya/ideagate/backend/client/controller/adapter/kubernetes"
 )
 
 type usecase struct {

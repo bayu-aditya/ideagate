@@ -44,8 +44,9 @@ func sendEventHandler(pubSub pubsub.IPubSubAdapter) http.HandlerFunc {
 		ctx := r.Context()
 
 		requestBody := struct {
-			ProjectId string
-			Data      any
+			ProjectId string `json:"project_id"`
+			Type      string `json:"type"`
+			Data      any    `json:"data"`
 		}{}
 
 		if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
@@ -62,6 +63,7 @@ func sendEventHandler(pubSub pubsub.IPubSubAdapter) http.HandlerFunc {
 		eventRequest := entitywebsocket.Event{
 			Id:        uuid.NewString(),
 			ProjectId: requestBody.ProjectId,
+			Type:      requestBody.Type,
 			Data:      requestBody.Data,
 		}
 
