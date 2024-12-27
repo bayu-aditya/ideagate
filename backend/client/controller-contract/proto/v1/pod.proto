@@ -15,6 +15,6 @@ enum PodStatus {
 message Pod {
     string name = 1;
     string namespace = 2;
-    google.protobuf.Timestamp creation_at = 3;
+    google.protobuf.Timestamp created_at = 3;
     PodStatus status = 4;
 }
