@@ -21,31 +21,34 @@ type SubscribeSetting struct {
 }
 
 func New() IPubSub {
-	return &pubSub{
-		subscribers: make(map[string]map[string]*subscriber),
-	}
+	return &pubSub{}
 }
 
 type pubSub struct {
-	sync.RWMutex
-	subscribers map[string]map[string]*subscriber
-	isClosed    bool
+	subscribersV2 sync.Map // map[topic]map[subscriberName]*subscriber
+	isClosed      bool
 }
 
 func (p *pubSub) Publish(_ context.Context, topic string, data any) {
-	p.RLock()
-	defer p.RUnlock()
-
 	if p.isClosed {
 		return
 	}
 
-	for _, subscribe := range p.subscribers[topic] {
-		if subscribe.isClosed {
-			continue
-		}
-		subscribe.dataChan <- data
+	subscribersPerTopic, ok := p.subscribersV2.Load(topic)
+	if !ok {
+		// if not found, return
+		return
 	}
+
+	subscribersPerTopicMap := subscribersPerTopic.(*sync.Map)
+	subscribersPerTopicMap.Range(func(subscribeName, subscribe interface{}) bool {
+		subs := subscribe.(*subscriber)
+		if subs.isClosed {
+			return true
+		}
+		subs.dataChan <- data
+		return true
+	})
 }
 
 func (p *pubSub) Subscribe(_ context.Context, topic, name string, setting SubscribeSetting) ISubscribe {
@@ -57,12 +60,9 @@ func (p *pubSub) Subscribe(_ context.Context, topic, name string, setting Subscr
 		dataChan: make(chan any, setting.NumBufferChan),
 	}
 
-	p.Lock()
-	if p.subscribers[topic] == nil {
-		p.subscribers[topic] = make(map[string]*subscriber)
-	}
-	p.subscribers[topic][name] = newSubscriber
-	p.Unlock()
+	subscribersPerTopic, _ := p.subscribersV2.LoadOrStore(topic, &sync.Map{})
+	subscribersPerTopicMap := subscribersPerTopic.(*sync.Map)
+	subscribersPerTopicMap.Store(name, newSubscriber)
 
 	return newSubscriber
 }
@@ -70,13 +70,14 @@ func (p *pubSub) Subscribe(_ context.Context, topic, name string, setting Subscr
 func (p *pubSub) Close() {
 	p.isClosed = true
 
-	p.Lock()
-	for _, subscribersPerTopic := range p.subscribers {
-		for _, subscribe := range subscribersPerTopic {
-			subscribe.Close()
-		}
-	}
-	p.Unlock()
+	p.subscribersV2.Range(func(topic, subscribers interface{}) bool {
+		subscribersPerTopicMap := subscribers.(*sync.Map)
+		subscribersPerTopicMap.Range(func(_, subscribe interface{}) bool {
+			subscribe.(*subscriber).Close()
+			return true
+		})
+		return true
+	})
 }
 
 type subscriber struct {
