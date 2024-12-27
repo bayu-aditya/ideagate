@@ -2,7 +2,6 @@ go 1.23.0
 
 use (
 	./client/controller
-	./client/controller-contract
 	./client/worker-rest
 	./core
 	./model

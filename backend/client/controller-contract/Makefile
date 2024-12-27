@@ -1,2 +1,0 @@
-buf-generate:
-	buf generate
