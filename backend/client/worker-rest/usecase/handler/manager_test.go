@@ -1,6 +1,10 @@
 package handler
 
 import (
+	"net/http"
+	"net/http/httptest"
+	"net/url"
+
 	adapterEndpointMock "github.com/bayu-aditya/ideagate/backend/internal/shared/adapter/endpoint/_mock"
 	"github.com/bayu-aditya/ideagate/backend/internal/shared/domain/constant"
 	entityEndpoint "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/endpoint"
@@ -8,9 +12,6 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/stretchr/testify/mock"
-	"net/http"
-	"net/http/httptest"
-	"net/url"
 )
 
 var _ = Describe("Manager - Process", func() {

@@ -3,18 +3,18 @@ package handler
 import (
 	"context"
 	"fmt"
-	"github.com/bayu-aditya/ideagate/backend/pkg/utils/pubsub"
 	"sync"
 	"time"
 
+	"github.com/bayu-aditya/ideagate/backend/client/worker-rest/model"
+	handlerJob "github.com/bayu-aditya/ideagate/backend/client/worker-rest/usecase/handler/job"
 	adapterEndpoint "github.com/bayu-aditya/ideagate/backend/internal/shared/adapter/endpoint"
 	"github.com/bayu-aditya/ideagate/backend/internal/shared/domain/constant"
 	entityContext "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/context"
 	"github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/datasource"
 	entityEndpoint "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/endpoint"
-	"github.com/bayu-aditya/ideagate/backend/internal/workerapi/domain/entity"
-	handlerJob "github.com/bayu-aditya/ideagate/backend/internal/workerapi/usecase/handler/job"
 	"github.com/bayu-aditya/ideagate/backend/pkg/utils/errors"
+	"github.com/bayu-aditya/ideagate/backend/pkg/utils/pubsub"
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,7 +27,7 @@ type manager struct {
 	ctxGin                *gin.Context
 	ctx                   context.Context
 	ctxData               *entityContext.ContextData
-	response              entity.HttpResponse
+	response              model.HttpResponse
 	endpoint              entityEndpoint.Endpoint
 	steps                 map[string]entityEndpoint.Step // map[stepId]step
 	stepStatus            map[string]StepStatusType      // map[stepId]StepStatus

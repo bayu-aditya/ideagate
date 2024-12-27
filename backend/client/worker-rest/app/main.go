@@ -1,14 +1,14 @@
-package app
+package main
 
 import (
 	"context"
 
-	"github.com/bayu-aditya/ideagate/backend/internal/workerapi/usecase/handler"
+	"github.com/bayu-aditya/ideagate/backend/client/worker-rest/usecase/handler"
 	"github.com/bayu-aditya/ideagate/backend/pkg/utils/log"
 	"github.com/gin-gonic/gin"
 )
 
-func Rest() {
+func main() {
 	ctx := context.Background()
 	router := gin.Default()
 
