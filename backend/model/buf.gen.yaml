@@ -4,13 +4,13 @@ managed:
   enabled: true
   override:
     - file_option: go_package_prefix
-      value: github.com/bufbuild/buf-tour/gen
+      value: github.com/bayu-aditya/ideagate/backend/model/gen-go
 plugins:
   - remote: buf.build/protocolbuffers/go
     out: gen-go
     opt:
       - paths=source_relative
-  - remote: buf.build/connectrpc/go
+  - remote: buf.build/grpc/go
     out: gen-go
     opt:
       - paths=source_relative
