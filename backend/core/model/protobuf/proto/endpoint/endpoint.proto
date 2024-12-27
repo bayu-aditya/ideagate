@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package endpoint;
+
+import "google/protobuf/any.proto";
+
+message Endpoint {
+    string id = 1;
+    string project_id = 2;
+    string method = 3;
+    string path = 4;
+    Setting setting = 5;
+    Workflow workflow = 6;
+}
+
+message Variable {
+    string type = 1;
+    bool required = 2;
+    google.protobuf.Any value = 3;
+    google.protobuf.Any default = 4;
+}
+
+message Setting {
+    string name = 1;
+    string description = 2;
+    int64 timeout_ms = 3;
+    int32 num_workers = 4;
+    SettingRequest request = 5;
+}
+
+message SettingRequest {
+    map<string, Variable> query = 1;
+    map<string, Variable> json = 2;
+}
+
+message Workflow {
+    repeated Step steps = 1;
+    repeated Edge edges = 2;
+}
+
+message Step {
+    string id = 1;
+    string name = 2;
+    string type = 3;
+    map<string, Variable> variables = 4;
+    Action action = 5;
+    map<string, Variable> outputs = 6;
+    repeated Return returns = 7;
+}
+
+message Action {
+    string data_source_id = 1;
+    ActionEnd end = 2;
+    ActionMysql mysql = 3;
+    ActionRest rest = 4;
+    ActionSleep sleep = 5;
+}
+
+message ActionEnd {
+    repeated string return_data_from_step_ids = 1;
+}
+
+message ActionMysql {
+    repeated Query queries = 1;
+}
+
+message ActionRest {
+    Variable path = 1;
+    string method = 2;
+    map<string, Variable> headers = 3;
+    string request_type = 4;
+    string request_body = 5;
+}
+
+message ActionSleep {
+    int64 timeout_ms = 1;
+}
+
+message Query {
+    Variable query = 1;
+    repeated Variable parameters = 2;
+}
+
+message Return {
+    string id = 1;
+    string name = 2;
+    string is_finish_condition = 3;
+    string next_step_id = 4;
+}
+
+message Edge {
+    string id = 1;
+    string condition_id = 2;
+    string source = 3;
+    string dest = 4;
+}

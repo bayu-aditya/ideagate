@@ -9,6 +9,7 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cast v1.7.1
 	github.com/stretchr/testify v1.9.0
+	google.golang.org/protobuf v1.36.1
 	gorm.io/gorm v1.25.12
 )
 
