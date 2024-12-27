@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"sync"
 
-	entitypubsub "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/pubsub"
-	entitywebsocket "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/websocket"
-	"github.com/bayu-aditya/ideagate/backend/internal/shared/ports/distributionlock"
-	"github.com/bayu-aditya/ideagate/backend/internal/shared/ports/pubsub"
-	"github.com/bayu-aditya/ideagate/backend/pkg/utils/log"
+	entitypubsub "github.com/bayu-aditya/ideagate/backend/core/model/entity/pubsub"
+	entitywebsocket "github.com/bayu-aditya/ideagate/backend/core/model/entity/websocket"
+	"github.com/bayu-aditya/ideagate/backend/core/ports/distributionlock"
+	"github.com/bayu-aditya/ideagate/backend/core/ports/pubsub"
+	"github.com/bayu-aditya/ideagate/backend/core/utils/log"
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
 )

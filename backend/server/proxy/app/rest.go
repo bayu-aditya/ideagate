@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	entitypubsub "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/pubsub"
-	entitywebsocket "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/websocket"
-	"github.com/bayu-aditya/ideagate/backend/internal/shared/ports/pubsub"
+	entitypubsub "github.com/bayu-aditya/ideagate/backend/core/model/entity/pubsub"
+	entitywebsocket "github.com/bayu-aditya/ideagate/backend/core/model/entity/websocket"
+	"github.com/bayu-aditya/ideagate/backend/core/ports/pubsub"
 	"github.com/bayu-aditya/ideagate/backend/server/proxy/usecase"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"

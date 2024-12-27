@@ -5,9 +5,9 @@ import (
 	"net/http/httptest"
 	"net/url"
 
-	adapterEndpointMock "github.com/bayu-aditya/ideagate/backend/internal/shared/adapter/endpoint/_mock"
-	"github.com/bayu-aditya/ideagate/backend/internal/shared/domain/constant"
-	entityEndpoint "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/endpoint"
+	adapterEndpointMock "github.com/bayu-aditya/ideagate/backend/core/adapter/endpoint/_mock"
+	"github.com/bayu-aditya/ideagate/backend/core/model/constant"
+	entityEndpoint "github.com/bayu-aditya/ideagate/backend/core/model/entity/endpoint"
 	"github.com/gin-gonic/gin"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"

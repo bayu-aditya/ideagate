@@ -3,7 +3,7 @@ package job
 import (
 	"fmt"
 
-	"github.com/bayu-aditya/ideagate/backend/internal/shared/domain/constant"
+	"github.com/bayu-aditya/ideagate/backend/core/model/constant"
 )
 
 type ErrActionConfigEmpty struct {

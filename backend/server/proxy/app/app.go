@@ -6,8 +6,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/bayu-aditya/ideagate/backend/internal/shared/adapter/redis"
-	"github.com/bayu-aditya/ideagate/backend/pkg/utils/log"
+	"github.com/bayu-aditya/ideagate/backend/core/adapter/redis"
+	"github.com/bayu-aditya/ideagate/backend/core/utils/log"
 	"github.com/bayu-aditya/ideagate/backend/server/proxy/config"
 	"github.com/bayu-aditya/ideagate/backend/server/proxy/infrastructure"
 	"github.com/bayu-aditya/ideagate/backend/server/proxy/usecase"

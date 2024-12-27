@@ -3,9 +3,9 @@ package job
 import (
 	"context"
 
-	entityContext "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/context"
-	entityDataSource "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/datasource"
-	entityEndpoint "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/endpoint"
+	entityContext "github.com/bayu-aditya/ideagate/backend/core/model/entity/context"
+	entityDataSource "github.com/bayu-aditya/ideagate/backend/core/model/entity/datasource"
+	entityEndpoint "github.com/bayu-aditya/ideagate/backend/core/model/entity/endpoint"
 	"github.com/gin-gonic/gin"
 )
 

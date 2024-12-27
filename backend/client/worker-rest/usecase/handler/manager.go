@@ -8,13 +8,13 @@ import (
 
 	"github.com/bayu-aditya/ideagate/backend/client/worker-rest/model"
 	handlerJob "github.com/bayu-aditya/ideagate/backend/client/worker-rest/usecase/handler/job"
-	adapterEndpoint "github.com/bayu-aditya/ideagate/backend/internal/shared/adapter/endpoint"
-	"github.com/bayu-aditya/ideagate/backend/internal/shared/domain/constant"
-	entityContext "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/context"
-	"github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/datasource"
-	entityEndpoint "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/endpoint"
-	"github.com/bayu-aditya/ideagate/backend/pkg/utils/errors"
-	"github.com/bayu-aditya/ideagate/backend/pkg/utils/pubsub"
+	adapterEndpoint "github.com/bayu-aditya/ideagate/backend/core/adapter/endpoint"
+	"github.com/bayu-aditya/ideagate/backend/core/model/constant"
+	entityContext "github.com/bayu-aditya/ideagate/backend/core/model/entity/context"
+	"github.com/bayu-aditya/ideagate/backend/core/model/entity/datasource"
+	entityEndpoint "github.com/bayu-aditya/ideagate/backend/core/model/entity/endpoint"
+	"github.com/bayu-aditya/ideagate/backend/core/utils/errors"
+	"github.com/bayu-aditya/ideagate/backend/core/utils/pubsub"
 	"github.com/gin-gonic/gin"
 )
 

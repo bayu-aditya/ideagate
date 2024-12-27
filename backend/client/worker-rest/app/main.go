@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/bayu-aditya/ideagate/backend/client/worker-rest/usecase/handler"
-	"github.com/bayu-aditya/ideagate/backend/pkg/utils/log"
+	"github.com/bayu-aditya/ideagate/backend/core/utils/log"
 	"github.com/gin-gonic/gin"
 )
 

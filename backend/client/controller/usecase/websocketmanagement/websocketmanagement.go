@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	entitywebsocket "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/websocket"
+	entitywebsocket "github.com/bayu-aditya/ideagate/backend/core/model/entity/websocket"
 	"github.com/gorilla/websocket"
 )
 

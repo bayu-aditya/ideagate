@@ -1,7 +1,7 @@
 package job
 
 import (
-	entityEndpoint "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/endpoint"
+	entityEndpoint "github.com/bayu-aditya/ideagate/backend/core/model/entity/endpoint"
 	"github.com/gin-gonic/gin"
 )
 

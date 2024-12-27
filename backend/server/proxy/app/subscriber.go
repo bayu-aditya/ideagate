@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 
-	entitypubsub "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/pubsub"
-	entitywebsocket "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/websocket"
-	"github.com/bayu-aditya/ideagate/backend/internal/shared/ports/pubsub"
-	"github.com/bayu-aditya/ideagate/backend/pkg/utils/log"
+	entitypubsub "github.com/bayu-aditya/ideagate/backend/core/model/entity/pubsub"
+	entitywebsocket "github.com/bayu-aditya/ideagate/backend/core/model/entity/websocket"
+	"github.com/bayu-aditya/ideagate/backend/core/ports/pubsub"
+	"github.com/bayu-aditya/ideagate/backend/core/utils/log"
 	"github.com/bayu-aditya/ideagate/backend/server/proxy/usecase"
 	"github.com/sirupsen/logrus"
 )

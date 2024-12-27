@@ -5,7 +5,7 @@ package mockery
 import (
 	context "context"
 
-	endpoint "github.com/bayu-aditya/ideagate/backend/internal/shared/domain/entity/endpoint"
+	endpoint "github.com/bayu-aditya/ideagate/backend/core/model/entity/endpoint"
 	mock "github.com/stretchr/testify/mock"
 )
 

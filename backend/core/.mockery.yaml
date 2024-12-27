@@ -7,6 +7,3 @@ packages:
   github.com/bayu-aditya/ideagate/backend/core/adapter/endpoint:
     interfaces:
       IEndpointAdapter:
-  github.com/bayu-aditya/ideagate/backend/internal/controller/adapter/kubernetes:
-    interfaces:
-      IKubernetesAdapter:

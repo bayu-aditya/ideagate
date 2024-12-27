@@ -1,6 +1,6 @@
 package job
 
-import "github.com/bayu-aditya/ideagate/backend/pkg/utils/errors"
+import "github.com/bayu-aditya/ideagate/backend/core/utils/errors"
 
 type mysql struct {
 	Input StartInput

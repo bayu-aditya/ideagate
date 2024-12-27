@@ -3,8 +3,8 @@ package handler
 import (
 	"context"
 
-	adapterEndpoint "github.com/bayu-aditya/ideagate/backend/internal/shared/adapter/endpoint"
-	"github.com/bayu-aditya/ideagate/backend/pkg/utils/errors"
+	adapterEndpoint "github.com/bayu-aditya/ideagate/backend/core/adapter/endpoint"
+	"github.com/bayu-aditya/ideagate/backend/core/utils/errors"
 	"github.com/gin-gonic/gin"
 )
 
