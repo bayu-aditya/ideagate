@@ -3,7 +3,8 @@ package handler
 import (
 	"context"
 
-	adapterEndpoint "github.com/bayu-aditya/ideagate/backend/core/adapter/endpoint"
+	adapterController "github.com/bayu-aditya/ideagate/backend/client/worker-rest/adapter/controller"
+	entityEndpoint "github.com/bayu-aditya/ideagate/backend/core/model/entity/endpoint"
 	"github.com/bayu-aditya/ideagate/backend/core/utils/errors"
 	"github.com/gin-gonic/gin"
 )
@@ -12,36 +13,39 @@ type IHandlerUsecase interface {
 	GenerateEndpoint(ctx context.Context, router *gin.Engine) error
 }
 
-func New() IHandlerUsecase {
+func New(adapterController adapterController.IControllerAdapter) IHandlerUsecase {
 	return &handler{
-		prefix:          "handler",
-		endpointAdapter: nil, // TODO fill this
+		prefix:            "handler",
+		adapterController: adapterController,
 	}
 }
 
 type handler struct {
-	prefix          string
-	endpointAdapter adapterEndpoint.IEndpointAdapter
+	prefix            string
+	adapterController adapterController.IControllerAdapter
 }
 
 func (h *handler) GenerateEndpoint(ctx context.Context, router *gin.Engine) error {
 	prefix := h.prefix + ".GenerateEndpoint"
 
-	endpoints, err := h.endpointAdapter.GetListEndpoint(ctx)
+	resultListEndpoint, err := h.adapterController.GetListEndpoint(ctx)
 	if err != nil {
 		return errors.Wrap(prefix, err, "get list endpoint")
 	}
 
-	for _, endpointItem := range endpoints {
-		router.Handle(endpointItem.Method, endpointItem.Path, h.handler(endpointItem.Id))
+	for _, endpointPb := range resultListEndpoint.GetEndpoints() {
+		endpoint := entityEndpoint.Endpoint{}
+		endpoint.FromPB(endpointPb)
+
+		router.Handle(endpointPb.GetMethod(), endpointPb.GetPath(), h.handler(endpoint))
 	}
 
 	return nil
 }
 
-func (h *handler) handler(endpointId string) gin.HandlerFunc {
+func (h *handler) handler(endpoint entityEndpoint.Endpoint) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		mgr, _ := newManager(c, h.endpointAdapter, endpointId)
+		mgr, _ := newManager(c, endpoint)
 		mgr.RunHandler()
 	}
 }

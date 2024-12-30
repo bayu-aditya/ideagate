@@ -5,13 +5,11 @@ import (
 	"net/http/httptest"
 	"net/url"
 
-	adapterEndpointMock "github.com/bayu-aditya/ideagate/backend/core/adapter/endpoint/_mock"
 	"github.com/bayu-aditya/ideagate/backend/core/model/constant"
 	entityEndpoint "github.com/bayu-aditya/ideagate/backend/core/model/entity/endpoint"
 	"github.com/gin-gonic/gin"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	"github.com/stretchr/testify/mock"
 )
 
 var _ = Describe("Manager - Process", func() {
@@ -26,51 +24,49 @@ var _ = Describe("Manager - Process", func() {
 				URL: &url.URL{},
 			}
 
-			mockAdapterEndpoint := adapterEndpointMock.NewIEndpointAdapter(t)
-			mockEndpointId := "mock_endpoint_id"
-			mockWorkflow := entityEndpoint.Workflow{
-				Steps: []entityEndpoint.Step{
-					{
-						Id:   constant.StepIdStart,
-						Type: constant.JobTypeStart,
-					},
-					{
-						Id:   "sleep_1",
-						Type: constant.JobTypeSleep,
-						Action: entityEndpoint.Action{
-							Sleep: &entityEndpoint.ActionSleep{
-								TimeoutMs: 1000,
+			mockEndpoint := entityEndpoint.Endpoint{
+				Id: "mock_endpoint_id",
+				Workflow: entityEndpoint.Workflow{
+					Steps: []entityEndpoint.Step{
+						{
+							Id:   constant.StepIdStart,
+							Type: constant.JobTypeStart,
+						},
+						{
+							Id:   "sleep_1",
+							Type: constant.JobTypeSleep,
+							Action: entityEndpoint.Action{
+								Sleep: &entityEndpoint.ActionSleep{
+									TimeoutMs: 1000,
+								},
+							},
+						},
+						{
+							Id:   "sleep_2",
+							Type: constant.JobTypeSleep,
+							Action: entityEndpoint.Action{
+								Sleep: &entityEndpoint.ActionSleep{
+									TimeoutMs: 500,
+								},
+							},
+						},
+						{
+							Id:   "end",
+							Type: constant.JobTypeEnd,
+							Action: entityEndpoint.Action{
+								End: &entityEndpoint.ActionEnd{},
 							},
 						},
 					},
-					{
-						Id:   "sleep_2",
-						Type: constant.JobTypeSleep,
-						Action: entityEndpoint.Action{
-							Sleep: &entityEndpoint.ActionSleep{
-								TimeoutMs: 500,
-							},
-						},
+					Edges: []entityEndpoint.Edge{
+						{Id: "edge_1", Source: constant.StepIdStart, Dest: "sleep_1"},
+						{Id: "edge_2", Source: "sleep_1", Dest: "sleep_2"},
+						{Id: "edge_3", Source: "sleep_2", Dest: constant.StepIdEnd},
 					},
-					{
-						Id:   "end",
-						Type: constant.JobTypeEnd,
-						Action: entityEndpoint.Action{
-							End: &entityEndpoint.ActionEnd{},
-						},
-					},
-				},
-				Edges: []entityEndpoint.Edge{
-					{Id: "edge_1", Source: constant.StepIdStart, Dest: "sleep_1"},
-					{Id: "edge_2", Source: "sleep_1", Dest: "sleep_2"},
-					{Id: "edge_3", Source: "sleep_2", Dest: constant.StepIdEnd},
 				},
 			}
 
-			mockAdapterEndpoint.EXPECT().GetEndpoint(mock.Anything, mockEndpointId).Once().
-				Return(entityEndpoint.Endpoint{Workflow: mockWorkflow}, nil)
-
-			manager, err := newManager(mockCtxGin, mockAdapterEndpoint, mockEndpointId)
+			manager, err := newManager(mockCtxGin, mockEndpoint)
 			if err != nil {
 				t.Error("new manager failed", err)
 			}
@@ -187,10 +183,7 @@ var _ = Describe("Manager - Process", func() {
 				mockDataEndpoint.Setting.NumWorkers = 1
 				mockDataEndpoint.Setting.TimeoutMs = 10100 // must be finished around 10 secs
 
-				mockAdapterEndpoint := adapterEndpointMock.NewIEndpointAdapter(t)
-				mockAdapterEndpoint.EXPECT().GetEndpoint(mock.Anything, mockDataEndpoint.Id).Once().Return(mockDataEndpoint, nil)
-
-				manager, err := newManager(mockCtxGin, mockAdapterEndpoint, mockDataEndpoint.Id)
+				manager, err := newManager(mockCtxGin, mockDataEndpoint)
 				if err != nil {
 					t.Error("new manager failed", err)
 				}
@@ -203,10 +196,7 @@ var _ = Describe("Manager - Process", func() {
 				mockDataEndpoint.Setting.NumWorkers = 3
 				mockDataEndpoint.Setting.TimeoutMs = 8100 // must be finished around 8 secs
 
-				mockAdapterEndpoint := adapterEndpointMock.NewIEndpointAdapter(t)
-				mockAdapterEndpoint.EXPECT().GetEndpoint(mock.Anything, mockDataEndpoint.Id).Once().Return(mockDataEndpoint, nil)
-
-				manager, err := newManager(mockCtxGin, mockAdapterEndpoint, mockDataEndpoint.Id)
+				manager, err := newManager(mockCtxGin, mockDataEndpoint)
 				if err != nil {
 					t.Error("new manager failed", err)
 				}

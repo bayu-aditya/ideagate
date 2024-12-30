@@ -8,7 +8,6 @@ import (
 
 	"github.com/bayu-aditya/ideagate/backend/client/worker-rest/model"
 	handlerJob "github.com/bayu-aditya/ideagate/backend/client/worker-rest/usecase/handler/job"
-	adapterEndpoint "github.com/bayu-aditya/ideagate/backend/core/adapter/endpoint"
 	"github.com/bayu-aditya/ideagate/backend/core/model/constant"
 	entityContext "github.com/bayu-aditya/ideagate/backend/core/model/entity/context"
 	"github.com/bayu-aditya/ideagate/backend/core/model/entity/datasource"
@@ -37,11 +36,12 @@ type manager struct {
 	edgesPrev             map[string][]string // map[stepId]prevStepIds
 }
 
-func newManager(c *gin.Context, endpointAdapter adapterEndpoint.IEndpointAdapter, endpointId string) (iManager, error) {
+func newManager(c *gin.Context, endpoint entityEndpoint.Endpoint) (iManager, error) {
 	mgr := &manager{
 		ctxGin:                c,
 		ctx:                   c.Request.Context(),
 		ctxData:               new(entityContext.ContextData),
+		endpoint:              endpoint,
 		steps:                 make(map[string]entityEndpoint.Step),
 		stepStatus:            make(map[string]StepStatusType),
 		pubSub:                pubsub.New(),
@@ -50,21 +50,13 @@ func newManager(c *gin.Context, endpointAdapter adapterEndpoint.IEndpointAdapter
 		edgesPrev:             make(map[string][]string),
 	}
 
-	// construct endpoint detail
-	endpointDetail, err := endpointAdapter.GetEndpoint(mgr.ctx, endpointId)
-	if err != nil {
-		mgr.response.AddErrors(err).GinErrorInternal(mgr.ctxGin)
-		return nil, err
-	}
-	mgr.endpoint = endpointDetail
-
 	// construct map of steps
-	for _, step := range endpointDetail.Workflow.Steps {
+	for _, step := range endpoint.Workflow.Steps {
 		mgr.steps[step.Id] = step
 	}
 
 	// construct edges
-	for _, edge := range endpointDetail.Workflow.Edges {
+	for _, edge := range endpoint.Workflow.Edges {
 		mgr.edgesNext[edge.Source] = append(mgr.edgesNext[edge.Source], edge.Dest)
 		mgr.edgesPrev[edge.Dest] = append(mgr.edgesPrev[edge.Dest], edge.Source)
 	}
