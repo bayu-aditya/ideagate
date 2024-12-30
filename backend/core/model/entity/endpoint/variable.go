@@ -8,6 +8,8 @@ import (
 	"text/template"
 
 	entityContext "github.com/bayu-aditya/ideagate/backend/core/model/entity/context"
+	utilPb "github.com/bayu-aditya/ideagate/backend/core/utils/protobuf"
+	pbEndpoint "github.com/bayu-aditya/ideagate/backend/model/gen-go/core/endpoint"
 	"github.com/spf13/cast"
 )
 
@@ -27,6 +29,25 @@ var (
 	VariableTypeBool   VariableType = "bool"
 	VariableTypeObject VariableType = "object"
 )
+
+func (v *Variable) FromPB(in *pbEndpoint.Variable) {
+	v.Type = in.Type
+	v.Required = in.Required
+	v.Value, _ = utilPb.ConvertAnyToInterface(in.Value)
+	v.Default, _ = utilPb.ConvertAnyToInterface(in.Default)
+}
+
+func (v *Variable) ToPB() *pbEndpoint.Variable {
+	valueAny, _ := utilPb.ConvertInterfaceToAny(v.Value)
+	defaultAny, _ := utilPb.ConvertInterfaceToAny(v.Default)
+
+	return &pbEndpoint.Variable{
+		Type:     v.Type,
+		Required: v.Required,
+		Value:    valueAny,
+		Default:  defaultAny,
+	}
+}
 
 func (v *Variable) GetValue(stepId string, ctxData *entityContext.ContextData) (interface{}, error) {
 	value := v.Value
