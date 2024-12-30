@@ -3,12 +3,14 @@ module github.com/bayu-aditya/ideagate/backend/core
 go 1.23.0
 
 require (
+	github.com/golang/protobuf v1.5.4
 	github.com/onsi/ginkgo/v2 v2.22.1
 	github.com/onsi/gomega v1.36.2
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cast v1.7.1
 	github.com/stretchr/testify v1.9.0
+	google.golang.org/protobuf v1.36.1
 	gorm.io/gorm v1.25.12
 )
 
