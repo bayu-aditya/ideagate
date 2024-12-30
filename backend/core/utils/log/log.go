@@ -6,16 +6,16 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func Debug(args ...interface{}) {
-	logrus.Debug(args...)
+func Debug(format string, args ...interface{}) {
+	logrus.Debugf(format, args...)
 }
 
-func Info(args ...interface{}) {
-	logrus.Info(args...)
+func Info(format string, args ...interface{}) {
+	logrus.Infof(format, args...)
 }
 
-func Warn(args ...interface{}) {
-	logrus.Warn(args...)
+func Warn(format string, args ...interface{}) {
+	logrus.Warnf(format, args...)
 }
 
 func Error(format string, args ...interface{}) {
@@ -27,10 +27,10 @@ func ErrorP(prefix string, args ...interface{}) {
 	logrus.Error(fmt.Sprintf("[%s]:", prefix), args)
 }
 
-func Panic(args ...interface{}) {
-	logrus.Panic(args...)
+func Panic(format string, args ...interface{}) {
+	logrus.Panicf(format, args...)
 }
 
-func Fatal(args ...interface{}) {
-	logrus.Fatal(args...)
+func Fatal(format string, args ...interface{}) {
+	logrus.Fatalf(format, args...)
 }

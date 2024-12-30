@@ -17,7 +17,7 @@ func RunSubscriber(pubSub pubsub.IPubSubAdapter, usecaseWebsocketClientManagemen
 
 	subscriber, err := pubSub.Subscribe(ctx, entitypubsub.TopicEventRequest)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 
 	for eventRequestBytes := range subscriber.Data(ctx) {

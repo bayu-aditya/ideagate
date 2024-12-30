@@ -125,7 +125,7 @@ func (c *WebsocketClient) SendEvent(event entitywebsocket.Event) {
 	lockKey := fmt.Sprintf("%s:%s", c.projectId, event.Id)
 	isAllow, err := c.distributedLock.Lock(c.ctx, lockKey)
 	if err != nil {
-		log.Error("distributed lock", err)
+		log.Error("distributed lock: %v", err)
 		c.cancelCtxFunc()
 		return
 	}
@@ -137,7 +137,7 @@ func (c *WebsocketClient) SendEvent(event entitywebsocket.Event) {
 	// send to websocket client
 	eventBytes, err := json.Marshal(event)
 	if err != nil {
-		log.Error("marshal event", err)
+		log.Error("marshal event: %v", err)
 		c.cancelCtxFunc()
 		return
 	}
@@ -160,7 +160,7 @@ func (c *WebsocketClient) WorkerReceiveEvent() {
 
 		// publish event to PubSub distributed, if error only log it
 		if err = c.pubSub.Publish(context.Background(), entitypubsub.TopicEventResponse, message); err != nil {
-			log.Error("publish", err)
+			log.Error("publish: %v", err)
 		}
 	}
 }
