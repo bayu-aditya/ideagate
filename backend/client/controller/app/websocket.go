@@ -97,7 +97,7 @@ func NewWebsocketClient() {
 		case t := <-ticker.C:
 			err := websocketConn.WriteMessage(websocket.TextMessage, []byte(t.String()))
 			if err != nil {
-				log.Info("write:", err)
+				log.Info("write: %v", err)
 				return
 			}
 		case <-interrupt:
@@ -105,7 +105,7 @@ func NewWebsocketClient() {
 			// Cleanly close the connection by sending a close message and then waiting for the server to close the connection.
 			err := websocketConn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
 			if err != nil {
-				log.Info("write close:", err)
+				log.Info("write close: %v", err)
 				return
 			}
 			select {

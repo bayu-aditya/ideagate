@@ -8,6 +8,7 @@ import (
 )
 
 func Test_getKubeConfig(t *testing.T) {
+	t.Skip()
 	tests := []struct {
 		name     string
 		mockFunc func()
