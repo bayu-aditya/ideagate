@@ -95,7 +95,7 @@ const ActionRest: FC<{ form: UseFormReturn<Tdata> }> = ({ form }) => {
     <div>
       <div>
         <div>Method:</div>
-        <Controller control={form.control} name="" render={() => <TextField />} />
+        <Controller control={form.control} name="vars" render={() => <TextField />} />
       </div>
       <div>
         <div>Path:</div>
