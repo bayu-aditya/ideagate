@@ -93,7 +93,7 @@ export default function themeTypography(vars: ThemeOptionsVars): TypographyOptio
       padding: '20px',
       marginTop: '88px',
       marginRight: '20px',
-      borderRadius: `${vars.borderRadius}px`,
+      borderRadius: vars.borderRadius,
     },
     menuCaption: {
       fontSize: '0.875rem',

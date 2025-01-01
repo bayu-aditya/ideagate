@@ -39,6 +39,7 @@ export const theme = () => {
       },
     },
     typography: themeTypography(themeOptionsVars),
+    opts: themeOptionsVars,
   }
 
   const themes = createTheme(themeOptions)

@@ -22,7 +22,7 @@ export default function componentStyleOverrides(vars: ThemeOptionsVars): Theme['
           backgroundImage: 'none',
         },
         rounded: {
-          borderRadius: `${vars.borderRadius}px`,
+          borderRadius: vars.borderRadius,
         },
       },
     },
@@ -107,7 +107,7 @@ export default function componentStyleOverrides(vars: ThemeOptionsVars): Theme['
       styleOverrides: {
         root: {
           background: bgColor,
-          borderRadius: `${vars.borderRadius}px`,
+          borderRadius: vars.borderRadius,
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: vars.colors?.grey400,
           },
@@ -122,7 +122,7 @@ export default function componentStyleOverrides(vars: ThemeOptionsVars): Theme['
           fontWeight: 500,
           background: bgColor,
           padding: '15.5px 14px',
-          borderRadius: `${vars.borderRadius}px`,
+          borderRadius: vars.borderRadius,
           '&.MuiInputBase-inputSizeSmall': {
             padding: '10px 14px',
             '&.MuiInputBase-inputAdornedStart': {
@@ -134,7 +134,7 @@ export default function componentStyleOverrides(vars: ThemeOptionsVars): Theme['
           paddingLeft: 4,
         },
         notchedOutline: {
-          borderRadius: `${vars.borderRadius}px`,
+          borderRadius: vars.borderRadius,
         },
       },
     },
