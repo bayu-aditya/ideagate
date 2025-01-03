@@ -6,8 +6,8 @@
   "scripts": {
     "format:eslint:check": "eslint",
     "format:eslint:fix": "eslint --fix",
-    "format:prettier:check": "prettier --check --ignore-path .gitignore .",
-    "format:prettier:fix": "prettier --write --ignore-path .gitignore .",
+    "format:prettier:check": "prettier --check --ignore-path .prettierignore --ignore-path .gitignore .",
+    "format:prettier:fix": "prettier --write --ignore-path .prettierignore --ignore-path .gitignore .",
     "format:typescript:check": "tsc -b --noEmit",
     "format:check": "pnpm run format:eslint:check && pnpm run format:prettier:check && pnpm run format:typescript:check",
     "dev": "vite",
