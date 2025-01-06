@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package application;
+
+import "google/protobuf/timestamp.proto";
+
+message Application {
+    string id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    google.protobuf.Timestamp updated_at = 3;
+    string project_id = 4;
+    string name = 5;
+    string description = 6;
+}

@@ -4,6 +4,7 @@ use (
 	./client/controller
 	./client/worker-rest
 	./core
-	./model
+	./model/gen-go
+	./server/controller
 	./server/proxy
 )

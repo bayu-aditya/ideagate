@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package dashboard;
+
+import "core/application/application.proto";
+import "google/protobuf/struct.proto";
+
+service DashboardService {
+    rpc GetListApplication(GetListApplicationRequest) returns (GetListApplicationResponse);
+    rpc UpsertApplication(UpsertApplicationRequest) returns (UpsertApplicationResponse);
+    rpc DeleteApplication(DeleteApplicationRequest) returns (DeleteApplicationResponse);
+}
+
+message GetListApplicationRequest {
+    string project_id = 1;
+}
+
+message GetListApplicationResponse {
+    repeated application.Application applications = 1;
+}
+
+message UpsertApplicationRequest {
+    string project_id = 1;
+    string application_id = 2;
+    google.protobuf.Struct values = 3;
+}
+
+message UpsertApplicationResponse {
+    application.Application application = 1;
+}
+
+message DeleteApplicationRequest {
+    string project_id = 1;
+    string application_id = 2;
+}
+
+message DeleteApplicationResponse {}

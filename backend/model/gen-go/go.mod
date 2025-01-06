@@ -1,4 +1,4 @@
-module github.com/bayu-aditya/ideagate/backend/model
+module github.com/bayu-aditya/ideagate/backend/model/gen-go
 
 go 1.23.0
 

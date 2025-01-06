@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package user;
+
+import "google/protobuf/timestamp.proto";
+
+message User {
+    string id = 1;
+    google.protobuf.Timestamp created_at = 2;
+    google.protobuf.Timestamp updated_at = 3;
+    string name = 4;
+    string email = 5;
+    string password = 6;
+    string profile_picture = 7;
+}
