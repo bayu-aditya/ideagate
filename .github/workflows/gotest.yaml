@@ -65,3 +65,89 @@ jobs:
       - name: Build Binary
         working-directory: backend/client/worker-rest
         run: go build ./app/*
+
+  gotest-client-core:
+    name: "Gotest: Core"
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Golang
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Cache Go Modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Test
+        working-directory: backend/core
+        run: go test -count=1 -race -failfast ./...
+
+  gotest-server-controller:
+    name: "Gotest: Server Controller"
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Golang
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Cache Go Modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Test
+        working-directory: backend/server/controller
+        run: go test -count=1 -race -failfast ./...
+
+      - name: Build Binary
+        working-directory: backend/server/controller
+        run: go build main.go
+
+  gotest-server-proxy:
+    name: "Gotest: Server Proxy"
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Golang
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Cache Go Modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Test
+        working-directory: backend/server/proxy
+        run: go test -count=1 -race -failfast ./...
+
+      - name: Build Binary
+        working-directory: backend/server/proxy
+        run: go build./app/*
