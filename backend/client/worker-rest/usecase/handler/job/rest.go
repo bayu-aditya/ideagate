@@ -27,7 +27,7 @@ func (j *rest) Start() (output StartOutput, err error) {
 	}
 
 	//construct request url, path is getting by template
-	pathVariable := endpoint.Variable{Variable: actionRest.Path}
+	pathVariable := endpoint.Variable(*actionRest.Path)
 	path, err := pathVariable.GetValueString(step.Id, dataCtx)
 	if err != nil {
 		return
@@ -44,7 +44,7 @@ func (j *rest) Start() (output StartOutput, err error) {
 	for headerKey, headerVar := range actionRest.Headers {
 		var headerValue string
 
-		headerVariable := endpoint.Variable{Variable: headerVar}
+		headerVariable := endpoint.Variable(*headerVar)
 		headerValue, err = headerVariable.GetValueString(step.Id, dataCtx)
 		if err != nil {
 			return

@@ -3,7 +3,7 @@ module github.com/bayu-aditya/ideagate/backend/server/proxy
 go 1.23.0
 
 require (
-	github.com/bayu-aditya/ideagate/backend/core v0.0.0-20241227065414-1ceeb27ac183
+	github.com/bayu-aditya/ideagate/backend/core v0.0.0-20250108074321-3e3e2b49cf48
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.3
 	github.com/redis/go-redis/v9 v9.7.0

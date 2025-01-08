@@ -3,7 +3,7 @@ module github.com/bayu-aditya/ideagate/backend/client/worker-rest
 go 1.23.0
 
 require (
-	github.com/bayu-aditya/ideagate/backend/core v0.0.0-20241227065414-1ceeb27ac183
+	github.com/bayu-aditya/ideagate/backend/core v0.0.0-20250108074321-3e3e2b49cf48
 	github.com/gin-gonic/gin v1.10.0
 	github.com/jarcoal/httpmock v1.3.1
 	github.com/onsi/ginkgo/v2 v2.22.1

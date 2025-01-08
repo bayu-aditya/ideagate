@@ -22,7 +22,7 @@ func (j *start) Start() (output StartOutput, err error) {
 	// Construct variables
 	variables := make(map[string]interface{})
 	for name, variable := range j.Input.Step.Variables {
-		variableParsed := endpoint.Variable{Variable: variable}
+		variableParsed := endpoint.Variable(*variable)
 		variables[name], err = variableParsed.GetValue(j.Input.Step.Id, j.Input.DataCtx)
 		if err != nil {
 			return
@@ -33,7 +33,7 @@ func (j *start) Start() (output StartOutput, err error) {
 	// Construct output
 	outputs := make(map[string]interface{})
 	for name, out := range j.Input.Step.Outputs {
-		outVariable := endpoint.Variable{Variable: out}
+		outVariable := endpoint.Variable(*out)
 		outputs[name], err = outVariable.GetValue(j.Input.Step.Id, j.Input.DataCtx)
 		if err != nil {
 			return
@@ -62,7 +62,7 @@ func (j *start) parseReqQueryJson(c *gin.Context, setting *pbEndpoint.SettingReq
 	}
 
 	for fieldName, variable := range setting.GetQuery() {
-		variableParsed := endpoint.Variable{Variable: variable}
+		variableParsed := endpoint.Variable(*variable)
 		dataQuery[fieldName], _ = variableParsed.GetValueString(j.Input.Step.Id, j.Input.DataCtx)
 	}
 
@@ -75,7 +75,7 @@ func (j *start) parseReqQueryJson(c *gin.Context, setting *pbEndpoint.SettingReq
 	}
 
 	for fieldName, variable := range setting.GetJson() {
-		variableParsed := endpoint.Variable{Variable: variable}
+		variableParsed := endpoint.Variable(*variable)
 		dataJson[fieldName], _ = variableParsed.GetValue(j.Input.Step.Id, j.Input.DataCtx)
 	}
 

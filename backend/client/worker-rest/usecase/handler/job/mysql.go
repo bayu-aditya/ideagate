@@ -37,7 +37,7 @@ func (j *mysql) Start() (output StartOutput, err error) {
 
 	for _, queryItem := range action.Queries {
 		// run template for query template
-		queryVariable := endpoint.Variable{Variable: queryItem.Query}
+		queryVariable := endpoint.Variable(*queryItem.Query)
 		query, errQuery := queryVariable.GetValueString(step.Id, ctxData)
 		if errQuery != nil {
 			err = errQuery
@@ -47,7 +47,7 @@ func (j *mysql) Start() (output StartOutput, err error) {
 		// run template for parameters
 		var paramsParsed []interface{}
 		for _, param := range queryItem.Parameters {
-			paramVariable := endpoint.Variable{Variable: param}
+			paramVariable := endpoint.Variable(*param)
 			paramParsed, errParsed := paramVariable.GetValue(step.Id, ctxData)
 			if errParsed != nil {
 				err = errParsed
