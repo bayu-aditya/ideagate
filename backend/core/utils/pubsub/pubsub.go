@@ -3,6 +3,7 @@ package pubsub
 import (
 	"context"
 	"sync"
+	"sync/atomic"
 )
 
 type IPubSub interface {
@@ -25,16 +26,16 @@ func New() IPubSub {
 }
 
 type pubSub struct {
-	subscribersV2 sync.Map // map[topic]map[subscriberName]*subscriber
-	isClosed      bool
+	subscribers sync.Map // map[topic]map[subscriberName]*subscriber
+	isClosed    atomic.Bool
 }
 
 func (p *pubSub) Publish(_ context.Context, topic string, data any) {
-	if p.isClosed {
+	if p.isClosed.Load() {
 		return
 	}
 
-	subscribersPerTopic, ok := p.subscribersV2.Load(topic)
+	subscribersPerTopic, ok := p.subscribers.Load(topic)
 	if !ok {
 		// if not found, return
 		return
@@ -43,7 +44,7 @@ func (p *pubSub) Publish(_ context.Context, topic string, data any) {
 	subscribersPerTopicMap := subscribersPerTopic.(*sync.Map)
 	subscribersPerTopicMap.Range(func(subscribeName, subscribe interface{}) bool {
 		subs := subscribe.(*subscriber)
-		if subs.isClosed {
+		if subs.isClosed.Load() {
 			return true
 		}
 		subs.dataChan <- data
@@ -52,15 +53,16 @@ func (p *pubSub) Publish(_ context.Context, topic string, data any) {
 }
 
 func (p *pubSub) Subscribe(_ context.Context, topic, name string, setting SubscribeSetting) ISubscribe {
-	if p.isClosed {
+	if p.isClosed.Load() {
 		return nil
 	}
 
 	newSubscriber := &subscriber{
-		dataChan: make(chan any, setting.NumBufferChan),
+		dataChan:  make(chan any, setting.NumBufferChan),
+		closeFunc: p.removeSubscriber(topic, name),
 	}
 
-	subscribersPerTopic, _ := p.subscribersV2.LoadOrStore(topic, &sync.Map{})
+	subscribersPerTopic, _ := p.subscribers.LoadOrStore(topic, &sync.Map{})
 	subscribersPerTopicMap := subscribersPerTopic.(*sync.Map)
 	subscribersPerTopicMap.Store(name, newSubscriber)
 
@@ -68,9 +70,9 @@ func (p *pubSub) Subscribe(_ context.Context, topic, name string, setting Subscr
 }
 
 func (p *pubSub) Close() {
-	p.isClosed = true
+	p.isClosed.Store(true)
 
-	p.subscribersV2.Range(func(topic, subscribers interface{}) bool {
+	p.subscribers.Range(func(topic, subscribers interface{}) bool {
 		subscribersPerTopicMap := subscribers.(*sync.Map)
 		subscribersPerTopicMap.Range(func(_, subscribe interface{}) bool {
 			subscribe.(*subscriber).Close()
@@ -80,9 +82,22 @@ func (p *pubSub) Close() {
 	})
 }
 
+func (p *pubSub) removeSubscriber(topic, name string) func() {
+	return func() {
+		subscribersPerTopic, ok := p.subscribers.Load(topic)
+		if !ok {
+			return
+		}
+
+		subscribersPerTopicMap := subscribersPerTopic.(*sync.Map)
+		subscribersPerTopicMap.Delete(name)
+	}
+}
+
 type subscriber struct {
-	dataChan chan any
-	isClosed bool
+	dataChan  chan any
+	isClosed  atomic.Bool
+	closeFunc func()
 }
 
 func (s *subscriber) GetData() <-chan any {
@@ -90,6 +105,11 @@ func (s *subscriber) GetData() <-chan any {
 }
 
 func (s *subscriber) Close() {
-	s.isClosed = true
+	if s.isClosed.Load() {
+		return
+	}
+
+	s.isClosed.Store(true)
 	close(s.dataChan)
+	s.closeFunc()
 }
