@@ -1,7 +1,8 @@
 package job
 
 import (
-	entityEndpoint "github.com/bayu-aditya/ideagate/backend/core/model/entity/endpoint"
+	"github.com/bayu-aditya/ideagate/backend/core/model/endpoint"
+	pbEndpoint "github.com/bayu-aditya/ideagate/backend/model/gen-go/core/endpoint"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,7 +12,7 @@ type start struct {
 
 func (j *start) Start() (output StartOutput, err error) {
 	// Parse request query and json
-	queries, jsons, err := j.parseReqQueryJson(j.Input.GinCtx, j.Input.Endpoint.Setting.Request)
+	queries, jsons, err := j.parseReqQueryJson(j.Input.GinCtx, j.Input.Endpoint.GetSetting().GetRequest())
 	if err != nil {
 		return
 	}
@@ -21,7 +22,8 @@ func (j *start) Start() (output StartOutput, err error) {
 	// Construct variables
 	variables := make(map[string]interface{})
 	for name, variable := range j.Input.Step.Variables {
-		variables[name], err = variable.GetValue(j.Input.Step.Id, j.Input.DataCtx)
+		variableParsed := endpoint.Variable{Variable: variable}
+		variables[name], err = variableParsed.GetValue(j.Input.Step.Id, j.Input.DataCtx)
 		if err != nil {
 			return
 		}
@@ -31,7 +33,8 @@ func (j *start) Start() (output StartOutput, err error) {
 	// Construct output
 	outputs := make(map[string]interface{})
 	for name, out := range j.Input.Step.Outputs {
-		outputs[name], err = out.GetValue(j.Input.Step.Id, j.Input.DataCtx)
+		outVariable := endpoint.Variable{Variable: out}
+		outputs[name], err = outVariable.GetValue(j.Input.Step.Id, j.Input.DataCtx)
 		if err != nil {
 			return
 		}
@@ -51,15 +54,16 @@ func (j *start) Start() (output StartOutput, err error) {
 	return
 }
 
-func (j *start) parseReqQueryJson(c *gin.Context, setting entityEndpoint.SettingRequest) (dataQuery, dataJson map[string]any, err error) {
+func (j *start) parseReqQueryJson(c *gin.Context, setting *pbEndpoint.SettingRequest) (dataQuery, dataJson map[string]any, err error) {
 	// construct dataQuery parameters
 	query := map[string]string{}
 	if err = c.BindQuery(&query); err != nil {
 		return
 	}
 
-	for fieldName, variable := range setting.Query {
-		dataQuery[fieldName], _ = variable.GetValueString(j.Input.Step.Id, j.Input.DataCtx)
+	for fieldName, variable := range setting.GetQuery() {
+		variableParsed := endpoint.Variable{Variable: variable}
+		dataQuery[fieldName], _ = variableParsed.GetValueString(j.Input.Step.Id, j.Input.DataCtx)
 	}
 
 	// construct body json
@@ -70,8 +74,9 @@ func (j *start) parseReqQueryJson(c *gin.Context, setting entityEndpoint.Setting
 		}
 	}
 
-	for fieldName, variable := range setting.Json {
-		dataJson[fieldName], _ = variable.GetValue(j.Input.Step.Id, j.Input.DataCtx)
+	for fieldName, variable := range setting.GetJson() {
+		variableParsed := endpoint.Variable{Variable: variable}
+		dataJson[fieldName], _ = variableParsed.GetValue(j.Input.Step.Id, j.Input.DataCtx)
 	}
 
 	return

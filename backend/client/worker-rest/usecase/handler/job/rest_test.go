@@ -7,7 +7,7 @@ import (
 
 	entityContext "github.com/bayu-aditya/ideagate/backend/core/model/entity/context"
 	entityDataSource "github.com/bayu-aditya/ideagate/backend/core/model/entity/datasource"
-	entityEndpoint "github.com/bayu-aditya/ideagate/backend/core/model/entity/endpoint"
+	pbEndpoint "github.com/bayu-aditya/ideagate/backend/model/gen-go/core/endpoint"
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 )
@@ -52,12 +52,12 @@ func Test_rest_Start(t *testing.T) {
 					DataSource: &entityDataSource.DataSource{
 						Config: entityDataSource.Config{Host: "https://mockhost.com/api"},
 					},
-					Step: entityEndpoint.Step{
+					Step: &pbEndpoint.Step{
 						Id: mockStepId,
-						Action: entityEndpoint.Action{
-							Rest: &entityEndpoint.ActionRest{
+						Action: &pbEndpoint.Action{
+							Rest: &pbEndpoint.ActionRest{
 								Method: "GET",
-								Path:   entityEndpoint.Variable{Value: "/user/detail"},
+								Path:   &pbEndpoint.Variable{Value: "/user/detail"},
 							},
 						},
 					},
@@ -76,12 +76,12 @@ func Test_rest_Start(t *testing.T) {
 					DataSource: &entityDataSource.DataSource{
 						Config: entityDataSource.Config{Host: "https://mockhost.com/api"},
 					},
-					Step: entityEndpoint.Step{
+					Step: &pbEndpoint.Step{
 						Id: mockStepId,
-						Action: entityEndpoint.Action{
-							Rest: &entityEndpoint.ActionRest{
+						Action: &pbEndpoint.Action{
+							Rest: &pbEndpoint.ActionRest{
 								Method: "unknown",
-								Path:   entityEndpoint.Variable{Value: "/user/detail"},
+								Path:   &pbEndpoint.Variable{Value: "/user/detail"},
 							},
 						},
 					},
@@ -108,15 +108,15 @@ func Test_rest_Start(t *testing.T) {
 					DataSource: &entityDataSource.DataSource{
 						Config: entityDataSource.Config{Host: "https://mockhost.com/api"},
 					},
-					Step: entityEndpoint.Step{
+					Step: &pbEndpoint.Step{
 						Id: mockStepId,
-						Action: entityEndpoint.Action{
-							Rest: &entityEndpoint.ActionRest{
+						Action: &pbEndpoint.Action{
+							Rest: &pbEndpoint.ActionRest{
 								Method: "GET",
-								Path:   entityEndpoint.Variable{Value: "/user/detail?user_id={{.Var.user_id}}"},
+								Path:   &pbEndpoint.Variable{Value: "/user/detail?user_id={{.Var.user_id}}"},
 							},
 						},
-						Returns: []entityEndpoint.Return{
+						Returns: []*pbEndpoint.Return{
 							{NextStepId: mockNextStepId},
 						},
 					},
@@ -156,15 +156,15 @@ func Test_rest_Start(t *testing.T) {
 					DataSource: &entityDataSource.DataSource{
 						Config: entityDataSource.Config{Host: "https://mockhost.com/api"},
 					},
-					Step: entityEndpoint.Step{
+					Step: &pbEndpoint.Step{
 						Id: mockStepId,
-						Action: entityEndpoint.Action{
-							Rest: &entityEndpoint.ActionRest{
+						Action: &pbEndpoint.Action{
+							Rest: &pbEndpoint.ActionRest{
 								Method: "GET",
-								Path:   entityEndpoint.Variable{Value: "/user/detail?user_id={{.Var.user_id}}"},
+								Path:   &pbEndpoint.Variable{Value: "/user/detail?user_id={{.Var.user_id}}"},
 							},
 						},
-						Returns: []entityEndpoint.Return{
+						Returns: []*pbEndpoint.Return{
 							{NextStepId: mockNextStepId},
 						},
 					},

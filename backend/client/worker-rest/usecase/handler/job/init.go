@@ -3,30 +3,30 @@ package job
 import (
 	"fmt"
 
-	"github.com/bayu-aditya/ideagate/backend/core/model/constant"
+	pbEndpoint "github.com/bayu-aditya/ideagate/backend/model/gen-go/core/endpoint"
 )
 
 type IJob interface {
 	Start() (StartOutput, error) // TODO rename to Process
 }
 
-func New(jobType constant.JobType, input StartInput) (IJob, error) {
+func New(jobType pbEndpoint.StepType, input StartInput) (IJob, error) {
 	switch jobType {
-	case constant.JobTypeStart:
+	case pbEndpoint.StepType_STEP_TYPE_START:
 		return &start{Input: input}, nil
 
-	case constant.JobTypeEnd:
+	case pbEndpoint.StepType_STEP_TYPE_END:
 		return &end{input: input}, nil
 
-	case constant.JobTypeSleep:
+	case pbEndpoint.StepType_STEP_TYPE_SLEEP:
 		return &sleep{input: input}, nil
 
-	case constant.JobTypeRest:
+	case pbEndpoint.StepType_STEP_TYPE_REST:
 		return &rest{Input: input}, nil
 
-	case constant.JobTypeMysql:
+	case pbEndpoint.StepType_STEP_TYPE_MYSQL:
 		return &mysql{Input: input}, nil
 	}
 
-	return nil, fmt.Errorf("unknown job type (%s)", jobType)
+	return nil, fmt.Errorf("unknown job type '%s'", jobType.String())
 }

@@ -1,6 +1,9 @@
 package job
 
-import "github.com/bayu-aditya/ideagate/backend/core/utils/errors"
+import (
+	"github.com/bayu-aditya/ideagate/backend/core/model/endpoint"
+	"github.com/bayu-aditya/ideagate/backend/core/utils/errors"
+)
 
 type mysql struct {
 	Input StartInput
@@ -21,7 +24,7 @@ func (j *mysql) Start() (output StartOutput, err error) {
 	}
 
 	if action == nil {
-		err = &ErrActionConfigEmpty{jobType: step.Type, stepId: step.Id}
+		err = &ErrActionConfigEmpty{jobType: step.Type.String(), stepId: step.Id}
 		return
 	}
 
@@ -34,7 +37,8 @@ func (j *mysql) Start() (output StartOutput, err error) {
 
 	for _, queryItem := range action.Queries {
 		// run template for query template
-		query, errQuery := queryItem.Query.GetValueString(step.Id, ctxData)
+		queryVariable := endpoint.Variable{Variable: queryItem.Query}
+		query, errQuery := queryVariable.GetValueString(step.Id, ctxData)
 		if errQuery != nil {
 			err = errQuery
 			return
@@ -43,7 +47,8 @@ func (j *mysql) Start() (output StartOutput, err error) {
 		// run template for parameters
 		var paramsParsed []interface{}
 		for _, param := range queryItem.Parameters {
-			paramParsed, errParsed := param.GetValue(step.Id, ctxData)
+			paramVariable := endpoint.Variable{Variable: param}
+			paramParsed, errParsed := paramVariable.GetValue(step.Id, ctxData)
 			if errParsed != nil {
 				err = errParsed
 				return

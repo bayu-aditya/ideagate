@@ -1,6 +1,5 @@
 import * as jspb from 'google-protobuf'
 
-import * as google_protobuf_any_pb from 'google-protobuf/google/protobuf/any_pb'; // proto import: "google/protobuf/any.proto"
 
 
 export class Endpoint extends jspb.Message {
@@ -46,21 +45,17 @@ export namespace Endpoint {
 }
 
 export class Variable extends jspb.Message {
-  getType(): string;
-  setType(value: string): Variable;
+  getType(): VariableType;
+  setType(value: VariableType): Variable;
 
   getRequired(): boolean;
   setRequired(value: boolean): Variable;
 
-  getValue(): google_protobuf_any_pb.Any | undefined;
-  setValue(value?: google_protobuf_any_pb.Any): Variable;
-  hasValue(): boolean;
-  clearValue(): Variable;
+  getValue(): string;
+  setValue(value: string): Variable;
 
-  getDefault(): google_protobuf_any_pb.Any | undefined;
-  setDefault(value?: google_protobuf_any_pb.Any): Variable;
-  hasDefault(): boolean;
-  clearDefault(): Variable;
+  getDefault(): string;
+  setDefault(value: string): Variable;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Variable.AsObject;
@@ -72,10 +67,10 @@ export class Variable extends jspb.Message {
 
 export namespace Variable {
   export type AsObject = {
-    type: string,
+    type: VariableType,
     required: boolean,
-    value?: google_protobuf_any_pb.Any.AsObject,
-    pb_default?: google_protobuf_any_pb.Any.AsObject,
+    value: string,
+    pb_default: string,
   }
 }
 
@@ -170,8 +165,8 @@ export class Step extends jspb.Message {
   getName(): string;
   setName(value: string): Step;
 
-  getType(): string;
-  setType(value: string): Step;
+  getType(): StepType;
+  setType(value: StepType): Step;
 
   getVariablesMap(): jspb.Map<string, Variable>;
   clearVariablesMap(): Step;
@@ -201,7 +196,7 @@ export namespace Step {
   export type AsObject = {
     id: string,
     name: string,
-    type: string,
+    type: StepType,
     variablesMap: Array<[string, Variable.AsObject]>,
     action?: Action.AsObject,
     outputsMap: Array<[string, Variable.AsObject]>,
@@ -431,3 +426,23 @@ export namespace Edge {
   }
 }
 
+export enum VariableType { 
+  VARIABLE_TYPE_UNSPECIFIED = 0,
+  VARIABLE_TYPE_STRING = 1,
+  VARIABLE_TYPE_INT = 2,
+  VARIABLE_TYPE_FLOAT = 3,
+  VARIABLE_TYPE_BOOL = 4,
+  VARIABLE_TYPE_OBJECT = 5,
+}
+export enum StepType { 
+  STEP_TYPE_UNSPECIFIED = 0,
+  STEP_TYPE_START = 1,
+  STEP_TYPE_END = 2,
+  STEP_TYPE_SLEEP = 3,
+  STEP_TYPE_SCRIPT_JS = 4,
+  STEP_TYPE_CONDITION = 5,
+  STEP_TYPE_REST = 6,
+  STEP_TYPE_MYSQL = 7,
+  STEP_TYPE_POSTGRESQL = 8,
+  STEP_TYPE_REDIS = 9,
+}

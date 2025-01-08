@@ -6,7 +6,7 @@ import (
 	"net/url"
 
 	"github.com/bayu-aditya/ideagate/backend/core/model/constant"
-	entityEndpoint "github.com/bayu-aditya/ideagate/backend/core/model/entity/endpoint"
+	pbEndpoint "github.com/bayu-aditya/ideagate/backend/model/gen-go/core/endpoint"
 	"github.com/gin-gonic/gin"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -24,41 +24,41 @@ var _ = Describe("Manager - Process", func() {
 				URL: &url.URL{},
 			}
 
-			mockEndpoint := entityEndpoint.Endpoint{
+			mockEndpoint := &pbEndpoint.Endpoint{
 				Id: "mock_endpoint_id",
-				Workflow: entityEndpoint.Workflow{
-					Steps: []entityEndpoint.Step{
+				Workflow: &pbEndpoint.Workflow{
+					Steps: []*pbEndpoint.Step{
 						{
 							Id:   constant.StepIdStart,
-							Type: constant.JobTypeStart,
+							Type: pbEndpoint.StepType_STEP_TYPE_START,
 						},
 						{
 							Id:   "sleep_1",
-							Type: constant.JobTypeSleep,
-							Action: entityEndpoint.Action{
-								Sleep: &entityEndpoint.ActionSleep{
+							Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+							Action: &pbEndpoint.Action{
+								Sleep: &pbEndpoint.ActionSleep{
 									TimeoutMs: 1000,
 								},
 							},
 						},
 						{
 							Id:   "sleep_2",
-							Type: constant.JobTypeSleep,
-							Action: entityEndpoint.Action{
-								Sleep: &entityEndpoint.ActionSleep{
+							Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+							Action: &pbEndpoint.Action{
+								Sleep: &pbEndpoint.ActionSleep{
 									TimeoutMs: 500,
 								},
 							},
 						},
 						{
 							Id:   "end",
-							Type: constant.JobTypeEnd,
-							Action: entityEndpoint.Action{
-								End: &entityEndpoint.ActionEnd{},
+							Type: pbEndpoint.StepType_STEP_TYPE_END,
+							Action: &pbEndpoint.Action{
+								End: &pbEndpoint.ActionEnd{},
 							},
 						},
 					},
-					Edges: []entityEndpoint.Edge{
+					Edges: []*pbEndpoint.Edge{
 						{Id: "edge_1", Source: constant.StepIdStart, Dest: "sleep_1"},
 						{Id: "edge_2", Source: "sleep_1", Dest: "sleep_2"},
 						{Id: "edge_3", Source: "sleep_2", Dest: constant.StepIdEnd},
@@ -83,81 +83,81 @@ var _ = Describe("Manager - Process", func() {
 				mockCtxGin       *gin.Context
 				t                = GinkgoT()
 				httpRecorder     = httptest.NewRecorder()
-				mockDataEndpoint = entityEndpoint.Endpoint{
+				mockDataEndpoint = &pbEndpoint.Endpoint{
 					Id: "mock_endpoint_id",
-					Setting: entityEndpoint.Setting{
+					Setting: &pbEndpoint.Setting{
 						NumWorkers: 1,
 						TimeoutMs:  8100,
 					},
-					Workflow: entityEndpoint.Workflow{
-						Steps: []entityEndpoint.Step{
+					Workflow: &pbEndpoint.Workflow{
+						Steps: []*pbEndpoint.Step{
 							{
 								Id:   constant.StepIdStart,
-								Type: constant.JobTypeStart,
+								Type: pbEndpoint.StepType_STEP_TYPE_START,
 							},
 							{
 								Id:   "sleep_1",
-								Type: constant.JobTypeSleep,
-								Action: entityEndpoint.Action{
-									Sleep: &entityEndpoint.ActionSleep{
+								Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+								Action: &pbEndpoint.Action{
+									Sleep: &pbEndpoint.ActionSleep{
 										TimeoutMs: 3000,
 									},
 								},
 							},
 							{
 								Id:   "sleep_2",
-								Type: constant.JobTypeSleep,
-								Action: entityEndpoint.Action{
-									Sleep: &entityEndpoint.ActionSleep{
+								Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+								Action: &pbEndpoint.Action{
+									Sleep: &pbEndpoint.ActionSleep{
 										TimeoutMs: 3000,
 									},
 								},
 							},
 							{
 								Id:   "sleep_3",
-								Type: constant.JobTypeSleep,
-								Action: entityEndpoint.Action{
-									Sleep: &entityEndpoint.ActionSleep{
+								Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+								Action: &pbEndpoint.Action{
+									Sleep: &pbEndpoint.ActionSleep{
 										TimeoutMs: 1000,
 									},
 								},
 							},
 							{
 								Id:   "sleep_4",
-								Type: constant.JobTypeSleep,
-								Action: entityEndpoint.Action{
-									Sleep: &entityEndpoint.ActionSleep{
+								Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+								Action: &pbEndpoint.Action{
+									Sleep: &pbEndpoint.ActionSleep{
 										TimeoutMs: 1000,
 									},
 								},
 							},
 							{
 								Id:   "sleep_5",
-								Type: constant.JobTypeSleep,
-								Action: entityEndpoint.Action{
-									Sleep: &entityEndpoint.ActionSleep{
+								Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+								Action: &pbEndpoint.Action{
+									Sleep: &pbEndpoint.ActionSleep{
 										TimeoutMs: 500,
 									},
 								},
 							},
 							{
 								Id:   "sleep_6",
-								Type: constant.JobTypeSleep,
-								Action: entityEndpoint.Action{
-									Sleep: &entityEndpoint.ActionSleep{
+								Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+								Action: &pbEndpoint.Action{
+									Sleep: &pbEndpoint.ActionSleep{
 										TimeoutMs: 1500,
 									},
 								},
 							},
 							{
 								Id:   "end",
-								Type: constant.JobTypeEnd,
-								Action: entityEndpoint.Action{
-									End: &entityEndpoint.ActionEnd{},
+								Type: pbEndpoint.StepType_STEP_TYPE_END,
+								Action: &pbEndpoint.Action{
+									End: &pbEndpoint.ActionEnd{},
 								},
 							},
 						},
-						Edges: []entityEndpoint.Edge{
+						Edges: []*pbEndpoint.Edge{
 							{Id: "edge_1", Source: constant.StepIdStart, Dest: "sleep_1"},
 							{Id: "edge_2", Source: "sleep_1", Dest: "sleep_2"},
 							{Id: "edge_3", Source: "sleep_2", Dest: "sleep_5"},

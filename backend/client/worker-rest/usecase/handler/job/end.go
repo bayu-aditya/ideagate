@@ -12,7 +12,7 @@ func (e *end) Start() (output StartOutput, err error) {
 	)
 
 	if actionEnd == nil {
-		err = &ErrActionConfigEmpty{jobType: step.Type, stepId: step.Id}
+		err = &ErrActionConfigEmpty{jobType: step.Type.String(), stepId: step.Id}
 		return
 	}
 

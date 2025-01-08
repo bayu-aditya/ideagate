@@ -5,6 +5,7 @@ go 1.23.0
 require (
 	github.com/bayu-aditya/ideagate/backend/core v0.0.0-20250107005000-af6083a59e9d
 	github.com/golang-migrate/migrate/v4 v4.18.1
+	github.com/jackc/pgtype v1.14.0
 	github.com/urfave/cli/v2 v2.27.5
 )
 
@@ -14,6 +15,7 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect

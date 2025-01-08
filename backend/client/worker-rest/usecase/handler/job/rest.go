@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+
+	"github.com/bayu-aditya/ideagate/backend/core/model/endpoint"
 )
 
 type rest struct {
@@ -20,12 +22,13 @@ func (j *rest) Start() (output StartOutput, err error) {
 	)
 
 	if actionRest == nil {
-		err = &ErrActionConfigEmpty{jobType: step.Type, stepId: step.Id}
+		err = &ErrActionConfigEmpty{jobType: step.Type.String(), stepId: step.Id}
 		return
 	}
 
 	//construct request url, path is getting by template
-	path, err := actionRest.Path.GetValueString(step.Id, dataCtx)
+	pathVariable := endpoint.Variable{Variable: actionRest.Path}
+	path, err := pathVariable.GetValueString(step.Id, dataCtx)
 	if err != nil {
 		return
 	}
@@ -41,7 +44,8 @@ func (j *rest) Start() (output StartOutput, err error) {
 	for headerKey, headerVar := range actionRest.Headers {
 		var headerValue string
 
-		headerValue, err = headerVar.GetValueString(step.Id, dataCtx)
+		headerVariable := endpoint.Variable{Variable: headerVar}
+		headerValue, err = headerVariable.GetValueString(step.Id, dataCtx)
 		if err != nil {
 			return
 		}

@@ -11,9 +11,9 @@ import (
 	"github.com/bayu-aditya/ideagate/backend/core/model/constant"
 	entityContext "github.com/bayu-aditya/ideagate/backend/core/model/entity/context"
 	"github.com/bayu-aditya/ideagate/backend/core/model/entity/datasource"
-	entityEndpoint "github.com/bayu-aditya/ideagate/backend/core/model/entity/endpoint"
 	"github.com/bayu-aditya/ideagate/backend/core/utils/errors"
 	"github.com/bayu-aditya/ideagate/backend/core/utils/pubsub"
+	pbEndpoint "github.com/bayu-aditya/ideagate/backend/model/gen-go/core/endpoint"
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,22 +27,22 @@ type manager struct {
 	ctx                   context.Context
 	ctxData               *entityContext.ContextData
 	response              model.HttpResponse
-	endpoint              entityEndpoint.Endpoint
-	steps                 map[string]entityEndpoint.Step // map[stepId]step
-	stepStatus            map[string]StepStatusType      // map[stepId]StepStatus
+	endpoint              *pbEndpoint.Endpoint
+	steps                 map[string]*pbEndpoint.Step // map[stepId]step
+	stepStatus            map[string]StepStatusType   // map[stepId]StepStatus
 	pubSub                pubsub.IPubSub
 	pubSubTopicStepStatus string
 	edgesNext             map[string][]string // map[stepId]nextStepIds
 	edgesPrev             map[string][]string // map[stepId]prevStepIds
 }
 
-func newManager(c *gin.Context, endpoint entityEndpoint.Endpoint) (iManager, error) {
+func newManager(c *gin.Context, endpoint *pbEndpoint.Endpoint) (iManager, error) {
 	mgr := &manager{
 		ctxGin:                c,
 		ctx:                   c.Request.Context(),
 		ctxData:               new(entityContext.ContextData),
 		endpoint:              endpoint,
-		steps:                 make(map[string]entityEndpoint.Step),
+		steps:                 make(map[string]*pbEndpoint.Step),
 		stepStatus:            make(map[string]StepStatusType),
 		pubSub:                pubsub.New(),
 		pubSubTopicStepStatus: "step_status",
@@ -66,7 +66,7 @@ func newManager(c *gin.Context, endpoint entityEndpoint.Endpoint) (iManager, err
 
 func (m *manager) RunHandler() {
 	// construct timeout channel based on endpoint detail setting
-	timeoutMs := m.endpoint.Setting.TimeoutMs
+	timeoutMs := m.endpoint.GetSetting().GetTimeoutMs()
 	if timeoutMs == 0 {
 		timeoutMs = 10000 // default 10 sec
 	}
@@ -106,7 +106,7 @@ func (m *manager) process() handlerResult {
 	}
 
 	var (
-		numWorkers    = m.endpoint.Setting.NumWorkers
+		numWorkers    = m.endpoint.GetSetting().GetNumWorkers()
 		jobSeedsChan  = make(chan string, 1000)      // value is stepId
 		jobFinishChan = make(chan jobFinishChanType) // value is based on latest step
 	)
@@ -128,7 +128,7 @@ func (m *manager) process() handlerResult {
 	}
 
 	// Spawn workers
-	for i := 0; i < numWorkers; i++ {
+	for i := 0; i < int(numWorkers); i++ {
 		go func() {
 			for stepId := range jobSeedsChan {
 				workerName := fmt.Sprintf("worker-%d", i)
@@ -139,7 +139,7 @@ func (m *manager) process() handlerResult {
 					return
 				}
 
-				if m.steps[stepId].Type == constant.JobTypeEnd {
+				if m.steps[stepId].Type == pbEndpoint.StepType_STEP_TYPE_END {
 					jobFinishChan <- jobFinishChanType{stepId: stepId, data: data}
 					return
 				}

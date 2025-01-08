@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package endpoint;
 
-import "google/protobuf/any.proto";
-
 message Endpoint {
     string id = 1;
     string project_id = 2;
@@ -14,10 +12,19 @@ message Endpoint {
 }
 
 message Variable {
-    string type = 1;
+    VariableType type = 1;
     bool required = 2;
-    google.protobuf.Any value = 3;
-    google.protobuf.Any default = 4;
+    string value = 3;
+    string default = 4;
+}
+
+enum VariableType {
+    VARIABLE_TYPE_UNSPECIFIED = 0;
+    VARIABLE_TYPE_STRING = 1;
+    VARIABLE_TYPE_INT = 2;
+    VARIABLE_TYPE_FLOAT = 3;
+    VARIABLE_TYPE_BOOL = 4;
+    VARIABLE_TYPE_OBJECT = 5;
 }
 
 message Setting {
@@ -41,11 +48,24 @@ message Workflow {
 message Step {
     string id = 1;
     string name = 2;
-    string type = 3;
+    StepType type = 3;
     map<string, Variable> variables = 4;
     Action action = 5;
     map<string, Variable> outputs = 6;
     repeated Return returns = 7;
+}
+
+enum StepType {
+    STEP_TYPE_UNSPECIFIED = 0;
+    STEP_TYPE_START = 1;
+    STEP_TYPE_END = 2;
+    STEP_TYPE_SLEEP = 3;
+    STEP_TYPE_SCRIPT_JS = 4;
+    STEP_TYPE_CONDITION = 5;
+    STEP_TYPE_REST = 6;
+    STEP_TYPE_MYSQL = 7;
+    STEP_TYPE_POSTGRESQL = 8;
+    STEP_TYPE_REDIS = 9;
 }
 
 message Action {

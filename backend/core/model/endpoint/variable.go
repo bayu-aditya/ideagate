@@ -4,77 +4,39 @@ import (
 	"bytes"
 	"reflect"
 	"strings"
-
 	"text/template"
 
 	entityContext "github.com/bayu-aditya/ideagate/backend/core/model/entity/context"
-	utilPb "github.com/bayu-aditya/ideagate/backend/core/utils/protobuf"
 	pbEndpoint "github.com/bayu-aditya/ideagate/backend/model/gen-go/core/endpoint"
 	"github.com/spf13/cast"
 )
 
 type Variable struct {
-	Type     string      `json:",omitempty"` // related with VariableType
-	Required bool        `json:",omitempty"`
-	Value    interface{} `json:",omitempty"`
-	Default  interface{} `json:",omitempty"`
-}
-
-type VariableType string
-
-var (
-	VariableTypeString VariableType = "string"
-	VariableTypeInt    VariableType = "int"
-	VariableTypeFloat  VariableType = "float"
-	VariableTypeBool   VariableType = "bool"
-	VariableTypeObject VariableType = "object"
-)
-
-func (v *Variable) FromPB(in *pbEndpoint.Variable) {
-	v.Type = in.Type
-	v.Required = in.Required
-	v.Value, _ = utilPb.ConvertAnyToInterface(in.Value)
-	v.Default, _ = utilPb.ConvertAnyToInterface(in.Default)
-}
-
-func (v *Variable) ToPB() *pbEndpoint.Variable {
-	valueAny, _ := utilPb.ConvertInterfaceToAny(v.Value)
-	defaultAny, _ := utilPb.ConvertInterfaceToAny(v.Default)
-
-	return &pbEndpoint.Variable{
-		Type:     v.Type,
-		Required: v.Required,
-		Value:    valueAny,
-		Default:  defaultAny,
-	}
+	*pbEndpoint.Variable
 }
 
 func (v *Variable) GetValue(stepId string, ctxData *entityContext.ContextData) (interface{}, error) {
-	value := v.Value
-	varType := VariableType(v.Type)
+	var result any = v.Value
 
 	// get value from context
-	if valStr, ok := v.Value.(string); ok {
-		value = v.getValueFromTemplate(stepId, ctxData, valStr)
-	}
+	result = v.getValueFromTemplate(stepId, ctxData, v.Value)
 
 	// parse value by type
-	value, err := v.parseValueByType(value, varType)
+	result, err := v.parseValueByType(result, v.Type)
 	if err != nil {
 		return nil, err
 	}
 
 	// check is value empty
-	if v.isEmptyValue(value) && v.Required {
+	if v.isEmptyValue(result) && v.Required {
 		// set into default and parse the default value
-		value = v.Default
-		value, err = v.parseValueByType(value, varType)
+		result, err = v.parseValueByType(v.Default, v.Type)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return value, nil
+	return result, nil
 }
 
 func (v *Variable) GetValueString(stepId string, ctxData *entityContext.ContextData) (string, error) {
@@ -122,25 +84,25 @@ func (v *Variable) getValueFromTemplate(stepId string, ctxData *entityContext.Co
 	return result
 }
 
-func (v *Variable) parseValueByType(value interface{}, varType VariableType) (interface{}, error) {
+func (v *Variable) parseValueByType(value interface{}, varType pbEndpoint.VariableType) (interface{}, error) {
 	if value == nil {
 		return nil, nil
 	}
 
 	switch varType {
-	case VariableTypeString:
+	case pbEndpoint.VariableType_VARIABLE_TYPE_STRING:
 		return cast.ToStringE(value)
 
-	case VariableTypeInt:
+	case pbEndpoint.VariableType_VARIABLE_TYPE_INT:
 		return cast.ToInt64E(value)
 
-	case VariableTypeFloat:
+	case pbEndpoint.VariableType_VARIABLE_TYPE_FLOAT:
 		return cast.ToFloat64E(value)
 
-	case VariableTypeBool:
+	case pbEndpoint.VariableType_VARIABLE_TYPE_BOOL:
 		return cast.ToBoolE(value)
 
-	case VariableTypeObject:
+	case pbEndpoint.VariableType_VARIABLE_TYPE_OBJECT:
 		return value, nil
 	}
 

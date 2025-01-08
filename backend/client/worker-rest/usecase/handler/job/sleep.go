@@ -11,7 +11,7 @@ func (s *sleep) Start() (output StartOutput, err error) {
 	action := step.Action.Sleep
 
 	if action == nil {
-		err = &ErrActionConfigEmpty{jobType: step.Type, stepId: step.Id}
+		err = &ErrActionConfigEmpty{jobType: step.Type.String(), stepId: step.Id}
 		return
 	}
 

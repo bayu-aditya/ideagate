@@ -2,12 +2,10 @@ package job
 
 import (
 	"fmt"
-
-	"github.com/bayu-aditya/ideagate/backend/core/model/constant"
 )
 
 type ErrActionConfigEmpty struct {
-	jobType constant.JobType
+	jobType string
 	stepId  string
 }
 
