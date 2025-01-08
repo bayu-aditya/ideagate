@@ -1,5 +1,7 @@
 github.com/bayu-aditya/ideagate/backend/core v0.0.0-20241227065414-1ceeb27ac183 h1:ppAxyCZJtK8c2ov2iV5LMoFNeWpewg3REX9phoVQopc=
 github.com/bayu-aditya/ideagate/backend/core v0.0.0-20241227065414-1ceeb27ac183/go.mod h1:Cciw75FpfICcD5z/WIsD13usBBcawqa8cY2dCY8reBE=
+github.com/bayu-aditya/ideagate/backend/core v0.0.0-20250108084853-95d1bc89102d h1:NVvUfGCLaQlhLaFm0+ql42xi+QjOYEn/cp+JHNX+Bto=
+github.com/bayu-aditya/ideagate/backend/core v0.0.0-20250108084853-95d1bc89102d/go.mod h1:mt7YUkqE7ionb68vl3/Qj8WUvp8raOGWZhGOwoOACrw=
 github.com/bsm/ginkgo/v2 v2.12.0 h1:Ny8MWAHyOepLGlLKYmXG4IEkioBysk6GpaRTLC8zwWs=
 github.com/bsm/ginkgo/v2 v2.12.0/go.mod h1:SwYbGRRDovPVboqFv0tPTcG1sN61LM1Z4ARdbAV9g4c=
 github.com/bsm/gomega v1.27.10 h1:yeMWxP2pV2fG3FgAODIY8EiRE3dy0aeFYt4l7wh6yKA=
