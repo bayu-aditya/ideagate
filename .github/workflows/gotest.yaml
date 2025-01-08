@@ -150,4 +150,4 @@ jobs:
 
       - name: Build Binary
         working-directory: backend/server/proxy
-        run: go build ./app/*
+        run: go build main.go
