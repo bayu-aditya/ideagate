@@ -82,7 +82,7 @@ var _ = Describe("Variable", func() {
 		},
 	}
 
-	runTest := func(variable Variable, wantResult any, wantErr bool) {
+	runTest := func(variable *Variable, wantResult any, wantErr bool) {
 		got, err := variable.GetValue(mockStepId, mockCtxData)
 
 		if wantResult == nil {
@@ -165,26 +165,26 @@ var _ = Describe("Variable", func() {
 		})
 		Context("Json", func() {
 			It("{{.Req.Json.<Key>}} - exist", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value: "{{.Req.Json.json_1}}",
 					Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 				}, "value_json_1", false)
 			})
 			It("{{.Req.Json.<Key>}} - exist nested", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value: "{{.Req.Json.json_2.json_2_a}}",
 					Type:  pbEndpoint.VariableType_VARIABLE_TYPE_INT,
 				}, int64(123), false)
 			})
 			It("{{.Req.Json.<Key>}} - not exist", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value:   "{{.Req.Json.unknown.unknown}}",
 					Type:    pbEndpoint.VariableType_VARIABLE_TYPE_INT,
 					Default: "456",
 				}, nil, false)
 			})
 			It("{{.Req.Json.<Key>}} - using default", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value:    "{{.Req.Json.unknown.unknown}}",
 					Type:     pbEndpoint.VariableType_VARIABLE_TYPE_INT,
 					Required: true,
@@ -196,26 +196,26 @@ var _ = Describe("Variable", func() {
 	Describe("From Another Step", func() {
 		Context("Variable", func() {
 			It("{{.Step.<StepId>.Var.<Key>}} - invalid step id", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value: "{{.Step.unknown.Var.var_1}}",
 					Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 				}, nil, false)
 			})
 			It("{{.Step.<StepId>.Var.<Key>}} - exist", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value: "{{.Step.mockAnotherStep.Var.var_4}}",
 					Type:  pbEndpoint.VariableType_VARIABLE_TYPE_FLOAT,
 				}, 123.45, false)
 			})
 			It("{{.Step.<StepId>.Var.<Key>}} - not exist", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value:   "{{.Step.mockAnotherStep.Var.unknown}}",
 					Type:    pbEndpoint.VariableType_VARIABLE_TYPE_FLOAT,
 					Default: "789.123",
 				}, nil, false)
 			})
 			It("{{.Step.<StepId>.Var.<Key>}} - using default", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value:    "{{.Step.mockAnotherStep.Var.unknown}}",
 					Type:     pbEndpoint.VariableType_VARIABLE_TYPE_FLOAT,
 					Required: true,
@@ -226,25 +226,25 @@ var _ = Describe("Variable", func() {
 		Context("Data", func() {
 			Context("Body", func() {
 				It("{{.Step.<StepId>.Data.Body.<Key>}} - invalid step id", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{.Step.unknown.Data.Body.var_1}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 					}, nil, false)
 				})
 				It("{{.Step.<StepId>.Data.Body.<Key>}} - exist", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{.Step.mockAnotherStep.Data.Body.body_2}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_BOOL,
 					}, true, false)
 				})
 				It("{{.Step.<StepId>.Data.Body.<Key>}} - not exist", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{.Step.mockAnotherStep.Data.Body.unknown}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_BOOL,
 					}, nil, false)
 				})
 				It("{{.Step.<StepId>.Data.Body.<Key>}} - using default", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value:    "{{.Step.mockAnotherStep.Data.Body.unknown}}",
 						Type:     pbEndpoint.VariableType_VARIABLE_TYPE_BOOL,
 						Required: true,
@@ -254,37 +254,37 @@ var _ = Describe("Variable", func() {
 			})
 			Context("Query", func() {
 				It("{{.Step.<StepId>.Data.Query.<QueryId>}} - invalid step id", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{.Step.unknown.Data.Query.query_1}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 					}, nil, false)
 				})
 				It("{{.Step.<StepId>.Data.Query.<QueryId>}} - invalid query id", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{(index .Step.mockAnotherStep.Data.Query.unknown 0).col_a}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 					}, nil, false)
 				})
 				It("{{.Step.<StepId>.Data.Query.<QueryId>}} - not exist, index > length", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{(index .Step.mockAnotherStep.Data.Query.query_1 10).col_a}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 					}, nil, false)
 				})
 				It("{{.Step.<StepId>.Data.Query.<QueryId>}} - invalid property", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{(index .Step.mockAnotherStep.Data.Query.query_1 0).unknown}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 					}, nil, false)
 				})
 				It("{{.Step.<StepId>.Data.Query.<QueryId>}} - exist index 0", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{(index .Step.mockAnotherStep.Data.Query.query_1 0).col_a}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 					}, "val_a_1", false)
 				})
 				It("{{.Step.<StepId>.Data.Query.<QueryId>}} - using default", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value:    "{{(index .Step.mockAnotherStep.Data.Query.unknown 0).col_a}}",
 						Type:     pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 						Required: true,
@@ -294,25 +294,25 @@ var _ = Describe("Variable", func() {
 			})
 			Context("StatusCode", func() {
 				It("{{.Step.<StepId>.Data.StatusCode}} - invalid step id", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{.Step.unknown.Data.StatusCode}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_INT,
 					}, nil, false)
 				})
 				It("{{.Step.<StepId>.Data.StatusCode}} - exist", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{.Step.mockAnotherStep.Data.StatusCode}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_INT,
 					}, int64(204), false)
 				})
 				It("{{.Step.<StepId>.Data.StatusCode}} - empty", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{.Step.mockAnotherStep2.Data.StatusCode}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_INT,
 					}, int64(0), false)
 				})
 				It("{{.Step.<StepId>.Data.StatusCode}} - using default", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value:    "{{.Step.mockAnotherStep2.Data.StatusCode}}",
 						Type:     pbEndpoint.VariableType_VARIABLE_TYPE_INT,
 						Required: true,
@@ -323,25 +323,25 @@ var _ = Describe("Variable", func() {
 		})
 		Context("Output", func() {
 			It("{{.Step.<StepId>.Out.<Key>}} - invalid step id", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value: "{{.Step.unknown.Out.out_1}}",
 					Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 				}, nil, false)
 			})
 			It("{{.Step.<StepId>.Out.<Key>}} - exist", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value: "{{.Step.mockAnotherStep.Out.out_1}}",
 					Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 				}, "value_out_1", false)
 			})
 			It("{{.Step.<StepId>.Out.<Key>}} - not exist", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value: "{{.Step.mockAnotherStep.Out.unknown}}",
 					Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 				}, nil, false)
 			})
 			It("{{.Step.<StepId>.Out.<Key>}} - using default", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value:    "{{.Step.mockAnotherStep.Out.unknown}}",
 					Type:     pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 					Required: true,
@@ -353,19 +353,19 @@ var _ = Describe("Variable", func() {
 	Describe("From Current Step", func() {
 		Context("Variable", func() {
 			It("{{.Var.<Key>}} - exist", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value: "{{.Var.var_1}}",
 					Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 				}, "value_var_1", false)
 			})
 			It("{{.Var.<Key>}} - not exist", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value: "{{.Var.unknown}}",
 					Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 				}, nil, false)
 			})
 			It("{{.Var.<Key>}} - using default", func() {
-				runTest(Variable{
+				runTest(&Variable{
 					Value:    "{{.Var.unknown}}",
 					Type:     pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 					Required: true,
@@ -376,19 +376,19 @@ var _ = Describe("Variable", func() {
 		Context("Data", func() {
 			Context("Body", func() {
 				It("{{.Data.Body.<Key>}} - exist", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{.Data.Body.current_body_1}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 					}, "value_body_1", false)
 				})
 				It("{{.Data.Body.<Key>}} - not exist", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{.Data.Body.unknown}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 					}, nil, false)
 				})
 				It("{{.Data.Body.<Key>}} - using default", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value:    "{{.Data.Body.unknown}}",
 						Type:     pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 						Required: true,
@@ -398,19 +398,19 @@ var _ = Describe("Variable", func() {
 			})
 			Context("Query", func() {
 				It("{{.Data.Query.<QueryId>}} - exist", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{.Data.Query.current_query_1.col_a}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 					}, "val_a_1", false)
 				})
 				It("{{.Data.Query.<QueryId>}} - not exist", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{.Data.Query.unknown.unknown}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 					}, nil, false)
 				})
 				It("{{.Data.Query.<QueryId>}} - using default", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value:    "{{.Data.Query.unknown.unknown}}",
 						Type:     pbEndpoint.VariableType_VARIABLE_TYPE_STRING,
 						Required: true,
@@ -420,7 +420,7 @@ var _ = Describe("Variable", func() {
 			})
 			Context("StatusCode", func() {
 				It("{{.Data.StatusCode}} - exist", func() {
-					runTest(Variable{
+					runTest(&Variable{
 						Value: "{{.Data.StatusCode}}",
 						Type:  pbEndpoint.VariableType_VARIABLE_TYPE_INT,
 					}, int64(200), false)
@@ -435,10 +435,9 @@ func TestVariable_isEmptyValue(t *testing.T) {
 		value interface{}
 	}
 	tests := []struct {
-		name   string
-		fields Variable
-		args   args
-		want   bool
+		name string
+		args args
+		want bool
 	}{
 		{
 			name: "nil",
@@ -457,12 +456,7 @@ func TestVariable_isEmptyValue(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			v := &Variable{
-				Type:     tt.fields.Type,
-				Required: tt.fields.Required,
-				Value:    tt.fields.Value,
-				Default:  tt.fields.Default,
-			}
+			v := &Variable{}
 			if got := v.isEmptyValue(tt.args.value); got != tt.want {
 				t.Errorf("isEmptyValue() = %v, want %v", got, tt.want)
 			}

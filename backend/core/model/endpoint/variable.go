@@ -11,9 +11,7 @@ import (
 	"github.com/spf13/cast"
 )
 
-type Variable struct {
-	*pbEndpoint.Variable
-}
+type Variable pbEndpoint.Variable
 
 func (v *Variable) GetValue(stepId string, ctxData *entityContext.ContextData) (interface{}, error) {
 	var result any = v.Value

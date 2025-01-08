@@ -3,25 +3,24 @@ package protobuf
 import (
 	"encoding/json"
 
-	"github.com/golang/protobuf/ptypes/any"
-	"github.com/golang/protobuf/ptypes/wrappers"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
-func ConvertInterfaceToAny(v interface{}) (*any.Any, error) {
-	anyValue := &any.Any{}
+func ConvertInterfaceToAny(v interface{}) (*anypb.Any, error) {
+	anyValue := &anypb.Any{}
 	bytes, _ := json.Marshal(v)
-	bytesValue := &wrappers.BytesValue{
+	bytesValue := &wrapperspb.BytesValue{
 		Value: bytes,
 	}
 	err := anypb.MarshalFrom(anyValue, bytesValue, proto.MarshalOptions{})
 	return anyValue, err
 }
 
-func ConvertAnyToInterface(anyValue *any.Any) (interface{}, error) {
+func ConvertAnyToInterface(anyValue *anypb.Any) (interface{}, error) {
 	var value interface{}
-	bytesValue := &wrappers.BytesValue{}
+	bytesValue := &wrapperspb.BytesValue{}
 	err := anypb.UnmarshalTo(anyValue, bytesValue, proto.UnmarshalOptions{})
 	if err != nil {
 		return value, err
