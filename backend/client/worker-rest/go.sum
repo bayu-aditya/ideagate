@@ -1,7 +1,6 @@
-github.com/bayu-aditya/ideagate/backend/core v0.0.0-20241227065414-1ceeb27ac183 h1:ppAxyCZJtK8c2ov2iV5LMoFNeWpewg3REX9phoVQopc=
-github.com/bayu-aditya/ideagate/backend/core v0.0.0-20241227065414-1ceeb27ac183/go.mod h1:Cciw75FpfICcD5z/WIsD13usBBcawqa8cY2dCY8reBE=
-github.com/bayu-aditya/ideagate/backend/core v0.0.0-20250108074321-3e3e2b49cf48 h1:E8CyzMtJJkI5jgmYbRgeWRQBuAb5bBj5rDbURLNx1Xk=
-github.com/bayu-aditya/ideagate/backend/core v0.0.0-20250108074321-3e3e2b49cf48/go.mod h1:mt7YUkqE7ionb68vl3/Qj8WUvp8raOGWZhGOwoOACrw=
+github.com/bayu-aditya/ideagate/backend/core v0.0.0-20250108094104-23d45f317aa0 h1:3hIToXJa8yPoU3zS2eJGouFMp3Wt8cGljMDUyEGf/Ic=
+github.com/bayu-aditya/ideagate/backend/core v0.0.0-20250108094104-23d45f317aa0/go.mod h1:mt7YUkqE7ionb68vl3/Qj8WUvp8raOGWZhGOwoOACrw=
+github.com/bayu-aditya/ideagate/backend/model/gen-go v0.0.0-20250108071210-e53796da7921 h1:2z9zTsjfdRGGjF3qeBA/HhELetyQUYDE8SYIY1GoXbI=
 github.com/bytedance/sonic v1.12.3 h1:W2MGa7RCU1QTeYRTPE3+88mVC0yXmsRQRChiyVocVjU=
 github.com/bytedance/sonic v1.12.3/go.mod h1:B8Gt/XvtZ3Fqj+iSKMypzymZxw/FVwgIGKzMzT9r/rk=
 github.com/bytedance/sonic/loader v0.1.1/go.mod h1:ncP89zfokxS5LZrJxl5z0UJcsk4M4yY2JpfqGeCtNLU=
@@ -61,11 +60,8 @@ github.com/klauspost/cpuid/v2 v2.0.9/go.mod h1:FInQzS24/EEf25PyTYn52gqo7WaD8xa02
 github.com/klauspost/cpuid/v2 v2.2.8 h1:+StwCXwm9PdpiEkPyzBXIy+M9KUb4ODm0Zarf1kS5BM=
 github.com/klauspost/cpuid/v2 v2.2.8/go.mod h1:Lcz8mBdAVJIBVzewtcLocK12l3Y+JytZYpaMropDUws=
 github.com/knz/go-libedit v1.10.1/go.mod h1:MZTVkCWyz0oBc7JOWP3wNAzd002ZbM/5hgShxwh4x8M=
-github.com/kr/pretty v0.2.1/go.mod h1:ipq/a2n7PKx3OHsz4KJII5eveXtPO4qwEXGdVfWzfnI=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
-github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
-github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
 github.com/kr/text v0.2.0/go.mod h1:eLer722TekiGuMkidMxC/pM04lWEeraHUUmBw8l2grE=
 github.com/leodido/go-urn v1.4.0 h1:WT9HwE9SGECu3lg4d/dIA+jxlljEa1/ffXKmRjqdmIQ=
