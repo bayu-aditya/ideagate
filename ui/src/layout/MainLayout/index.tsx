@@ -53,7 +53,7 @@ const MainLayout = () => {
   const theme = useTheme()
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'))
 
-  const [leftDrawerOpened, setLeftDrawerOpened] = useState(false)
+  const [leftDrawerOpened, setLeftDrawerOpened] = useState(true)
 
   const handleLeftDrawerToggle = () => setLeftDrawerOpened((prev) => !prev)
 

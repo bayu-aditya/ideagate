@@ -1,4 +1,4 @@
-import { IconDashboard, IconKey, IconProps } from '@tabler/icons-react'
+import { IconApps, IconDashboard, IconKey, IconProps } from '@tabler/icons-react'
 import { FC, ReactElement } from 'react'
 
 export type Menu = {
@@ -31,6 +31,13 @@ export const menu: Menu[] = [
         type: 'item',
         url: '/',
         icon: IconDashboard,
+      },
+      {
+        id: 'application',
+        title: 'Aplikasi',
+        type: 'item',
+        url: '/application',
+        icon: IconApps,
       },
     ],
   },
