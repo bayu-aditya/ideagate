@@ -1,14 +1,18 @@
-import '@xyflow/react/dist/style.css'
-
+import { Grid2 } from '@mui/material'
 import { FC } from 'react'
 
-import { Workflow } from './components'
+import { StepDetail, Workflow } from './components'
 
 const ApplicationPage: FC = () => {
   return (
-    <div>
-      <Workflow />
-    </div>
+    <Grid2 container spacing={2}>
+      <Grid2 size="grow">
+        <Workflow />
+      </Grid2>
+      <Grid2 size={3}>
+        <StepDetail />
+      </Grid2>
+    </Grid2>
   )
 }
 

@@ -1,9 +1,10 @@
+import '@xyflow/react/dist/style.css'
+
 import {
   addEdge,
   Background,
   BackgroundVariant,
   Connection,
-  Controls,
   MiniMap,
   Node,
   OnConnectEnd,
@@ -16,6 +17,7 @@ import {
 import { FC, useCallback } from 'react'
 
 import { mockEdges, mockNodes } from '../../models/mock'
+import Control from './Control'
 import { nodeTypes } from './nodes'
 
 const Workflow: FC = () => {
@@ -82,8 +84,9 @@ const ReactFlowBody: FC = () => {
       nodeTypes={nodeTypes}
       fitView
       fitViewOptions={{ padding: 0.5 }}
+      panOnScroll
     >
-      <Controls />
+      <Control />
       <MiniMap />
       <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
     </ReactFlow>
