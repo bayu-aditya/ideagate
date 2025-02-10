@@ -8,23 +8,25 @@ importers:
 
   .:
     dependencies:
-      google-protobuf:
-        specifier: ^3.21.4
-        version: 3.21.4
-      grpc-web:
-        specifier: ^1.5.0
-        version: 1.5.0
+      '@protobuf-ts/runtime':
+        specifier: ^2.9.4
+        version: 2.9.4
+      '@protobuf-ts/runtime-rpc':
+        specifier: ^2.9.4
+        version: 2.9.4
 
 packages:
 
-  google-protobuf@3.21.4:
-    resolution: {integrity: sha512-MnG7N936zcKTco4Jd2PX2U96Kf9PxygAPKBug+74LHzmHXmceN16MmRcdgZv+DGef/S9YvQAfRsNCn4cjf9yyQ==}
+  '@protobuf-ts/runtime-rpc@2.9.4':
+    resolution: {integrity: sha512-y9L9JgnZxXFqH5vD4d7j9duWvIJ7AShyBRoNKJGhu9Q27qIbchfzli66H9RvrQNIFk5ER7z1Twe059WZGqERcA==}
 
-  grpc-web@1.5.0:
-    resolution: {integrity: sha512-y1tS3BBIoiVSzKTDF3Hm7E8hV2n7YY7pO0Uo7depfWJqKzWE+SKr0jvHNIJsJJYILQlpYShpi/DRJJMbosgDMQ==}
+  '@protobuf-ts/runtime@2.9.4':
+    resolution: {integrity: sha512-vHRFWtJJB/SiogWDF0ypoKfRIZ41Kq+G9cEFj6Qm1eQaAhJ1LDFvgZ7Ja4tb3iLOQhz0PaoPnnOijF1qmEqTxg==}
 
 snapshots:
 
-  google-protobuf@3.21.4: {}
+  '@protobuf-ts/runtime-rpc@2.9.4':
+    dependencies:
+      '@protobuf-ts/runtime': 2.9.4
 
-  grpc-web@1.5.0: {}
+  '@protobuf-ts/runtime@2.9.4': {}
