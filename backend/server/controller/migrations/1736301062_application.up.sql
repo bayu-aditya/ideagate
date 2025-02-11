@@ -8,14 +8,15 @@ create table if not exists application (
     primary key (id, project_id)
 );
 
-create table if not exists endpoint (
+create type entrypoint_type as enum('rest','cron');
+
+create table if not exists entrypoint (
     id varchar(20) not null,
     application_id varchar(20) not null,
     project_id varchar(20) not null,
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now(),
-    method varchar(10) not null,
-    path varchar(255) not null,
+    type entrypoint_type not null,
     name varchar(255),
     description text,
     settings jsonb not null default '{}',
@@ -25,12 +26,12 @@ create table if not exists endpoint (
 
 create table if not exists workflow (
     version int not null,
-    endpoint_id varchar(20) not null,
+    entrypoint_id varchar(20) not null,
     application_id varchar(20) not null,
     project_id varchar(20) not null,
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now(),
     data jsonb not null default '{}',
-    foreign key (endpoint_id, application_id, project_id) references endpoint(id, application_id, project_id),
-    primary key (version, endpoint_id, application_id, project_id)
+    foreign key (entrypoint_id, application_id, project_id) references entrypoint(id, application_id, project_id),
+    primary key (version, entrypoint_id, application_id, project_id)
 );
