@@ -8,6 +8,7 @@ create table if not exists application (
     primary key (id, project_id)
 );
 
+drop type if exists entrypoint_type;
 create type entrypoint_type as enum('rest','cron');
 
 create table if not exists entrypoint (

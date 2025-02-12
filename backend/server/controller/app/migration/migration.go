@@ -80,7 +80,7 @@ func initMigration() (*migrate.Migrate, error) {
 	}
 
 	dbType := "postgres"
-	db, err := sql.Open(dbType, fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s",
+	db, err := sql.Open(dbType, fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		cfg.Postgres.Host, cfg.Postgres.Port, cfg.Postgres.User, cfg.Postgres.Password, cfg.Postgres.DB))
 	if err != nil {
 		log.Panic(err.Error())
