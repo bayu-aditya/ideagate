@@ -32,9 +32,31 @@ export interface GetListApplicationResponse {
     applications: Application[];
 }
 /**
- * @generated from protobuf message dashboard.UpsertApplicationRequest
+ * @generated from protobuf message dashboard.CreateApplicationRequest
  */
-export interface UpsertApplicationRequest {
+export interface CreateApplicationRequest {
+    /**
+     * @generated from protobuf field: string project_id = 1;
+     */
+    projectId: string;
+    /**
+     * @generated from protobuf field: string application_id = 2;
+     */
+    applicationId: string;
+    /**
+     * @generated from protobuf field: string name = 3;
+     */
+    name: string;
+}
+/**
+ * @generated from protobuf message dashboard.CreateApplicationResponse
+ */
+export interface CreateApplicationResponse {
+}
+/**
+ * @generated from protobuf message dashboard.UpdateApplicationRequest
+ */
+export interface UpdateApplicationRequest {
     /**
      * @generated from protobuf field: string project_id = 1;
      */
@@ -49,13 +71,9 @@ export interface UpsertApplicationRequest {
     values?: Struct;
 }
 /**
- * @generated from protobuf message dashboard.UpsertApplicationResponse
+ * @generated from protobuf message dashboard.UpdateApplicationResponse
  */
-export interface UpsertApplicationResponse {
-    /**
-     * @generated from protobuf field: application.Application application = 1;
-     */
-    application?: Application;
+export interface UpdateApplicationResponse {
 }
 /**
  * @generated from protobuf message dashboard.DeleteApplicationRequest
@@ -170,23 +188,111 @@ class GetListApplicationResponse$Type extends MessageType<GetListApplicationResp
  */
 export const GetListApplicationResponse = new GetListApplicationResponse$Type();
 // @generated message type with reflection information, may provide speed optimized methods
-class UpsertApplicationRequest$Type extends MessageType<UpsertApplicationRequest> {
+class CreateApplicationRequest$Type extends MessageType<CreateApplicationRequest> {
     constructor() {
-        super("dashboard.UpsertApplicationRequest", [
+        super("dashboard.CreateApplicationRequest", [
+            { no: 1, name: "project_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "application_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<CreateApplicationRequest>): CreateApplicationRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.projectId = "";
+        message.applicationId = "";
+        message.name = "";
+        if (value !== undefined)
+            reflectionMergePartial<CreateApplicationRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: CreateApplicationRequest): CreateApplicationRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string project_id */ 1:
+                    message.projectId = reader.string();
+                    break;
+                case /* string application_id */ 2:
+                    message.applicationId = reader.string();
+                    break;
+                case /* string name */ 3:
+                    message.name = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: CreateApplicationRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string project_id = 1; */
+        if (message.projectId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.projectId);
+        /* string application_id = 2; */
+        if (message.applicationId !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.applicationId);
+        /* string name = 3; */
+        if (message.name !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.name);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message dashboard.CreateApplicationRequest
+ */
+export const CreateApplicationRequest = new CreateApplicationRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class CreateApplicationResponse$Type extends MessageType<CreateApplicationResponse> {
+    constructor() {
+        super("dashboard.CreateApplicationResponse", []);
+    }
+    create(value?: PartialMessage<CreateApplicationResponse>): CreateApplicationResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        if (value !== undefined)
+            reflectionMergePartial<CreateApplicationResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: CreateApplicationResponse): CreateApplicationResponse {
+        return target ?? this.create();
+    }
+    internalBinaryWrite(message: CreateApplicationResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message dashboard.CreateApplicationResponse
+ */
+export const CreateApplicationResponse = new CreateApplicationResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class UpdateApplicationRequest$Type extends MessageType<UpdateApplicationRequest> {
+    constructor() {
+        super("dashboard.UpdateApplicationRequest", [
             { no: 1, name: "project_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "application_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "values", kind: "message", T: () => Struct }
         ]);
     }
-    create(value?: PartialMessage<UpsertApplicationRequest>): UpsertApplicationRequest {
+    create(value?: PartialMessage<UpdateApplicationRequest>): UpdateApplicationRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.projectId = "";
         message.applicationId = "";
         if (value !== undefined)
-            reflectionMergePartial<UpsertApplicationRequest>(this, message, value);
+            reflectionMergePartial<UpdateApplicationRequest>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: UpsertApplicationRequest): UpsertApplicationRequest {
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: UpdateApplicationRequest): UpdateApplicationRequest {
         let message = target ?? this.create(), end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
@@ -211,7 +317,7 @@ class UpsertApplicationRequest$Type extends MessageType<UpsertApplicationRequest
         }
         return message;
     }
-    internalBinaryWrite(message: UpsertApplicationRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+    internalBinaryWrite(message: UpdateApplicationRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
         /* string project_id = 1; */
         if (message.projectId !== "")
             writer.tag(1, WireType.LengthDelimited).string(message.projectId);
@@ -228,45 +334,24 @@ class UpsertApplicationRequest$Type extends MessageType<UpsertApplicationRequest
     }
 }
 /**
- * @generated MessageType for protobuf message dashboard.UpsertApplicationRequest
+ * @generated MessageType for protobuf message dashboard.UpdateApplicationRequest
  */
-export const UpsertApplicationRequest = new UpsertApplicationRequest$Type();
+export const UpdateApplicationRequest = new UpdateApplicationRequest$Type();
 // @generated message type with reflection information, may provide speed optimized methods
-class UpsertApplicationResponse$Type extends MessageType<UpsertApplicationResponse> {
+class UpdateApplicationResponse$Type extends MessageType<UpdateApplicationResponse> {
     constructor() {
-        super("dashboard.UpsertApplicationResponse", [
-            { no: 1, name: "application", kind: "message", T: () => Application }
-        ]);
+        super("dashboard.UpdateApplicationResponse", []);
     }
-    create(value?: PartialMessage<UpsertApplicationResponse>): UpsertApplicationResponse {
+    create(value?: PartialMessage<UpdateApplicationResponse>): UpdateApplicationResponse {
         const message = globalThis.Object.create((this.messagePrototype!));
         if (value !== undefined)
-            reflectionMergePartial<UpsertApplicationResponse>(this, message, value);
+            reflectionMergePartial<UpdateApplicationResponse>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: UpsertApplicationResponse): UpsertApplicationResponse {
-        let message = target ?? this.create(), end = reader.pos + length;
-        while (reader.pos < end) {
-            let [fieldNo, wireType] = reader.tag();
-            switch (fieldNo) {
-                case /* application.Application application */ 1:
-                    message.application = Application.internalBinaryRead(reader, reader.uint32(), options, message.application);
-                    break;
-                default:
-                    let u = options.readUnknownField;
-                    if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
-                    let d = reader.skip(wireType);
-                    if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
-            }
-        }
-        return message;
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: UpdateApplicationResponse): UpdateApplicationResponse {
+        return target ?? this.create();
     }
-    internalBinaryWrite(message: UpsertApplicationResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
-        /* application.Application application = 1; */
-        if (message.application)
-            Application.internalBinaryWrite(message.application, writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+    internalBinaryWrite(message: UpdateApplicationResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -274,9 +359,9 @@ class UpsertApplicationResponse$Type extends MessageType<UpsertApplicationRespon
     }
 }
 /**
- * @generated MessageType for protobuf message dashboard.UpsertApplicationResponse
+ * @generated MessageType for protobuf message dashboard.UpdateApplicationResponse
  */
-export const UpsertApplicationResponse = new UpsertApplicationResponse$Type();
+export const UpdateApplicationResponse = new UpdateApplicationResponse$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class DeleteApplicationRequest$Type extends MessageType<DeleteApplicationRequest> {
     constructor() {
@@ -362,6 +447,7 @@ export const DeleteApplicationResponse = new DeleteApplicationResponse$Type();
  */
 export const DashboardService = new ServiceType("dashboard.DashboardService", [
     { name: "GetListApplication", options: {}, I: GetListApplicationRequest, O: GetListApplicationResponse },
-    { name: "UpsertApplication", options: {}, I: UpsertApplicationRequest, O: UpsertApplicationResponse },
+    { name: "CreateApplication", options: {}, I: CreateApplicationRequest, O: CreateApplicationResponse },
+    { name: "UpdateApplication", options: {}, I: UpdateApplicationRequest, O: UpdateApplicationResponse },
     { name: "DeleteApplication", options: {}, I: DeleteApplicationRequest, O: DeleteApplicationResponse }
 ]);

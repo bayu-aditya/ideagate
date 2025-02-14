@@ -6,8 +6,10 @@ import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { DashboardService } from "./service";
 import type { DeleteApplicationResponse } from "./service";
 import type { DeleteApplicationRequest } from "./service";
-import type { UpsertApplicationResponse } from "./service";
-import type { UpsertApplicationRequest } from "./service";
+import type { UpdateApplicationResponse } from "./service";
+import type { UpdateApplicationRequest } from "./service";
+import type { CreateApplicationResponse } from "./service";
+import type { CreateApplicationRequest } from "./service";
 import { stackIntercept } from "@protobuf-ts/runtime-rpc";
 import type { GetListApplicationResponse } from "./service";
 import type { GetListApplicationRequest } from "./service";
@@ -22,9 +24,13 @@ export interface IDashboardServiceClient {
      */
     getListApplication(input: GetListApplicationRequest, options?: RpcOptions): UnaryCall<GetListApplicationRequest, GetListApplicationResponse>;
     /**
-     * @generated from protobuf rpc: UpsertApplication(dashboard.UpsertApplicationRequest) returns (dashboard.UpsertApplicationResponse);
+     * @generated from protobuf rpc: CreateApplication(dashboard.CreateApplicationRequest) returns (dashboard.CreateApplicationResponse);
      */
-    upsertApplication(input: UpsertApplicationRequest, options?: RpcOptions): UnaryCall<UpsertApplicationRequest, UpsertApplicationResponse>;
+    createApplication(input: CreateApplicationRequest, options?: RpcOptions): UnaryCall<CreateApplicationRequest, CreateApplicationResponse>;
+    /**
+     * @generated from protobuf rpc: UpdateApplication(dashboard.UpdateApplicationRequest) returns (dashboard.UpdateApplicationResponse);
+     */
+    updateApplication(input: UpdateApplicationRequest, options?: RpcOptions): UnaryCall<UpdateApplicationRequest, UpdateApplicationResponse>;
     /**
      * @generated from protobuf rpc: DeleteApplication(dashboard.DeleteApplicationRequest) returns (dashboard.DeleteApplicationResponse);
      */
@@ -47,17 +53,24 @@ export class DashboardServiceClient implements IDashboardServiceClient, ServiceI
         return stackIntercept<GetListApplicationRequest, GetListApplicationResponse>("unary", this._transport, method, opt, input);
     }
     /**
-     * @generated from protobuf rpc: UpsertApplication(dashboard.UpsertApplicationRequest) returns (dashboard.UpsertApplicationResponse);
+     * @generated from protobuf rpc: CreateApplication(dashboard.CreateApplicationRequest) returns (dashboard.CreateApplicationResponse);
      */
-    upsertApplication(input: UpsertApplicationRequest, options?: RpcOptions): UnaryCall<UpsertApplicationRequest, UpsertApplicationResponse> {
+    createApplication(input: CreateApplicationRequest, options?: RpcOptions): UnaryCall<CreateApplicationRequest, CreateApplicationResponse> {
         const method = this.methods[1], opt = this._transport.mergeOptions(options);
-        return stackIntercept<UpsertApplicationRequest, UpsertApplicationResponse>("unary", this._transport, method, opt, input);
+        return stackIntercept<CreateApplicationRequest, CreateApplicationResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: UpdateApplication(dashboard.UpdateApplicationRequest) returns (dashboard.UpdateApplicationResponse);
+     */
+    updateApplication(input: UpdateApplicationRequest, options?: RpcOptions): UnaryCall<UpdateApplicationRequest, UpdateApplicationResponse> {
+        const method = this.methods[2], opt = this._transport.mergeOptions(options);
+        return stackIntercept<UpdateApplicationRequest, UpdateApplicationResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: DeleteApplication(dashboard.DeleteApplicationRequest) returns (dashboard.DeleteApplicationResponse);
      */
     deleteApplication(input: DeleteApplicationRequest, options?: RpcOptions): UnaryCall<DeleteApplicationRequest, DeleteApplicationResponse> {
-        const method = this.methods[2], opt = this._transport.mergeOptions(options);
+        const method = this.methods[3], opt = this._transport.mergeOptions(options);
         return stackIntercept<DeleteApplicationRequest, DeleteApplicationResponse>("unary", this._transport, method, opt, input);
     }
 }

@@ -20,7 +20,8 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	DashboardService_GetListApplication_FullMethodName = "/dashboard.DashboardService/GetListApplication"
-	DashboardService_UpsertApplication_FullMethodName  = "/dashboard.DashboardService/UpsertApplication"
+	DashboardService_CreateApplication_FullMethodName  = "/dashboard.DashboardService/CreateApplication"
+	DashboardService_UpdateApplication_FullMethodName  = "/dashboard.DashboardService/UpdateApplication"
 	DashboardService_DeleteApplication_FullMethodName  = "/dashboard.DashboardService/DeleteApplication"
 )
 
@@ -29,7 +30,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DashboardServiceClient interface {
 	GetListApplication(ctx context.Context, in *GetListApplicationRequest, opts ...grpc.CallOption) (*GetListApplicationResponse, error)
-	UpsertApplication(ctx context.Context, in *UpsertApplicationRequest, opts ...grpc.CallOption) (*UpsertApplicationResponse, error)
+	CreateApplication(ctx context.Context, in *CreateApplicationRequest, opts ...grpc.CallOption) (*CreateApplicationResponse, error)
+	UpdateApplication(ctx context.Context, in *UpdateApplicationRequest, opts ...grpc.CallOption) (*UpdateApplicationResponse, error)
 	DeleteApplication(ctx context.Context, in *DeleteApplicationRequest, opts ...grpc.CallOption) (*DeleteApplicationResponse, error)
 }
 
@@ -51,10 +53,20 @@ func (c *dashboardServiceClient) GetListApplication(ctx context.Context, in *Get
 	return out, nil
 }
 
-func (c *dashboardServiceClient) UpsertApplication(ctx context.Context, in *UpsertApplicationRequest, opts ...grpc.CallOption) (*UpsertApplicationResponse, error) {
+func (c *dashboardServiceClient) CreateApplication(ctx context.Context, in *CreateApplicationRequest, opts ...grpc.CallOption) (*CreateApplicationResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpsertApplicationResponse)
-	err := c.cc.Invoke(ctx, DashboardService_UpsertApplication_FullMethodName, in, out, cOpts...)
+	out := new(CreateApplicationResponse)
+	err := c.cc.Invoke(ctx, DashboardService_CreateApplication_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dashboardServiceClient) UpdateApplication(ctx context.Context, in *UpdateApplicationRequest, opts ...grpc.CallOption) (*UpdateApplicationResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateApplicationResponse)
+	err := c.cc.Invoke(ctx, DashboardService_UpdateApplication_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +88,8 @@ func (c *dashboardServiceClient) DeleteApplication(ctx context.Context, in *Dele
 // for forward compatibility.
 type DashboardServiceServer interface {
 	GetListApplication(context.Context, *GetListApplicationRequest) (*GetListApplicationResponse, error)
-	UpsertApplication(context.Context, *UpsertApplicationRequest) (*UpsertApplicationResponse, error)
+	CreateApplication(context.Context, *CreateApplicationRequest) (*CreateApplicationResponse, error)
+	UpdateApplication(context.Context, *UpdateApplicationRequest) (*UpdateApplicationResponse, error)
 	DeleteApplication(context.Context, *DeleteApplicationRequest) (*DeleteApplicationResponse, error)
 	mustEmbedUnimplementedDashboardServiceServer()
 }
@@ -91,8 +104,11 @@ type UnimplementedDashboardServiceServer struct{}
 func (UnimplementedDashboardServiceServer) GetListApplication(context.Context, *GetListApplicationRequest) (*GetListApplicationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetListApplication not implemented")
 }
-func (UnimplementedDashboardServiceServer) UpsertApplication(context.Context, *UpsertApplicationRequest) (*UpsertApplicationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertApplication not implemented")
+func (UnimplementedDashboardServiceServer) CreateApplication(context.Context, *CreateApplicationRequest) (*CreateApplicationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateApplication not implemented")
+}
+func (UnimplementedDashboardServiceServer) UpdateApplication(context.Context, *UpdateApplicationRequest) (*UpdateApplicationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateApplication not implemented")
 }
 func (UnimplementedDashboardServiceServer) DeleteApplication(context.Context, *DeleteApplicationRequest) (*DeleteApplicationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteApplication not implemented")
@@ -136,20 +152,38 @@ func _DashboardService_GetListApplication_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DashboardService_UpsertApplication_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertApplicationRequest)
+func _DashboardService_CreateApplication_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateApplicationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DashboardServiceServer).UpsertApplication(ctx, in)
+		return srv.(DashboardServiceServer).CreateApplication(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DashboardService_UpsertApplication_FullMethodName,
+		FullMethod: DashboardService_CreateApplication_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardServiceServer).UpsertApplication(ctx, req.(*UpsertApplicationRequest))
+		return srv.(DashboardServiceServer).CreateApplication(ctx, req.(*CreateApplicationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DashboardService_UpdateApplication_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateApplicationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DashboardServiceServer).UpdateApplication(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DashboardService_UpdateApplication_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DashboardServiceServer).UpdateApplication(ctx, req.(*UpdateApplicationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -184,8 +218,12 @@ var DashboardService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DashboardService_GetListApplication_Handler,
 		},
 		{
-			MethodName: "UpsertApplication",
-			Handler:    _DashboardService_UpsertApplication_Handler,
+			MethodName: "CreateApplication",
+			Handler:    _DashboardService_CreateApplication_Handler,
+		},
+		{
+			MethodName: "UpdateApplication",
+			Handler:    _DashboardService_UpdateApplication_Handler,
 		},
 		{
 			MethodName: "DeleteApplication",
