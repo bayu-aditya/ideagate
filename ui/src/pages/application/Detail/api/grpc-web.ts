@@ -9,7 +9,7 @@ export async function getListApps() {
 
   const dashboardService = new DashboardServiceClient(transport)
 
-  const resp = await dashboardService.getListApplication({ projectId: '1' })
+  const resp = await dashboardService.getListApplication({ projectId: 'test' })
   console.log(resp)
   console.log(resp.response.applications)
 }

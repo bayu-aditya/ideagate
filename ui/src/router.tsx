@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import ApplicationPage from '#/pages/application'
+import ApplicationPage from '#/pages/application/Detail'
 
 // import { DashboardLayout } from './layout/dashboard'
 import MainLayout from './layout/MainLayout'
