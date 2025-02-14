@@ -1,20 +1,28 @@
 package grpc
 
 import (
-	"context"
 	"fmt"
 	"net"
 	"net/http"
 
-	"github.com/bayu-aditya/ideagate/backend/model/gen-go/core/application"
+	"github.com/bayu-aditya/ideagate/backend/core/config"
 	"github.com/bayu-aditya/ideagate/backend/model/gen-go/dashboard"
+	apprepositorysql "github.com/bayu-aditya/ideagate/backend/server/controller/domain/application/repository/sql"
+	appusecase "github.com/bayu-aditya/ideagate/backend/server/controller/domain/application/usecase"
+	"github.com/bayu-aditya/ideagate/backend/server/controller/infrastructure"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"github.com/urfave/cli/v2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
-func Action(c *cli.Context) error {
+func Action(_ *cli.Context) error {
+	// Load configuration
+	if err := config.Load("."); err != nil {
+		return fmt.Errorf("failed to load configuration: %v", err)
+	}
+
+	// Initialize TCP connection
 	lisGrpc, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		return fmt.Errorf("failed to listen: %v", err)
@@ -25,10 +33,15 @@ func Action(c *cli.Context) error {
 		return fmt.Errorf("failed to listen: %v", err)
 	}
 
-	s := grpc.NewServer()
+	// Initialize infrastructure
+	infra, err := infrastructure.NewInfrastructure(config.Get())
+	if err != nil {
+		return fmt.Errorf("failed to initialize infrastructure: %v", err)
+	}
 
 	// Register gRPC services
-	dashboard.RegisterDashboardServiceServer(s, &DashboardServiceServer{})
+	s := grpc.NewServer()
+	dashboard.RegisterDashboardServiceServer(s, NewDashboardServiceServer(infra))
 
 	// Register reflection service on gRPC server.
 	reflection.Register(s)
@@ -60,8 +73,6 @@ func Action(c *cli.Context) error {
 	}()
 
 	select {}
-
-	return nil
 }
 
 func middleware(next http.Handler) http.Handler {
@@ -83,13 +94,17 @@ func middleware(next http.Handler) http.Handler {
 
 type DashboardServiceServer struct {
 	dashboard.UnimplementedDashboardServiceServer
+	usecaseApplication appusecase.ApplicationUsecase
 }
 
-func (s *DashboardServiceServer) GetListApplication(context.Context, *dashboard.GetListApplicationRequest) (*dashboard.GetListApplicationResponse, error) {
-	return &dashboard.GetListApplicationResponse{
-		Applications: []*application.Application{
-			{Id: "1", Name: "App 1"},
-			{Id: "2", Name: "App 2"},
-		},
-	}, nil
+func NewDashboardServiceServer(infra *infrastructure.Infrastructure) *DashboardServiceServer {
+	// Initialize repository
+	repoApplication := apprepositorysql.NewApplicationRepository(infra.Postgres)
+
+	// Initialize usecase
+	usecaseApplication := appusecase.NewApplicationUsecase(repoApplication)
+
+	return &DashboardServiceServer{
+		usecaseApplication: usecaseApplication,
+	}
 }

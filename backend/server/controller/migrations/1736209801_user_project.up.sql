@@ -12,7 +12,7 @@ create table if not exists project (
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now(),
     name varchar(50) not null,
-    description text not null
+    description text
 );
 
 create table if not exists project_user (
