@@ -9,6 +9,8 @@ import (
 	"github.com/bayu-aditya/ideagate/backend/model/gen-go/dashboard"
 	apprepositorysql "github.com/bayu-aditya/ideagate/backend/server/controller/domain/application/repository/sql"
 	appusecase "github.com/bayu-aditya/ideagate/backend/server/controller/domain/application/usecase"
+	projectrepositorysql "github.com/bayu-aditya/ideagate/backend/server/controller/domain/project/repository/sql"
+	projectusecase "github.com/bayu-aditya/ideagate/backend/server/controller/domain/project/usecase"
 	"github.com/bayu-aditya/ideagate/backend/server/controller/infrastructure"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"github.com/urfave/cli/v2"
@@ -94,17 +96,22 @@ func middleware(next http.Handler) http.Handler {
 
 type DashboardServiceServer struct {
 	dashboard.UnimplementedDashboardServiceServer
+
+	usecaseProject     projectusecase.ProjectUsecase
 	usecaseApplication appusecase.ApplicationUsecase
 }
 
 func NewDashboardServiceServer(infra *infrastructure.Infrastructure) *DashboardServiceServer {
 	// Initialize repository
+	repoProject := projectrepositorysql.NewProjectRepository(infra.Postgres)
 	repoApplication := apprepositorysql.NewApplicationRepository(infra.Postgres)
 
 	// Initialize usecase
+	usecaseProject := projectusecase.NewProjectUsecase(repoProject)
 	usecaseApplication := appusecase.NewApplicationUsecase(repoApplication)
 
 	return &DashboardServiceServer{
+		usecaseProject:     usecaseProject,
 		usecaseApplication: usecaseApplication,
 	}
 }
