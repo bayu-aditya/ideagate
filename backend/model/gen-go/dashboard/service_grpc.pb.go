@@ -19,6 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	DashboardService_GetListProject_FullMethodName     = "/dashboard.DashboardService/GetListProject"
+	DashboardService_CreateProject_FullMethodName      = "/dashboard.DashboardService/CreateProject"
+	DashboardService_UpdateProject_FullMethodName      = "/dashboard.DashboardService/UpdateProject"
+	DashboardService_DeleteProject_FullMethodName      = "/dashboard.DashboardService/DeleteProject"
 	DashboardService_GetListApplication_FullMethodName = "/dashboard.DashboardService/GetListApplication"
 	DashboardService_CreateApplication_FullMethodName  = "/dashboard.DashboardService/CreateApplication"
 	DashboardService_UpdateApplication_FullMethodName  = "/dashboard.DashboardService/UpdateApplication"
@@ -29,6 +33,10 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DashboardServiceClient interface {
+	GetListProject(ctx context.Context, in *GetListProjectRequest, opts ...grpc.CallOption) (*GetListProjectResponse, error)
+	CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*CreateProjectResponse, error)
+	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*UpdateProjectResponse, error)
+	DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*DeleteProjectResponse, error)
 	GetListApplication(ctx context.Context, in *GetListApplicationRequest, opts ...grpc.CallOption) (*GetListApplicationResponse, error)
 	CreateApplication(ctx context.Context, in *CreateApplicationRequest, opts ...grpc.CallOption) (*CreateApplicationResponse, error)
 	UpdateApplication(ctx context.Context, in *UpdateApplicationRequest, opts ...grpc.CallOption) (*UpdateApplicationResponse, error)
@@ -41,6 +49,46 @@ type dashboardServiceClient struct {
 
 func NewDashboardServiceClient(cc grpc.ClientConnInterface) DashboardServiceClient {
 	return &dashboardServiceClient{cc}
+}
+
+func (c *dashboardServiceClient) GetListProject(ctx context.Context, in *GetListProjectRequest, opts ...grpc.CallOption) (*GetListProjectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetListProjectResponse)
+	err := c.cc.Invoke(ctx, DashboardService_GetListProject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dashboardServiceClient) CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*CreateProjectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateProjectResponse)
+	err := c.cc.Invoke(ctx, DashboardService_CreateProject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dashboardServiceClient) UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*UpdateProjectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateProjectResponse)
+	err := c.cc.Invoke(ctx, DashboardService_UpdateProject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dashboardServiceClient) DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*DeleteProjectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteProjectResponse)
+	err := c.cc.Invoke(ctx, DashboardService_DeleteProject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *dashboardServiceClient) GetListApplication(ctx context.Context, in *GetListApplicationRequest, opts ...grpc.CallOption) (*GetListApplicationResponse, error) {
@@ -87,6 +135,10 @@ func (c *dashboardServiceClient) DeleteApplication(ctx context.Context, in *Dele
 // All implementations must embed UnimplementedDashboardServiceServer
 // for forward compatibility.
 type DashboardServiceServer interface {
+	GetListProject(context.Context, *GetListProjectRequest) (*GetListProjectResponse, error)
+	CreateProject(context.Context, *CreateProjectRequest) (*CreateProjectResponse, error)
+	UpdateProject(context.Context, *UpdateProjectRequest) (*UpdateProjectResponse, error)
+	DeleteProject(context.Context, *DeleteProjectRequest) (*DeleteProjectResponse, error)
 	GetListApplication(context.Context, *GetListApplicationRequest) (*GetListApplicationResponse, error)
 	CreateApplication(context.Context, *CreateApplicationRequest) (*CreateApplicationResponse, error)
 	UpdateApplication(context.Context, *UpdateApplicationRequest) (*UpdateApplicationResponse, error)
@@ -101,6 +153,18 @@ type DashboardServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedDashboardServiceServer struct{}
 
+func (UnimplementedDashboardServiceServer) GetListProject(context.Context, *GetListProjectRequest) (*GetListProjectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetListProject not implemented")
+}
+func (UnimplementedDashboardServiceServer) CreateProject(context.Context, *CreateProjectRequest) (*CreateProjectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateProject not implemented")
+}
+func (UnimplementedDashboardServiceServer) UpdateProject(context.Context, *UpdateProjectRequest) (*UpdateProjectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateProject not implemented")
+}
+func (UnimplementedDashboardServiceServer) DeleteProject(context.Context, *DeleteProjectRequest) (*DeleteProjectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteProject not implemented")
+}
 func (UnimplementedDashboardServiceServer) GetListApplication(context.Context, *GetListApplicationRequest) (*GetListApplicationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetListApplication not implemented")
 }
@@ -132,6 +196,78 @@ func RegisterDashboardServiceServer(s grpc.ServiceRegistrar, srv DashboardServic
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&DashboardService_ServiceDesc, srv)
+}
+
+func _DashboardService_GetListProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetListProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DashboardServiceServer).GetListProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DashboardService_GetListProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DashboardServiceServer).GetListProject(ctx, req.(*GetListProjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DashboardService_CreateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DashboardServiceServer).CreateProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DashboardService_CreateProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DashboardServiceServer).CreateProject(ctx, req.(*CreateProjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DashboardService_UpdateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DashboardServiceServer).UpdateProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DashboardService_UpdateProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DashboardServiceServer).UpdateProject(ctx, req.(*UpdateProjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DashboardService_DeleteProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DashboardServiceServer).DeleteProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DashboardService_DeleteProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DashboardServiceServer).DeleteProject(ctx, req.(*DeleteProjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _DashboardService_GetListApplication_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -213,6 +349,22 @@ var DashboardService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "dashboard.DashboardService",
 	HandlerType: (*DashboardServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetListProject",
+			Handler:    _DashboardService_GetListProject_Handler,
+		},
+		{
+			MethodName: "CreateProject",
+			Handler:    _DashboardService_CreateProject_Handler,
+		},
+		{
+			MethodName: "UpdateProject",
+			Handler:    _DashboardService_UpdateProject_Handler,
+		},
+		{
+			MethodName: "DeleteProject",
+			Handler:    _DashboardService_DeleteProject_Handler,
+		},
 		{
 			MethodName: "GetListApplication",
 			Handler:    _DashboardService_GetListApplication_Handler,

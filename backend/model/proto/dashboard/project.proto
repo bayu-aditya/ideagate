@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package dashboard;
+
+import "google/protobuf/struct.proto";
+import "core/project/project.proto";
+
+message GetListProjectRequest {}
+
+message GetListProjectResponse {
+    repeated project.Project projects = 1;
+}
+
+message CreateProjectRequest {
+    string project_id = 1;
+    string name = 2;
+}
+
+message CreateProjectResponse {}
+
+message UpdateProjectRequest {
+    string project_id = 1;
+    google.protobuf.Struct values = 2;
+}
+
+message UpdateProjectResponse {}
+
+message DeleteProjectRequest {
+    string project_id = 1;
+}
+
+message DeleteProjectResponse {}

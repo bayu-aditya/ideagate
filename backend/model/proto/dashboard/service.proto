@@ -4,8 +4,14 @@ package dashboard;
 
 import "core/application/application.proto";
 import "google/protobuf/struct.proto";
+import "dashboard/project.proto";
 
 service DashboardService {
+    rpc GetListProject(GetListProjectRequest) returns (GetListProjectResponse);
+    rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
+    rpc UpdateProject(UpdateProjectRequest) returns (UpdateProjectResponse);
+    rpc DeleteProject(DeleteProjectRequest) returns (DeleteProjectResponse);
+
     rpc GetListApplication(GetListApplicationRequest) returns (GetListApplicationResponse);
     rpc CreateApplication(CreateApplicationRequest) returns (CreateApplicationResponse);
     rpc UpdateApplication(UpdateApplicationRequest) returns (UpdateApplicationResponse);
