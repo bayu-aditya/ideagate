@@ -1,13 +1,12 @@
 import { Grid2 } from '@mui/material'
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
+import { useParams } from 'react-router-dom'
 
-import { getListApps } from './api/grpc-web'
 import { StepDetail, Workflow } from './components'
 
 const ApplicationPage: FC = () => {
-  useEffect(() => {
-    getListApps()
-  }, [])
+  const { app_id } = useParams()
+  console.log(app_id)
 
   return (
     <Grid2 container spacing={2}>

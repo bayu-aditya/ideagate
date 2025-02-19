@@ -1,8 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import ApplicationPage from '#/pages/application/Detail'
+import ApplicationDetailPage from '#/pages/application/Detail'
+import ApplicationListPage from '#/pages/application/List'
 
-// import { DashboardLayout } from './layout/dashboard'
 import MainLayout from './layout/MainLayout'
 import DataSourcePage from './pages/datasource'
 import LoginPage from './pages/login'
@@ -18,8 +18,12 @@ export const router = createBrowserRouter([
         element: <Root />,
       },
       {
-        path: '/application',
-        element: <ApplicationPage />,
+        path: '/:project_id/application',
+        element: <ApplicationListPage />,
+      },
+      {
+        path: '/:project_id/application/:app_id',
+        element: <ApplicationDetailPage />,
       },
       {
         path: '/datasource',

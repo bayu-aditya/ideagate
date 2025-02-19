@@ -12,7 +12,7 @@ export const theme = () => {
 
   const themeOptionsVars: ThemeOptionsVars = {
     fontFamily: `'Roboto', sans-serif`,
-    borderRadius: `15px`,
+    borderRadius: `8px`,
     colors: color,
     heading: color.grey900,
     paper: color.paper,

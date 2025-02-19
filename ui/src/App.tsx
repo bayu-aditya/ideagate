@@ -13,20 +13,27 @@ import '@fontsource/poppins/600.css'
 import '@fontsource/poppins/700.css'
 
 import { CssBaseline, StyledEngineProvider, ThemeProvider } from '@mui/material'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider } from 'react-router-dom'
 
 import theme from '#/themes'
 
 import { router } from './router'
 
+const queryClient = new QueryClient()
+
 function App() {
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme()}>
-        <CssBaseline />
-        <RouterProvider router={router} />
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <QueryClientProvider client={queryClient}>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme()}>
+          <CssBaseline />
+          <ReactQueryDevtools />
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </QueryClientProvider>
   )
 }
 
