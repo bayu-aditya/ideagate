@@ -16,7 +16,7 @@ import {
 } from '@xyflow/react'
 import { FC, useCallback } from 'react'
 
-import { mockEdges, mockNodes } from '../../../../models/mock'
+import { mockEdges, mockNodes } from '../../models/mock'
 import Control from './Control'
 import { nodeTypes } from './nodes'
 

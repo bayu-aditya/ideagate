@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 
 import ApplicationDetailPage from '#/pages/application/Detail'
+import ApplicationEntrypointDetailPage from '#/pages/application/EntrypointDetail'
 import ApplicationListPage from '#/pages/application/List'
 
 import MainLayout from './layout/MainLayout'
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
       {
         path: '/:project_id/application/:app_id',
         element: <ApplicationDetailPage />,
+      },
+      {
+        path: '/:project_id/application/:app_id/entrypoint/:entrypoint_id',
+        element: <ApplicationEntrypointDetailPage />,
       },
       {
         path: '/datasource',

@@ -2,7 +2,7 @@ import { Box, InputAdornment, Stack, TextField, Typography } from '@mui/material
 import { FC } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { mockNodes } from '../../../../models/mock'
+import { mockNodes } from '../../models/mock'
 
 const StepDetail: FC = () => {
   const [searchParams] = useSearchParams()
