@@ -1,40 +1,86 @@
 import ApiIcon from '@mui/icons-material/Api'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { Card, CardContent, CardHeader, Divider, Tab, TabProps, Tabs } from '@mui/material'
-import { FC, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import {
+  Box,
+  Breadcrumbs,
+  Card,
+  CardContent,
+  Divider,
+  IconButton,
+  Tab,
+  TabProps,
+  Tabs,
+  TabsProps,
+  Typography,
+} from '@mui/material'
+import { FC, useEffect } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 
 import { Entrypoints, Setting } from './components'
 
 const ApplicationPage: FC = () => {
-  const { app_id } = useParams()
+  const { project_id, app_id } = useParams()
 
-  const [tab, setTab] = useState(0)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const tab = searchParams.get('tab')
+
+  const onChangeTab: TabsProps['onChange'] = (_, tab) => {
+    setSearchParams({ tab }, { replace: true })
+  }
+
+  useEffect(() => {
+    if (tab == null) {
+      setSearchParams({ tab: 'entrypoint' }, { replace: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const Body = () => {
     switch (tab) {
-      case 0:
-        return <Entrypoints />
-      case 1:
+      case 'setting':
         return <Setting />
       default:
-        return null
+        return <Entrypoints />
     }
   }
 
-  return (
-    <Card sx={{ minHeight: '100%' }}>
-      <CardHeader title={app_id} />
-      <CardContent sx={{ py: 0 }}>
-        <Tabs value={tab} onChange={(_, value) => setTab(value)} sx={{ minHeight: 0 }}>
-          <TabCustom icon={<ApiIcon />} iconPosition="start" label="Entrypoints" />
-          <TabCustom icon={<SettingsIcon />} iconPosition="start" label="Settings" />
-        </Tabs>
-        <Divider sx={{ marginBottom: 2 }} />
+  const linkApplications = `/${project_id}/application`
 
-        {Body()}
-      </CardContent>
-    </Card>
+  return (
+    <>
+      <Card sx={{ p: 1.5, mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Link to={linkApplications}>
+            <IconButton size="small">
+              <ArrowBackIcon />
+            </IconButton>
+          </Link>
+          <Typography variant="h4">{app_id}</Typography>
+        </Box>
+
+        <Breadcrumbs separator=">" aria-label="breadcrumb">
+          [
+          <Link to={linkApplications}>
+            <Typography>Applications</Typography>
+          </Link>
+          ,<Typography>{app_id}</Typography>]
+        </Breadcrumbs>
+      </Card>
+
+      <Card sx={{ minHeight: '100%' }}>
+        <CardContent>
+          <Tabs value={tab} onChange={onChangeTab} sx={{ minHeight: 0 }}>
+            <TabCustom value={'entrypoint'} icon={<ApiIcon />} iconPosition="start" label="Entrypoints" />
+            <TabCustom value={'setting'} icon={<SettingsIcon />} iconPosition="start" label="Settings" />
+          </Tabs>
+          <Divider sx={{ marginBottom: 2 }} />
+
+          {Body()}
+        </CardContent>
+      </Card>
+    </>
   )
 }
 
