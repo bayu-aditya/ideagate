@@ -14,28 +14,22 @@ import {
   TabsProps,
   Typography,
 } from '@mui/material'
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 
 import { Entrypoints, Setting } from './components'
+import { ApplicationProvider, useApplication } from './hooks/application'
 
 const ApplicationPage: FC = () => {
-  const { project_id, app_id } = useParams()
-
+  const { project_id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
+  const tab = searchParams.get('tab') || 'entrypoint'
 
-  const tab = searchParams.get('tab')
+  const { app, isLoading } = useApplication()
 
   const onChangeTab: TabsProps['onChange'] = (_, tab) => {
     setSearchParams({ tab }, { replace: true })
   }
-
-  useEffect(() => {
-    if (tab == null) {
-      setSearchParams({ tab: 'entrypoint' }, { replace: true })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const Body = () => {
     switch (tab) {
@@ -48,6 +42,10 @@ const ApplicationPage: FC = () => {
 
   const linkApplications = `/${project_id}/application`
 
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <>
       <Card sx={{ p: 1.5, mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -57,7 +55,7 @@ const ApplicationPage: FC = () => {
               <ArrowBackIcon />
             </IconButton>
           </Link>
-          <Typography variant="h4">{app_id}</Typography>
+          <Typography variant="h4">{app?.name}</Typography>
         </Box>
 
         <Breadcrumbs separator=">" aria-label="breadcrumb">
@@ -65,7 +63,7 @@ const ApplicationPage: FC = () => {
           <Link to={linkApplications}>
             <Typography>Applications</Typography>
           </Link>
-          ,<Typography>{app_id}</Typography>]
+          ,<Typography>{app?.name}</Typography>]
         </Breadcrumbs>
       </Card>
 
@@ -86,4 +84,10 @@ const ApplicationPage: FC = () => {
 
 const TabCustom = (props: TabProps) => <Tab {...props} sx={{ ...props.sx, minHeight: 0 }} />
 
-export default ApplicationPage
+export default function Page() {
+  return (
+    <ApplicationProvider>
+      <ApplicationPage />
+    </ApplicationProvider>
+  )
+}

@@ -18,7 +18,7 @@ import moment from 'moment'
 import { FC } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
-import { getListApps } from './api/grpc-web'
+import { getListApps } from '#/api/grpc/application'
 
 const ApplicationListPage: FC = () => {
   const theme = useTheme()
@@ -26,7 +26,10 @@ const ApplicationListPage: FC = () => {
   const { project_id } = useParams()
   const projectID = project_id as string
 
-  const { data } = useQuery({ queryKey: ['apps', project_id], queryFn: () => getListApps(projectID) })
+  const { data } = useQuery({
+    queryKey: ['apps', project_id],
+    queryFn: () => getListApps({ projectId: projectID }),
+  })
   const apps = data?.applications || []
 
   return (
@@ -71,7 +74,7 @@ const ApplicationListPage: FC = () => {
 
           <Grid2 container spacing={2}>
             {apps.map((app) => (
-              <Grid2 size={4}>
+              <Grid2 key={app.id} size={4}>
                 <Link to={`/${projectID}/application/${app.id}`}>
                   <Paper
                     key={app.id}
