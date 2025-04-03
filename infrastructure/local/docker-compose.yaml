@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:15.0-alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=ideagate
+      - POSTGRES_PASSWORD=ideagatepassword
+      - POSTGRES_DB=ideagate
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - default
+    command: ["postgres", "-c", "log_statement=all"]
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local

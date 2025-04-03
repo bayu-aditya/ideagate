@@ -24,6 +24,10 @@ func (r *repository) GetListApplication(ctx context.Context, req *GetListApplica
 		session = session.Where("project_id = ?", *req.ProjectID)
 	}
 
+	if req.ApplicationID != nil {
+		session = session.Where("id = ?", *req.ApplicationID)
+	}
+
 	if req.Limit == 0 {
 		req.Limit = 1
 	}

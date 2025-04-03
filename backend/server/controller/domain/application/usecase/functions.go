@@ -23,9 +23,15 @@ func (u *usecase) GetListApplication(ctx context.Context, req *GetListApplicatio
 		return nil, errors.New("ProjectID is required")
 	}
 
-	resultRepo, err := u.repoApp.GetListApplication(ctx, &sql.GetListApplicationRequest{
+	requestRepo := &sql.GetListApplicationRequest{
 		ProjectID: &req.ProjectID,
-	})
+	}
+
+	if req.ApplicationID != nil {
+		requestRepo.ApplicationID = req.ApplicationID
+	}
+
+	resultRepo, err := u.repoApp.GetListApplication(ctx, requestRepo)
 	if err != nil {
 		return nil, err
 	}

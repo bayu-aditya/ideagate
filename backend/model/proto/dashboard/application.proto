@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package dashboard;
+
+import "google/protobuf/struct.proto";
+import "core/application/application.proto";
+
+message GetListApplicationRequest {
+    string project_id = 1;
+    string application_id = 2;
+}
+
+message GetListApplicationResponse {
+    repeated application.Application applications = 1;
+}
+
+message CreateApplicationRequest {
+    string project_id = 1;
+    string application_id = 2;
+    string name = 3;
+}
+
+message CreateApplicationResponse {}
+
+message UpdateApplicationRequest {
+    string project_id = 1;
+    string application_id = 2;
+    google.protobuf.Struct values = 3;
+}
+
+message UpdateApplicationResponse {}
+
+message DeleteApplicationRequest {
+    string project_id = 1;
+    string application_id = 2;
+}
+
+message DeleteApplicationResponse {}

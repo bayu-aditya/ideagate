@@ -14,8 +14,9 @@ type ApplicationSQLRepository interface {
 }
 
 type GetListApplicationRequest struct {
-	ProjectID *string
-	Limit     int
+	ProjectID     *string
+	ApplicationID *string
+	Limit         int
 }
 
 type CreateApplicationRequest struct {

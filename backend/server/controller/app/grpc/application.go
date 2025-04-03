@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 
+	"github.com/bayu-aditya/ideagate/backend/core/utils"
 	"github.com/bayu-aditya/ideagate/backend/model/gen-go/dashboard"
 	"github.com/bayu-aditya/ideagate/backend/server/controller/domain/application/usecase"
 )
@@ -10,6 +11,10 @@ import (
 func (s *DashboardServiceServer) GetListApplication(ctx context.Context, req *dashboard.GetListApplicationRequest) (*dashboard.GetListApplicationResponse, error) {
 	reqListApp := &usecase.GetListApplicationRequest{
 		ProjectID: req.GetProjectId(),
+	}
+
+	if req.GetApplicationId() != "" {
+		reqListApp.ApplicationID = utils.ToPtr(req.GetApplicationId())
 	}
 
 	resListApp, err := s.usecaseApplication.GetListApplication(ctx, reqListApp)

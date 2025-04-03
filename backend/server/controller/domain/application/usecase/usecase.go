@@ -14,7 +14,8 @@ type ApplicationUsecase interface {
 }
 
 type GetListApplicationRequest struct {
-	ProjectID string
+	ProjectID     string
+	ApplicationID *string
 }
 
 type GetListApplicationResponse struct {
