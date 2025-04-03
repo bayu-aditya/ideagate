@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package dashboard;
+
+import "core/endpoint/endpoint.proto";
+
+message GetListEndpointRequest {
+    string project_id = 1;
+    string application_id = 2;
+    string endpoint_id = 3;
+}
+
+message GetListEndpointResponse {
+    repeated endpoint.Endpoint endpoints = 1;
+}

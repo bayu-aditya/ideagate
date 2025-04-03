@@ -4,6 +4,7 @@ package dashboard;
 
 import "dashboard/project.proto";
 import "dashboard/application.proto";
+import "dashboard/endpoint.proto";
 
 service DashboardService {
     rpc GetListProject(GetListProjectRequest) returns (GetListProjectResponse);
@@ -15,4 +16,6 @@ service DashboardService {
     rpc CreateApplication(CreateApplicationRequest) returns (CreateApplicationResponse);
     rpc UpdateApplication(UpdateApplicationRequest) returns (UpdateApplicationResponse);
     rpc DeleteApplication(DeleteApplicationRequest) returns (DeleteApplicationResponse);
+
+    rpc GetListEndpoint(GetListEndpointRequest) returns (GetListEndpointResponse);
 }

@@ -11,6 +11,7 @@ import (
 
 type IControllerAdapter interface {
 	GetListEndpoint(ctx context.Context) (*pbController.GetListEndpointResponse, error)
+	GetWorkflow(ctx context.Context, entrypointID string) (*pbController.GetWorkflowResponse, error)
 }
 
 func New() (IControllerAdapter, error) {
@@ -35,6 +36,17 @@ type controllerAdapter struct {
 
 func (c *controllerAdapter) GetListEndpoint(ctx context.Context) (*pbController.GetListEndpointResponse, error) {
 	resp, err := c.client.GetListEndpoint(ctx, &pbController.GetListEndpointRequest{})
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func (c *controllerAdapter) GetWorkflow(ctx context.Context, entrypointID string) (*pbController.GetWorkflowResponse, error) {
+	resp, err := c.client.GetWorkflow(ctx, &pbController.GetWorkflowRequest{
+		EntrypointId: entrypointID,
+	})
 	if err != nil {
 		return nil, err
 	}

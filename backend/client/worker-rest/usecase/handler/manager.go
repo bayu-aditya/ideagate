@@ -28,6 +28,7 @@ type manager struct {
 	ctxData               *entityContext.ContextData
 	response              model.HttpResponse
 	endpoint              *pbEndpoint.Endpoint
+	settings              *pbEndpoint.SettingRest
 	steps                 map[string]*pbEndpoint.Step // map[stepId]step
 	stepStatus            map[string]StepStatusType   // map[stepId]StepStatus
 	pubSub                pubsub.IPubSub
@@ -36,12 +37,13 @@ type manager struct {
 	edgesPrev             map[string][]string // map[stepId]prevStepIds
 }
 
-func newManager(c *gin.Context, endpoint *pbEndpoint.Endpoint) (iManager, error) {
+func newManager(c *gin.Context, endpoint *pbEndpoint.Endpoint, workflow *pbEndpoint.Workflow) (iManager, error) {
 	mgr := &manager{
 		ctxGin:                c,
 		ctx:                   c.Request.Context(),
 		ctxData:               new(entityContext.ContextData),
 		endpoint:              endpoint,
+		settings:              endpoint.GetSettingRest(),
 		steps:                 make(map[string]*pbEndpoint.Step),
 		stepStatus:            make(map[string]StepStatusType),
 		pubSub:                pubsub.New(),
@@ -51,12 +53,12 @@ func newManager(c *gin.Context, endpoint *pbEndpoint.Endpoint) (iManager, error)
 	}
 
 	// construct map of steps
-	for _, step := range endpoint.Workflow.Steps {
+	for _, step := range workflow.Steps {
 		mgr.steps[step.Id] = step
 	}
 
 	// construct edges
-	for _, edge := range endpoint.Workflow.Edges {
+	for _, edge := range workflow.Edges {
 		mgr.edgesNext[edge.Source] = append(mgr.edgesNext[edge.Source], edge.Dest)
 		mgr.edgesPrev[edge.Dest] = append(mgr.edgesPrev[edge.Dest], edge.Source)
 	}
@@ -66,7 +68,7 @@ func newManager(c *gin.Context, endpoint *pbEndpoint.Endpoint) (iManager, error)
 
 func (m *manager) RunHandler() {
 	// construct timeout channel based on endpoint detail setting
-	timeoutMs := m.endpoint.GetSetting().GetTimeoutMs()
+	timeoutMs := m.settings.GetTimeoutMs()
 	if timeoutMs == 0 {
 		timeoutMs = 10000 // default 10 sec
 	}
@@ -106,7 +108,7 @@ func (m *manager) process() handlerResult {
 	}
 
 	var (
-		numWorkers    = m.endpoint.GetSetting().GetNumWorkers()
+		numWorkers    = m.settings.GetNumWorkers()
 		jobSeedsChan  = make(chan string, 1000)      // value is stepId
 		jobFinishChan = make(chan jobFinishChanType) // value is based on latest step
 	)
@@ -212,8 +214,8 @@ func (m *manager) stepWorker(stepId, workerName string) (any, error) {
 }
 
 func (m *manager) waitAllDependencies(stepId, workerName string) {
-	stepsWait := make(map[string]bool)                            // key is list of step id must be waited
-	numBufferChanSubscriber := len(m.endpoint.Workflow.Steps) * 3 // num step * 3
+	stepsWait := make(map[string]bool)          // key is list of step id must be waited
+	numBufferChanSubscriber := len(m.steps) * 3 // num step * 3
 
 	subscriber := m.pubSub.Subscribe(context.Background(), m.pubSubTopicStepStatus, workerName, pubsub.SubscribeSetting{
 		NumBufferChan: numBufferChanSubscriber,

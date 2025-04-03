@@ -24,7 +24,7 @@ var File_dashboard_service_proto protoreflect.FileDescriptor
 
 const file_dashboard_service_proto_rawDesc = "" +
 	"\n" +
-	"\x17dashboard/service.proto\x12\tdashboard\x1a\x17dashboard/project.proto\x1a\x1bdashboard/application.proto2\xe8\x05\n" +
+	"\x17dashboard/service.proto\x12\tdashboard\x1a\x17dashboard/project.proto\x1a\x1bdashboard/application.proto\x1a\x18dashboard/endpoint.proto2\xc2\x06\n" +
 	"\x10DashboardService\x12U\n" +
 	"\x0eGetListProject\x12 .dashboard.GetListProjectRequest\x1a!.dashboard.GetListProjectResponse\x12R\n" +
 	"\rCreateProject\x12\x1f.dashboard.CreateProjectRequest\x1a .dashboard.CreateProjectResponse\x12R\n" +
@@ -33,7 +33,8 @@ const file_dashboard_service_proto_rawDesc = "" +
 	"\x12GetListApplication\x12$.dashboard.GetListApplicationRequest\x1a%.dashboard.GetListApplicationResponse\x12^\n" +
 	"\x11CreateApplication\x12#.dashboard.CreateApplicationRequest\x1a$.dashboard.CreateApplicationResponse\x12^\n" +
 	"\x11UpdateApplication\x12#.dashboard.UpdateApplicationRequest\x1a$.dashboard.UpdateApplicationResponse\x12^\n" +
-	"\x11DeleteApplication\x12#.dashboard.DeleteApplicationRequest\x1a$.dashboard.DeleteApplicationResponseB\xa1\x01\n" +
+	"\x11DeleteApplication\x12#.dashboard.DeleteApplicationRequest\x1a$.dashboard.DeleteApplicationResponse\x12X\n" +
+	"\x0fGetListEndpoint\x12!.dashboard.GetListEndpointRequest\x1a\".dashboard.GetListEndpointResponseB\xa1\x01\n" +
 	"\rcom.dashboardB\fServiceProtoP\x01Z>github.com/bayu-aditya/ideagate/backend/model/gen-go/dashboard\xa2\x02\x03DXX\xaa\x02\tDashboard\xca\x02\tDashboard\xe2\x02\x15Dashboard\\GPBMetadata\xea\x02\tDashboardb\x06proto3"
 
 var file_dashboard_service_proto_goTypes = []any{
@@ -45,14 +46,16 @@ var file_dashboard_service_proto_goTypes = []any{
 	(*CreateApplicationRequest)(nil),   // 5: dashboard.CreateApplicationRequest
 	(*UpdateApplicationRequest)(nil),   // 6: dashboard.UpdateApplicationRequest
 	(*DeleteApplicationRequest)(nil),   // 7: dashboard.DeleteApplicationRequest
-	(*GetListProjectResponse)(nil),     // 8: dashboard.GetListProjectResponse
-	(*CreateProjectResponse)(nil),      // 9: dashboard.CreateProjectResponse
-	(*UpdateProjectResponse)(nil),      // 10: dashboard.UpdateProjectResponse
-	(*DeleteProjectResponse)(nil),      // 11: dashboard.DeleteProjectResponse
-	(*GetListApplicationResponse)(nil), // 12: dashboard.GetListApplicationResponse
-	(*CreateApplicationResponse)(nil),  // 13: dashboard.CreateApplicationResponse
-	(*UpdateApplicationResponse)(nil),  // 14: dashboard.UpdateApplicationResponse
-	(*DeleteApplicationResponse)(nil),  // 15: dashboard.DeleteApplicationResponse
+	(*GetListEndpointRequest)(nil),     // 8: dashboard.GetListEndpointRequest
+	(*GetListProjectResponse)(nil),     // 9: dashboard.GetListProjectResponse
+	(*CreateProjectResponse)(nil),      // 10: dashboard.CreateProjectResponse
+	(*UpdateProjectResponse)(nil),      // 11: dashboard.UpdateProjectResponse
+	(*DeleteProjectResponse)(nil),      // 12: dashboard.DeleteProjectResponse
+	(*GetListApplicationResponse)(nil), // 13: dashboard.GetListApplicationResponse
+	(*CreateApplicationResponse)(nil),  // 14: dashboard.CreateApplicationResponse
+	(*UpdateApplicationResponse)(nil),  // 15: dashboard.UpdateApplicationResponse
+	(*DeleteApplicationResponse)(nil),  // 16: dashboard.DeleteApplicationResponse
+	(*GetListEndpointResponse)(nil),    // 17: dashboard.GetListEndpointResponse
 }
 var file_dashboard_service_proto_depIdxs = []int32{
 	0,  // 0: dashboard.DashboardService.GetListProject:input_type -> dashboard.GetListProjectRequest
@@ -63,16 +66,18 @@ var file_dashboard_service_proto_depIdxs = []int32{
 	5,  // 5: dashboard.DashboardService.CreateApplication:input_type -> dashboard.CreateApplicationRequest
 	6,  // 6: dashboard.DashboardService.UpdateApplication:input_type -> dashboard.UpdateApplicationRequest
 	7,  // 7: dashboard.DashboardService.DeleteApplication:input_type -> dashboard.DeleteApplicationRequest
-	8,  // 8: dashboard.DashboardService.GetListProject:output_type -> dashboard.GetListProjectResponse
-	9,  // 9: dashboard.DashboardService.CreateProject:output_type -> dashboard.CreateProjectResponse
-	10, // 10: dashboard.DashboardService.UpdateProject:output_type -> dashboard.UpdateProjectResponse
-	11, // 11: dashboard.DashboardService.DeleteProject:output_type -> dashboard.DeleteProjectResponse
-	12, // 12: dashboard.DashboardService.GetListApplication:output_type -> dashboard.GetListApplicationResponse
-	13, // 13: dashboard.DashboardService.CreateApplication:output_type -> dashboard.CreateApplicationResponse
-	14, // 14: dashboard.DashboardService.UpdateApplication:output_type -> dashboard.UpdateApplicationResponse
-	15, // 15: dashboard.DashboardService.DeleteApplication:output_type -> dashboard.DeleteApplicationResponse
-	8,  // [8:16] is the sub-list for method output_type
-	0,  // [0:8] is the sub-list for method input_type
+	8,  // 8: dashboard.DashboardService.GetListEndpoint:input_type -> dashboard.GetListEndpointRequest
+	9,  // 9: dashboard.DashboardService.GetListProject:output_type -> dashboard.GetListProjectResponse
+	10, // 10: dashboard.DashboardService.CreateProject:output_type -> dashboard.CreateProjectResponse
+	11, // 11: dashboard.DashboardService.UpdateProject:output_type -> dashboard.UpdateProjectResponse
+	12, // 12: dashboard.DashboardService.DeleteProject:output_type -> dashboard.DeleteProjectResponse
+	13, // 13: dashboard.DashboardService.GetListApplication:output_type -> dashboard.GetListApplicationResponse
+	14, // 14: dashboard.DashboardService.CreateApplication:output_type -> dashboard.CreateApplicationResponse
+	15, // 15: dashboard.DashboardService.UpdateApplication:output_type -> dashboard.UpdateApplicationResponse
+	16, // 16: dashboard.DashboardService.DeleteApplication:output_type -> dashboard.DeleteApplicationResponse
+	17, // 17: dashboard.DashboardService.GetListEndpoint:output_type -> dashboard.GetListEndpointResponse
+	9,  // [9:18] is the sub-list for method output_type
+	0,  // [0:9] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
@@ -85,6 +90,7 @@ func file_dashboard_service_proto_init() {
 	}
 	file_dashboard_project_proto_init()
 	file_dashboard_application_proto_init()
+	file_dashboard_endpoint_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

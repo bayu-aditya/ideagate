@@ -9,6 +9,7 @@ package endpoint
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -20,6 +21,55 @@ const (
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
+
+type EndpointType int32
+
+const (
+	EndpointType_ENDPOINT_TYPE_UNSPECIFIED EndpointType = 0
+	EndpointType_ENDPOINT_TYPE_REST        EndpointType = 1
+	EndpointType_ENDPOINT_TYPE_CRON        EndpointType = 2
+)
+
+// Enum value maps for EndpointType.
+var (
+	EndpointType_name = map[int32]string{
+		0: "ENDPOINT_TYPE_UNSPECIFIED",
+		1: "ENDPOINT_TYPE_REST",
+		2: "ENDPOINT_TYPE_CRON",
+	}
+	EndpointType_value = map[string]int32{
+		"ENDPOINT_TYPE_UNSPECIFIED": 0,
+		"ENDPOINT_TYPE_REST":        1,
+		"ENDPOINT_TYPE_CRON":        2,
+	}
+)
+
+func (x EndpointType) Enum() *EndpointType {
+	p := new(EndpointType)
+	*p = x
+	return p
+}
+
+func (x EndpointType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (EndpointType) Descriptor() protoreflect.EnumDescriptor {
+	return file_core_endpoint_endpoint_proto_enumTypes[0].Descriptor()
+}
+
+func (EndpointType) Type() protoreflect.EnumType {
+	return &file_core_endpoint_endpoint_proto_enumTypes[0]
+}
+
+func (x EndpointType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use EndpointType.Descriptor instead.
+func (EndpointType) EnumDescriptor() ([]byte, []int) {
+	return file_core_endpoint_endpoint_proto_rawDescGZIP(), []int{0}
+}
 
 type VariableType int32
 
@@ -63,11 +113,11 @@ func (x VariableType) String() string {
 }
 
 func (VariableType) Descriptor() protoreflect.EnumDescriptor {
-	return file_core_endpoint_endpoint_proto_enumTypes[0].Descriptor()
+	return file_core_endpoint_endpoint_proto_enumTypes[1].Descriptor()
 }
 
 func (VariableType) Type() protoreflect.EnumType {
-	return &file_core_endpoint_endpoint_proto_enumTypes[0]
+	return &file_core_endpoint_endpoint_proto_enumTypes[1]
 }
 
 func (x VariableType) Number() protoreflect.EnumNumber {
@@ -76,7 +126,7 @@ func (x VariableType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use VariableType.Descriptor instead.
 func (VariableType) EnumDescriptor() ([]byte, []int) {
-	return file_core_endpoint_endpoint_proto_rawDescGZIP(), []int{0}
+	return file_core_endpoint_endpoint_proto_rawDescGZIP(), []int{1}
 }
 
 type StepType int32
@@ -133,11 +183,11 @@ func (x StepType) String() string {
 }
 
 func (StepType) Descriptor() protoreflect.EnumDescriptor {
-	return file_core_endpoint_endpoint_proto_enumTypes[1].Descriptor()
+	return file_core_endpoint_endpoint_proto_enumTypes[2].Descriptor()
 }
 
 func (StepType) Type() protoreflect.EnumType {
-	return &file_core_endpoint_endpoint_proto_enumTypes[1]
+	return &file_core_endpoint_endpoint_proto_enumTypes[2]
 }
 
 func (x StepType) Number() protoreflect.EnumNumber {
@@ -146,17 +196,24 @@ func (x StepType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StepType.Descriptor instead.
 func (StepType) EnumDescriptor() ([]byte, []int) {
-	return file_core_endpoint_endpoint_proto_rawDescGZIP(), []int{1}
+	return file_core_endpoint_endpoint_proto_rawDescGZIP(), []int{2}
 }
 
 type Endpoint struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	ProjectId     string                 `protobuf:"bytes,2,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
-	Method        string                 `protobuf:"bytes,3,opt,name=method,proto3" json:"method,omitempty"`
-	Path          string                 `protobuf:"bytes,4,opt,name=path,proto3" json:"path,omitempty"`
-	Setting       *Setting               `protobuf:"bytes,5,opt,name=setting,proto3" json:"setting,omitempty"`
-	Workflow      *Workflow              `protobuf:"bytes,6,opt,name=workflow,proto3" json:"workflow,omitempty"`
+	ApplicationId string                 `protobuf:"bytes,2,opt,name=application_id,json=applicationId,proto3" json:"application_id,omitempty"`
+	ProjectId     string                 `protobuf:"bytes,3,opt,name=project_id,json=projectId,proto3" json:"project_id,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Type          EndpointType           `protobuf:"varint,6,opt,name=type,proto3,enum=endpoint.EndpointType" json:"type,omitempty"`
+	Name          string                 `protobuf:"bytes,7,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,8,opt,name=description,proto3" json:"description,omitempty"`
+	// Types that are valid to be assigned to Settings:
+	//
+	//	*Endpoint_SettingRest
+	//	*Endpoint_SettingCron
+	Settings      isEndpoint_Settings `protobuf_oneof:"settings"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -198,6 +255,13 @@ func (x *Endpoint) GetId() string {
 	return ""
 }
 
+func (x *Endpoint) GetApplicationId() string {
+	if x != nil {
+		return x.ApplicationId
+	}
+	return ""
+}
+
 func (x *Endpoint) GetProjectId() string {
 	if x != nil {
 		return x.ProjectId
@@ -205,33 +269,81 @@ func (x *Endpoint) GetProjectId() string {
 	return ""
 }
 
-func (x *Endpoint) GetMethod() string {
+func (x *Endpoint) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
-		return x.Method
-	}
-	return ""
-}
-
-func (x *Endpoint) GetPath() string {
-	if x != nil {
-		return x.Path
-	}
-	return ""
-}
-
-func (x *Endpoint) GetSetting() *Setting {
-	if x != nil {
-		return x.Setting
+		return x.CreatedAt
 	}
 	return nil
 }
 
-func (x *Endpoint) GetWorkflow() *Workflow {
+func (x *Endpoint) GetUpdatedAt() *timestamppb.Timestamp {
 	if x != nil {
-		return x.Workflow
+		return x.UpdatedAt
 	}
 	return nil
 }
+
+func (x *Endpoint) GetType() EndpointType {
+	if x != nil {
+		return x.Type
+	}
+	return EndpointType_ENDPOINT_TYPE_UNSPECIFIED
+}
+
+func (x *Endpoint) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Endpoint) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *Endpoint) GetSettings() isEndpoint_Settings {
+	if x != nil {
+		return x.Settings
+	}
+	return nil
+}
+
+func (x *Endpoint) GetSettingRest() *SettingRest {
+	if x != nil {
+		if x, ok := x.Settings.(*Endpoint_SettingRest); ok {
+			return x.SettingRest
+		}
+	}
+	return nil
+}
+
+func (x *Endpoint) GetSettingCron() *SettingCron {
+	if x != nil {
+		if x, ok := x.Settings.(*Endpoint_SettingCron); ok {
+			return x.SettingCron
+		}
+	}
+	return nil
+}
+
+type isEndpoint_Settings interface {
+	isEndpoint_Settings()
+}
+
+type Endpoint_SettingRest struct {
+	SettingRest *SettingRest `protobuf:"bytes,101,opt,name=setting_rest,json=settingRest,proto3,oneof"`
+}
+
+type Endpoint_SettingCron struct {
+	SettingCron *SettingCron `protobuf:"bytes,102,opt,name=setting_cron,json=settingCron,proto3,oneof"`
+}
+
+func (*Endpoint_SettingRest) isEndpoint_Settings() {}
+
+func (*Endpoint_SettingCron) isEndpoint_Settings() {}
 
 type Variable struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -301,31 +413,32 @@ func (x *Variable) GetDefault() string {
 	return ""
 }
 
-type Setting struct {
+type SettingRest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	Method        string                 `protobuf:"bytes,1,opt,name=method,proto3" json:"method,omitempty"`
+	Path          string                 `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
 	TimeoutMs     int64                  `protobuf:"varint,3,opt,name=timeout_ms,json=timeoutMs,proto3" json:"timeout_ms,omitempty"`
 	NumWorkers    int32                  `protobuf:"varint,4,opt,name=num_workers,json=numWorkers,proto3" json:"num_workers,omitempty"`
-	Request       *SettingRequest        `protobuf:"bytes,5,opt,name=request,proto3" json:"request,omitempty"`
+	Query         map[string]*Variable   `protobuf:"bytes,5,rep,name=query,proto3" json:"query,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Json          map[string]*Variable   `protobuf:"bytes,6,rep,name=json,proto3" json:"json,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Setting) Reset() {
-	*x = Setting{}
+func (x *SettingRest) Reset() {
+	*x = SettingRest{}
 	mi := &file_core_endpoint_endpoint_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Setting) String() string {
+func (x *SettingRest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Setting) ProtoMessage() {}
+func (*SettingRest) ProtoMessage() {}
 
-func (x *Setting) ProtoReflect() protoreflect.Message {
+func (x *SettingRest) ProtoReflect() protoreflect.Message {
 	mi := &file_core_endpoint_endpoint_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -337,68 +450,75 @@ func (x *Setting) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Setting.ProtoReflect.Descriptor instead.
-func (*Setting) Descriptor() ([]byte, []int) {
+// Deprecated: Use SettingRest.ProtoReflect.Descriptor instead.
+func (*SettingRest) Descriptor() ([]byte, []int) {
 	return file_core_endpoint_endpoint_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *Setting) GetName() string {
+func (x *SettingRest) GetMethod() string {
 	if x != nil {
-		return x.Name
+		return x.Method
 	}
 	return ""
 }
 
-func (x *Setting) GetDescription() string {
+func (x *SettingRest) GetPath() string {
 	if x != nil {
-		return x.Description
+		return x.Path
 	}
 	return ""
 }
 
-func (x *Setting) GetTimeoutMs() int64 {
+func (x *SettingRest) GetTimeoutMs() int64 {
 	if x != nil {
 		return x.TimeoutMs
 	}
 	return 0
 }
 
-func (x *Setting) GetNumWorkers() int32 {
+func (x *SettingRest) GetNumWorkers() int32 {
 	if x != nil {
 		return x.NumWorkers
 	}
 	return 0
 }
 
-func (x *Setting) GetRequest() *SettingRequest {
+func (x *SettingRest) GetQuery() map[string]*Variable {
 	if x != nil {
-		return x.Request
+		return x.Query
 	}
 	return nil
 }
 
-type SettingRequest struct {
+func (x *SettingRest) GetJson() map[string]*Variable {
+	if x != nil {
+		return x.Json
+	}
+	return nil
+}
+
+type SettingCron struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Query         map[string]*Variable   `protobuf:"bytes,1,rep,name=query,proto3" json:"query,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	Json          map[string]*Variable   `protobuf:"bytes,2,rep,name=json,proto3" json:"json,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Cron          string                 `protobuf:"bytes,1,opt,name=cron,proto3" json:"cron,omitempty"`
+	TimeoutMs     int64                  `protobuf:"varint,2,opt,name=timeout_ms,json=timeoutMs,proto3" json:"timeout_ms,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SettingRequest) Reset() {
-	*x = SettingRequest{}
+func (x *SettingCron) Reset() {
+	*x = SettingCron{}
 	mi := &file_core_endpoint_endpoint_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SettingRequest) String() string {
+func (x *SettingCron) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SettingRequest) ProtoMessage() {}
+func (*SettingCron) ProtoMessage() {}
 
-func (x *SettingRequest) ProtoReflect() protoreflect.Message {
+func (x *SettingCron) ProtoReflect() protoreflect.Message {
 	mi := &file_core_endpoint_endpoint_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -410,23 +530,23 @@ func (x *SettingRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SettingRequest.ProtoReflect.Descriptor instead.
-func (*SettingRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use SettingCron.ProtoReflect.Descriptor instead.
+func (*SettingCron) Descriptor() ([]byte, []int) {
 	return file_core_endpoint_endpoint_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *SettingRequest) GetQuery() map[string]*Variable {
+func (x *SettingCron) GetCron() string {
 	if x != nil {
-		return x.Query
+		return x.Cron
 	}
-	return nil
+	return ""
 }
 
-func (x *SettingRequest) GetJson() map[string]*Variable {
+func (x *SettingCron) GetTimeoutMs() int64 {
 	if x != nil {
-		return x.Json
+		return x.TimeoutMs
 	}
-	return nil
+	return 0
 }
 
 type Workflow struct {
@@ -1049,38 +1169,48 @@ var File_core_endpoint_endpoint_proto protoreflect.FileDescriptor
 
 const file_core_endpoint_endpoint_proto_rawDesc = "" +
 	"\n" +
-	"\x1ccore/endpoint/endpoint.proto\x12\bendpoint\"\xc2\x01\n" +
+	"\x1ccore/endpoint/endpoint.proto\x12\bendpoint\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbc\x03\n" +
 	"\bEndpoint\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12%\n" +
+	"\x0eapplication_id\x18\x02 \x01(\tR\rapplicationId\x12\x1d\n" +
 	"\n" +
-	"project_id\x18\x02 \x01(\tR\tprojectId\x12\x16\n" +
-	"\x06method\x18\x03 \x01(\tR\x06method\x12\x12\n" +
-	"\x04path\x18\x04 \x01(\tR\x04path\x12+\n" +
-	"\asetting\x18\x05 \x01(\v2\x11.endpoint.SettingR\asetting\x12.\n" +
-	"\bworkflow\x18\x06 \x01(\v2\x12.endpoint.WorkflowR\bworkflow\"\x82\x01\n" +
+	"project_id\x18\x03 \x01(\tR\tprojectId\x129\n" +
+	"\n" +
+	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"\n" +
+	"updated_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12*\n" +
+	"\x04type\x18\x06 \x01(\x0e2\x16.endpoint.EndpointTypeR\x04type\x12\x12\n" +
+	"\x04name\x18\a \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\b \x01(\tR\vdescription\x12:\n" +
+	"\fsetting_rest\x18e \x01(\v2\x15.endpoint.SettingRestH\x00R\vsettingRest\x12:\n" +
+	"\fsetting_cron\x18f \x01(\v2\x15.endpoint.SettingCronH\x00R\vsettingCronB\n" +
+	"\n" +
+	"\bsettings\"\x82\x01\n" +
 	"\bVariable\x12*\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x16.endpoint.VariableTypeR\x04type\x12\x1a\n" +
 	"\brequired\x18\x02 \x01(\bR\brequired\x12\x14\n" +
 	"\x05value\x18\x03 \x01(\tR\x05value\x12\x18\n" +
-	"\adefault\x18\x04 \x01(\tR\adefault\"\xb3\x01\n" +
-	"\aSetting\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1d\n" +
+	"\adefault\x18\x04 \x01(\tR\adefault\"\x81\x03\n" +
+	"\vSettingRest\x12\x16\n" +
+	"\x06method\x18\x01 \x01(\tR\x06method\x12\x12\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\x12\x1d\n" +
 	"\n" +
 	"timeout_ms\x18\x03 \x01(\x03R\ttimeoutMs\x12\x1f\n" +
 	"\vnum_workers\x18\x04 \x01(\x05R\n" +
-	"numWorkers\x122\n" +
-	"\arequest\x18\x05 \x01(\v2\x18.endpoint.SettingRequestR\arequest\"\x9e\x02\n" +
-	"\x0eSettingRequest\x129\n" +
-	"\x05query\x18\x01 \x03(\v2#.endpoint.SettingRequest.QueryEntryR\x05query\x126\n" +
-	"\x04json\x18\x02 \x03(\v2\".endpoint.SettingRequest.JsonEntryR\x04json\x1aL\n" +
+	"numWorkers\x126\n" +
+	"\x05query\x18\x05 \x03(\v2 .endpoint.SettingRest.QueryEntryR\x05query\x123\n" +
+	"\x04json\x18\x06 \x03(\v2\x1f.endpoint.SettingRest.JsonEntryR\x04json\x1aL\n" +
 	"\n" +
 	"QueryEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12(\n" +
 	"\x05value\x18\x02 \x01(\v2\x12.endpoint.VariableR\x05value:\x028\x01\x1aK\n" +
 	"\tJsonEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12(\n" +
-	"\x05value\x18\x02 \x01(\v2\x12.endpoint.VariableR\x05value:\x028\x01\"V\n" +
+	"\x05value\x18\x02 \x01(\v2\x12.endpoint.VariableR\x05value:\x028\x01\"@\n" +
+	"\vSettingCron\x12\x12\n" +
+	"\x04cron\x18\x01 \x01(\tR\x04cron\x12\x1d\n" +
+	"\n" +
+	"timeout_ms\x18\x02 \x01(\x03R\ttimeoutMs\"V\n" +
 	"\bWorkflow\x12$\n" +
 	"\x05steps\x18\x01 \x03(\v2\x0e.endpoint.StepR\x05steps\x12$\n" +
 	"\x05edges\x18\x02 \x03(\v2\x0e.endpoint.EdgeR\x05edges\"\xbe\x03\n" +
@@ -1136,7 +1266,11 @@ const file_core_endpoint_endpoint_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12!\n" +
 	"\fcondition_id\x18\x02 \x01(\tR\vconditionId\x12\x16\n" +
 	"\x06source\x18\x03 \x01(\tR\x06source\x12\x12\n" +
-	"\x04dest\x18\x04 \x01(\tR\x04dest*\xa9\x01\n" +
+	"\x04dest\x18\x04 \x01(\tR\x04dest*]\n" +
+	"\fEndpointType\x12\x1d\n" +
+	"\x19ENDPOINT_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
+	"\x12ENDPOINT_TYPE_REST\x10\x01\x12\x16\n" +
+	"\x12ENDPOINT_TYPE_CRON\x10\x02*\xa9\x01\n" +
 	"\fVariableType\x12\x1d\n" +
 	"\x19VARIABLE_TYPE_UNSPECIFIED\x10\x00\x12\x18\n" +
 	"\x14VARIABLE_TYPE_STRING\x10\x01\x12\x15\n" +
@@ -1169,64 +1303,68 @@ func file_core_endpoint_endpoint_proto_rawDescGZIP() []byte {
 	return file_core_endpoint_endpoint_proto_rawDescData
 }
 
-var file_core_endpoint_endpoint_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_core_endpoint_endpoint_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_core_endpoint_endpoint_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_core_endpoint_endpoint_proto_goTypes = []any{
-	(VariableType)(0),      // 0: endpoint.VariableType
-	(StepType)(0),          // 1: endpoint.StepType
-	(*Endpoint)(nil),       // 2: endpoint.Endpoint
-	(*Variable)(nil),       // 3: endpoint.Variable
-	(*Setting)(nil),        // 4: endpoint.Setting
-	(*SettingRequest)(nil), // 5: endpoint.SettingRequest
-	(*Workflow)(nil),       // 6: endpoint.Workflow
-	(*Step)(nil),           // 7: endpoint.Step
-	(*Action)(nil),         // 8: endpoint.Action
-	(*ActionEnd)(nil),      // 9: endpoint.ActionEnd
-	(*ActionMysql)(nil),    // 10: endpoint.ActionMysql
-	(*ActionRest)(nil),     // 11: endpoint.ActionRest
-	(*ActionSleep)(nil),    // 12: endpoint.ActionSleep
-	(*Query)(nil),          // 13: endpoint.Query
-	(*Return)(nil),         // 14: endpoint.Return
-	(*Edge)(nil),           // 15: endpoint.Edge
-	nil,                    // 16: endpoint.SettingRequest.QueryEntry
-	nil,                    // 17: endpoint.SettingRequest.JsonEntry
-	nil,                    // 18: endpoint.Step.VariablesEntry
-	nil,                    // 19: endpoint.Step.OutputsEntry
-	nil,                    // 20: endpoint.ActionRest.HeadersEntry
+	(EndpointType)(0),             // 0: endpoint.EndpointType
+	(VariableType)(0),             // 1: endpoint.VariableType
+	(StepType)(0),                 // 2: endpoint.StepType
+	(*Endpoint)(nil),              // 3: endpoint.Endpoint
+	(*Variable)(nil),              // 4: endpoint.Variable
+	(*SettingRest)(nil),           // 5: endpoint.SettingRest
+	(*SettingCron)(nil),           // 6: endpoint.SettingCron
+	(*Workflow)(nil),              // 7: endpoint.Workflow
+	(*Step)(nil),                  // 8: endpoint.Step
+	(*Action)(nil),                // 9: endpoint.Action
+	(*ActionEnd)(nil),             // 10: endpoint.ActionEnd
+	(*ActionMysql)(nil),           // 11: endpoint.ActionMysql
+	(*ActionRest)(nil),            // 12: endpoint.ActionRest
+	(*ActionSleep)(nil),           // 13: endpoint.ActionSleep
+	(*Query)(nil),                 // 14: endpoint.Query
+	(*Return)(nil),                // 15: endpoint.Return
+	(*Edge)(nil),                  // 16: endpoint.Edge
+	nil,                           // 17: endpoint.SettingRest.QueryEntry
+	nil,                           // 18: endpoint.SettingRest.JsonEntry
+	nil,                           // 19: endpoint.Step.VariablesEntry
+	nil,                           // 20: endpoint.Step.OutputsEntry
+	nil,                           // 21: endpoint.ActionRest.HeadersEntry
+	(*timestamppb.Timestamp)(nil), // 22: google.protobuf.Timestamp
 }
 var file_core_endpoint_endpoint_proto_depIdxs = []int32{
-	4,  // 0: endpoint.Endpoint.setting:type_name -> endpoint.Setting
-	6,  // 1: endpoint.Endpoint.workflow:type_name -> endpoint.Workflow
-	0,  // 2: endpoint.Variable.type:type_name -> endpoint.VariableType
-	5,  // 3: endpoint.Setting.request:type_name -> endpoint.SettingRequest
-	16, // 4: endpoint.SettingRequest.query:type_name -> endpoint.SettingRequest.QueryEntry
-	17, // 5: endpoint.SettingRequest.json:type_name -> endpoint.SettingRequest.JsonEntry
-	7,  // 6: endpoint.Workflow.steps:type_name -> endpoint.Step
-	15, // 7: endpoint.Workflow.edges:type_name -> endpoint.Edge
-	1,  // 8: endpoint.Step.type:type_name -> endpoint.StepType
-	18, // 9: endpoint.Step.variables:type_name -> endpoint.Step.VariablesEntry
-	8,  // 10: endpoint.Step.action:type_name -> endpoint.Action
-	19, // 11: endpoint.Step.outputs:type_name -> endpoint.Step.OutputsEntry
-	14, // 12: endpoint.Step.returns:type_name -> endpoint.Return
-	9,  // 13: endpoint.Action.end:type_name -> endpoint.ActionEnd
-	10, // 14: endpoint.Action.mysql:type_name -> endpoint.ActionMysql
-	11, // 15: endpoint.Action.rest:type_name -> endpoint.ActionRest
-	12, // 16: endpoint.Action.sleep:type_name -> endpoint.ActionSleep
-	13, // 17: endpoint.ActionMysql.queries:type_name -> endpoint.Query
-	3,  // 18: endpoint.ActionRest.path:type_name -> endpoint.Variable
-	20, // 19: endpoint.ActionRest.headers:type_name -> endpoint.ActionRest.HeadersEntry
-	3,  // 20: endpoint.Query.query:type_name -> endpoint.Variable
-	3,  // 21: endpoint.Query.parameters:type_name -> endpoint.Variable
-	3,  // 22: endpoint.SettingRequest.QueryEntry.value:type_name -> endpoint.Variable
-	3,  // 23: endpoint.SettingRequest.JsonEntry.value:type_name -> endpoint.Variable
-	3,  // 24: endpoint.Step.VariablesEntry.value:type_name -> endpoint.Variable
-	3,  // 25: endpoint.Step.OutputsEntry.value:type_name -> endpoint.Variable
-	3,  // 26: endpoint.ActionRest.HeadersEntry.value:type_name -> endpoint.Variable
-	27, // [27:27] is the sub-list for method output_type
-	27, // [27:27] is the sub-list for method input_type
-	27, // [27:27] is the sub-list for extension type_name
-	27, // [27:27] is the sub-list for extension extendee
-	0,  // [0:27] is the sub-list for field type_name
+	22, // 0: endpoint.Endpoint.created_at:type_name -> google.protobuf.Timestamp
+	22, // 1: endpoint.Endpoint.updated_at:type_name -> google.protobuf.Timestamp
+	0,  // 2: endpoint.Endpoint.type:type_name -> endpoint.EndpointType
+	5,  // 3: endpoint.Endpoint.setting_rest:type_name -> endpoint.SettingRest
+	6,  // 4: endpoint.Endpoint.setting_cron:type_name -> endpoint.SettingCron
+	1,  // 5: endpoint.Variable.type:type_name -> endpoint.VariableType
+	17, // 6: endpoint.SettingRest.query:type_name -> endpoint.SettingRest.QueryEntry
+	18, // 7: endpoint.SettingRest.json:type_name -> endpoint.SettingRest.JsonEntry
+	8,  // 8: endpoint.Workflow.steps:type_name -> endpoint.Step
+	16, // 9: endpoint.Workflow.edges:type_name -> endpoint.Edge
+	2,  // 10: endpoint.Step.type:type_name -> endpoint.StepType
+	19, // 11: endpoint.Step.variables:type_name -> endpoint.Step.VariablesEntry
+	9,  // 12: endpoint.Step.action:type_name -> endpoint.Action
+	20, // 13: endpoint.Step.outputs:type_name -> endpoint.Step.OutputsEntry
+	15, // 14: endpoint.Step.returns:type_name -> endpoint.Return
+	10, // 15: endpoint.Action.end:type_name -> endpoint.ActionEnd
+	11, // 16: endpoint.Action.mysql:type_name -> endpoint.ActionMysql
+	12, // 17: endpoint.Action.rest:type_name -> endpoint.ActionRest
+	13, // 18: endpoint.Action.sleep:type_name -> endpoint.ActionSleep
+	14, // 19: endpoint.ActionMysql.queries:type_name -> endpoint.Query
+	4,  // 20: endpoint.ActionRest.path:type_name -> endpoint.Variable
+	21, // 21: endpoint.ActionRest.headers:type_name -> endpoint.ActionRest.HeadersEntry
+	4,  // 22: endpoint.Query.query:type_name -> endpoint.Variable
+	4,  // 23: endpoint.Query.parameters:type_name -> endpoint.Variable
+	4,  // 24: endpoint.SettingRest.QueryEntry.value:type_name -> endpoint.Variable
+	4,  // 25: endpoint.SettingRest.JsonEntry.value:type_name -> endpoint.Variable
+	4,  // 26: endpoint.Step.VariablesEntry.value:type_name -> endpoint.Variable
+	4,  // 27: endpoint.Step.OutputsEntry.value:type_name -> endpoint.Variable
+	4,  // 28: endpoint.ActionRest.HeadersEntry.value:type_name -> endpoint.Variable
+	29, // [29:29] is the sub-list for method output_type
+	29, // [29:29] is the sub-list for method input_type
+	29, // [29:29] is the sub-list for extension type_name
+	29, // [29:29] is the sub-list for extension extendee
+	0,  // [0:29] is the sub-list for field type_name
 }
 
 func init() { file_core_endpoint_endpoint_proto_init() }
@@ -1234,12 +1372,16 @@ func file_core_endpoint_endpoint_proto_init() {
 	if File_core_endpoint_endpoint_proto != nil {
 		return
 	}
+	file_core_endpoint_endpoint_proto_msgTypes[0].OneofWrappers = []any{
+		(*Endpoint_SettingRest)(nil),
+		(*Endpoint_SettingCron)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_endpoint_endpoint_proto_rawDesc), len(file_core_endpoint_endpoint_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      3,
 			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   0,

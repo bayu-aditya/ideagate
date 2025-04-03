@@ -4,6 +4,8 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { DashboardService } from "./service";
+import type { GetListEndpointResponse } from "./endpoint";
+import type { GetListEndpointRequest } from "./endpoint";
 import type { DeleteApplicationResponse } from "./application";
 import type { DeleteApplicationRequest } from "./application";
 import type { UpdateApplicationResponse } from "./application";
@@ -59,6 +61,10 @@ export interface IDashboardServiceClient {
      * @generated from protobuf rpc: DeleteApplication(dashboard.DeleteApplicationRequest) returns (dashboard.DeleteApplicationResponse);
      */
     deleteApplication(input: DeleteApplicationRequest, options?: RpcOptions): UnaryCall<DeleteApplicationRequest, DeleteApplicationResponse>;
+    /**
+     * @generated from protobuf rpc: GetListEndpoint(dashboard.GetListEndpointRequest) returns (dashboard.GetListEndpointResponse);
+     */
+    getListEndpoint(input: GetListEndpointRequest, options?: RpcOptions): UnaryCall<GetListEndpointRequest, GetListEndpointResponse>;
 }
 /**
  * @generated from protobuf service dashboard.DashboardService
@@ -124,5 +130,12 @@ export class DashboardServiceClient implements IDashboardServiceClient, ServiceI
     deleteApplication(input: DeleteApplicationRequest, options?: RpcOptions): UnaryCall<DeleteApplicationRequest, DeleteApplicationResponse> {
         const method = this.methods[7], opt = this._transport.mergeOptions(options);
         return stackIntercept<DeleteApplicationRequest, DeleteApplicationResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: GetListEndpoint(dashboard.GetListEndpointRequest) returns (dashboard.GetListEndpointResponse);
+     */
+    getListEndpoint(input: GetListEndpointRequest, options?: RpcOptions): UnaryCall<GetListEndpointRequest, GetListEndpointResponse> {
+        const method = this.methods[8], opt = this._transport.mergeOptions(options);
+        return stackIntercept<GetListEndpointRequest, GetListEndpointResponse>("unary", this._transport, method, opt, input);
     }
 }

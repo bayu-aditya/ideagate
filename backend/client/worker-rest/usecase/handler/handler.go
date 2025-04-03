@@ -34,15 +34,26 @@ func (h *handler) GenerateEndpoint(ctx context.Context, router *gin.Engine) erro
 	}
 
 	for _, endpointPb := range resultListEndpoint.GetEndpoints() {
-		router.Handle(endpointPb.GetMethod(), endpointPb.GetPath(), h.handler(endpointPb))
+		setting := endpointPb.GetSettingRest()
+		if setting == nil {
+			continue
+		}
+
+		router.Handle(setting.GetMethod(), setting.GetPath(), h.handler(h.adapterController, endpointPb))
 	}
 
 	return nil
 }
 
-func (h *handler) handler(endpoint *pbEndpoint.Endpoint) gin.HandlerFunc {
+func (h *handler) handler(adapterController adapterController.IControllerAdapter, endpoint *pbEndpoint.Endpoint) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		mgr, _ := newManager(c, endpoint)
+		// get workflow from controller
+		respWorkflow, err := adapterController.GetWorkflow(c.Request.Context(), endpoint.GetId())
+		if err != nil {
+			return
+		}
+
+		mgr, _ := newManager(c, endpoint, respWorkflow.GetWorkflow())
 		mgr.RunHandler()
 	}
 }

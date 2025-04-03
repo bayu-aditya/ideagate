@@ -11,6 +11,7 @@ import type { IBinaryReader } from "@protobuf-ts/runtime";
 import type { PartialMessage } from "@protobuf-ts/runtime";
 import { reflectionMergePartial } from "@protobuf-ts/runtime";
 import { MessageType } from "@protobuf-ts/runtime";
+import { Workflow } from "../../../core/endpoint/endpoint";
 import { Endpoint } from "../../../core/endpoint/endpoint";
 /**
  * @generated from protobuf message v1.GetListEndpointRequest
@@ -25,6 +26,24 @@ export interface GetListEndpointResponse {
      * @generated from protobuf field: repeated endpoint.Endpoint endpoints = 1;
      */
     endpoints: Endpoint[];
+}
+/**
+ * @generated from protobuf message v1.GetWorkflowRequest
+ */
+export interface GetWorkflowRequest {
+    /**
+     * @generated from protobuf field: string entrypoint_id = 1;
+     */
+    entrypointId: string;
+}
+/**
+ * @generated from protobuf message v1.GetWorkflowResponse
+ */
+export interface GetWorkflowResponse {
+    /**
+     * @generated from protobuf field: endpoint.Workflow workflow = 1;
+     */
+    workflow?: Workflow;
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class GetListEndpointRequest$Type extends MessageType<GetListEndpointRequest> {
@@ -98,9 +117,103 @@ class GetListEndpointResponse$Type extends MessageType<GetListEndpointResponse> 
  * @generated MessageType for protobuf message v1.GetListEndpointResponse
  */
 export const GetListEndpointResponse = new GetListEndpointResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class GetWorkflowRequest$Type extends MessageType<GetWorkflowRequest> {
+    constructor() {
+        super("v1.GetWorkflowRequest", [
+            { no: 1, name: "entrypoint_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<GetWorkflowRequest>): GetWorkflowRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.entrypointId = "";
+        if (value !== undefined)
+            reflectionMergePartial<GetWorkflowRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: GetWorkflowRequest): GetWorkflowRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string entrypoint_id */ 1:
+                    message.entrypointId = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: GetWorkflowRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string entrypoint_id = 1; */
+        if (message.entrypointId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.entrypointId);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message v1.GetWorkflowRequest
+ */
+export const GetWorkflowRequest = new GetWorkflowRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class GetWorkflowResponse$Type extends MessageType<GetWorkflowResponse> {
+    constructor() {
+        super("v1.GetWorkflowResponse", [
+            { no: 1, name: "workflow", kind: "message", T: () => Workflow }
+        ]);
+    }
+    create(value?: PartialMessage<GetWorkflowResponse>): GetWorkflowResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        if (value !== undefined)
+            reflectionMergePartial<GetWorkflowResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: GetWorkflowResponse): GetWorkflowResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* endpoint.Workflow workflow */ 1:
+                    message.workflow = Workflow.internalBinaryRead(reader, reader.uint32(), options, message.workflow);
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: GetWorkflowResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* endpoint.Workflow workflow = 1; */
+        if (message.workflow)
+            Workflow.internalBinaryWrite(message.workflow, writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message v1.GetWorkflowResponse
+ */
+export const GetWorkflowResponse = new GetWorkflowResponse$Type();
 /**
  * @generated ServiceType for protobuf service v1.ControllerService
  */
 export const ControllerService = new ServiceType("v1.ControllerService", [
-    { name: "GetListEndpoint", options: {}, I: GetListEndpointRequest, O: GetListEndpointResponse }
+    { name: "GetListEndpoint", options: {}, I: GetListEndpointRequest, O: GetListEndpointResponse },
+    { name: "GetWorkflow", options: {}, I: GetWorkflowRequest, O: GetWorkflowResponse }
 ]);

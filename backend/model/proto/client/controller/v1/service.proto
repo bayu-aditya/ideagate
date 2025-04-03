@@ -6,10 +6,19 @@ import "core/endpoint/endpoint.proto";
 
 service ControllerService {
     rpc GetListEndpoint(GetListEndpointRequest) returns (GetListEndpointResponse);
+    rpc GetWorkflow(GetWorkflowRequest) returns (GetWorkflowResponse);
 }
 
 message GetListEndpointRequest {}
 
 message GetListEndpointResponse {
     repeated endpoint.Endpoint endpoints = 1;
+}
+
+message GetWorkflowRequest {
+    string entrypoint_id = 1;
+}
+
+message GetWorkflowResponse {
+     endpoint.Workflow workflow = 1;
 }

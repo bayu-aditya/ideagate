@@ -10,6 +10,7 @@ import { UnknownFieldHandler } from "@protobuf-ts/runtime";
 import type { PartialMessage } from "@protobuf-ts/runtime";
 import { reflectionMergePartial } from "@protobuf-ts/runtime";
 import { MessageType } from "@protobuf-ts/runtime";
+import { Timestamp } from "../../google/protobuf/timestamp";
 /**
  * @generated from protobuf message endpoint.Endpoint
  */
@@ -19,25 +20,51 @@ export interface Endpoint {
      */
     id: string;
     /**
-     * @generated from protobuf field: string project_id = 2;
+     * @generated from protobuf field: string application_id = 2;
+     */
+    applicationId: string;
+    /**
+     * @generated from protobuf field: string project_id = 3;
      */
     projectId: string;
     /**
-     * @generated from protobuf field: string method = 3;
+     * @generated from protobuf field: google.protobuf.Timestamp created_at = 4;
      */
-    method: string;
+    createdAt?: Timestamp;
     /**
-     * @generated from protobuf field: string path = 4;
+     * @generated from protobuf field: google.protobuf.Timestamp updated_at = 5;
      */
-    path: string;
+    updatedAt?: Timestamp;
     /**
-     * @generated from protobuf field: endpoint.Setting setting = 5;
+     * @generated from protobuf field: endpoint.EndpointType type = 6;
      */
-    setting?: Setting;
+    type: EndpointType;
     /**
-     * @generated from protobuf field: endpoint.Workflow workflow = 6;
+     * @generated from protobuf field: string name = 7;
      */
-    workflow?: Workflow;
+    name: string;
+    /**
+     * @generated from protobuf field: string description = 8;
+     */
+    description: string;
+    /**
+     * @generated from protobuf oneof: settings
+     */
+    settings: {
+        oneofKind: "settingRest";
+        /**
+         * @generated from protobuf field: endpoint.SettingRest setting_rest = 101;
+         */
+        settingRest: SettingRest;
+    } | {
+        oneofKind: "settingCron";
+        /**
+         * @generated from protobuf field: endpoint.SettingCron setting_cron = 102;
+         */
+        settingCron: SettingCron;
+    } | {
+        oneofKind: undefined;
+    };
 }
 /**
  * @generated from protobuf message endpoint.Variable
@@ -61,17 +88,17 @@ export interface Variable {
     default: string;
 }
 /**
- * @generated from protobuf message endpoint.Setting
+ * @generated from protobuf message endpoint.SettingRest
  */
-export interface Setting {
+export interface SettingRest {
     /**
-     * @generated from protobuf field: string name = 1;
+     * @generated from protobuf field: string method = 1;
      */
-    name: string;
+    method: string;
     /**
-     * @generated from protobuf field: string description = 2;
+     * @generated from protobuf field: string path = 2;
      */
-    description: string;
+    path: string;
     /**
      * @generated from protobuf field: int64 timeout_ms = 3;
      */
@@ -81,26 +108,30 @@ export interface Setting {
      */
     numWorkers: number;
     /**
-     * @generated from protobuf field: endpoint.SettingRequest request = 5;
-     */
-    request?: SettingRequest;
-}
-/**
- * @generated from protobuf message endpoint.SettingRequest
- */
-export interface SettingRequest {
-    /**
-     * @generated from protobuf field: map<string, endpoint.Variable> query = 1;
+     * @generated from protobuf field: map<string, endpoint.Variable> query = 5;
      */
     query: {
         [key: string]: Variable;
     };
     /**
-     * @generated from protobuf field: map<string, endpoint.Variable> json = 2;
+     * @generated from protobuf field: map<string, endpoint.Variable> json = 6;
      */
     json: {
         [key: string]: Variable;
     };
+}
+/**
+ * @generated from protobuf message endpoint.SettingCron
+ */
+export interface SettingCron {
+    /**
+     * @generated from protobuf field: string cron = 1;
+     */
+    cron: string;
+    /**
+     * @generated from protobuf field: int64 timeout_ms = 2;
+     */
+    timeoutMs: bigint;
 }
 /**
  * @generated from protobuf message endpoint.Workflow
@@ -287,6 +318,23 @@ export interface Edge {
     dest: string;
 }
 /**
+ * @generated from protobuf enum endpoint.EndpointType
+ */
+export enum EndpointType {
+    /**
+     * @generated from protobuf enum value: ENDPOINT_TYPE_UNSPECIFIED = 0;
+     */
+    UNSPECIFIED = 0,
+    /**
+     * @generated from protobuf enum value: ENDPOINT_TYPE_REST = 1;
+     */
+    REST = 1,
+    /**
+     * @generated from protobuf enum value: ENDPOINT_TYPE_CRON = 2;
+     */
+    CRON = 2
+}
+/**
  * @generated from protobuf enum endpoint.VariableType
  */
 export enum VariableType {
@@ -365,19 +413,26 @@ class Endpoint$Type extends MessageType<Endpoint> {
     constructor() {
         super("endpoint.Endpoint", [
             { no: 1, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "project_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 3, name: "method", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 4, name: "path", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 5, name: "setting", kind: "message", T: () => Setting },
-            { no: 6, name: "workflow", kind: "message", T: () => Workflow }
+            { no: 2, name: "application_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "project_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "created_at", kind: "message", T: () => Timestamp },
+            { no: 5, name: "updated_at", kind: "message", T: () => Timestamp },
+            { no: 6, name: "type", kind: "enum", T: () => ["endpoint.EndpointType", EndpointType, "ENDPOINT_TYPE_"] },
+            { no: 7, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 8, name: "description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 101, name: "setting_rest", kind: "message", oneof: "settings", T: () => SettingRest },
+            { no: 102, name: "setting_cron", kind: "message", oneof: "settings", T: () => SettingCron }
         ]);
     }
     create(value?: PartialMessage<Endpoint>): Endpoint {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.id = "";
+        message.applicationId = "";
         message.projectId = "";
-        message.method = "";
-        message.path = "";
+        message.type = 0;
+        message.name = "";
+        message.description = "";
+        message.settings = { oneofKind: undefined };
         if (value !== undefined)
             reflectionMergePartial<Endpoint>(this, message, value);
         return message;
@@ -390,20 +445,38 @@ class Endpoint$Type extends MessageType<Endpoint> {
                 case /* string id */ 1:
                     message.id = reader.string();
                     break;
-                case /* string project_id */ 2:
+                case /* string application_id */ 2:
+                    message.applicationId = reader.string();
+                    break;
+                case /* string project_id */ 3:
                     message.projectId = reader.string();
                     break;
-                case /* string method */ 3:
-                    message.method = reader.string();
+                case /* google.protobuf.Timestamp created_at */ 4:
+                    message.createdAt = Timestamp.internalBinaryRead(reader, reader.uint32(), options, message.createdAt);
                     break;
-                case /* string path */ 4:
-                    message.path = reader.string();
+                case /* google.protobuf.Timestamp updated_at */ 5:
+                    message.updatedAt = Timestamp.internalBinaryRead(reader, reader.uint32(), options, message.updatedAt);
                     break;
-                case /* endpoint.Setting setting */ 5:
-                    message.setting = Setting.internalBinaryRead(reader, reader.uint32(), options, message.setting);
+                case /* endpoint.EndpointType type */ 6:
+                    message.type = reader.int32();
                     break;
-                case /* endpoint.Workflow workflow */ 6:
-                    message.workflow = Workflow.internalBinaryRead(reader, reader.uint32(), options, message.workflow);
+                case /* string name */ 7:
+                    message.name = reader.string();
+                    break;
+                case /* string description */ 8:
+                    message.description = reader.string();
+                    break;
+                case /* endpoint.SettingRest setting_rest */ 101:
+                    message.settings = {
+                        oneofKind: "settingRest",
+                        settingRest: SettingRest.internalBinaryRead(reader, reader.uint32(), options, (message.settings as any).settingRest)
+                    };
+                    break;
+                case /* endpoint.SettingCron setting_cron */ 102:
+                    message.settings = {
+                        oneofKind: "settingCron",
+                        settingCron: SettingCron.internalBinaryRead(reader, reader.uint32(), options, (message.settings as any).settingCron)
+                    };
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -420,21 +493,33 @@ class Endpoint$Type extends MessageType<Endpoint> {
         /* string id = 1; */
         if (message.id !== "")
             writer.tag(1, WireType.LengthDelimited).string(message.id);
-        /* string project_id = 2; */
+        /* string application_id = 2; */
+        if (message.applicationId !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.applicationId);
+        /* string project_id = 3; */
         if (message.projectId !== "")
-            writer.tag(2, WireType.LengthDelimited).string(message.projectId);
-        /* string method = 3; */
-        if (message.method !== "")
-            writer.tag(3, WireType.LengthDelimited).string(message.method);
-        /* string path = 4; */
-        if (message.path !== "")
-            writer.tag(4, WireType.LengthDelimited).string(message.path);
-        /* endpoint.Setting setting = 5; */
-        if (message.setting)
-            Setting.internalBinaryWrite(message.setting, writer.tag(5, WireType.LengthDelimited).fork(), options).join();
-        /* endpoint.Workflow workflow = 6; */
-        if (message.workflow)
-            Workflow.internalBinaryWrite(message.workflow, writer.tag(6, WireType.LengthDelimited).fork(), options).join();
+            writer.tag(3, WireType.LengthDelimited).string(message.projectId);
+        /* google.protobuf.Timestamp created_at = 4; */
+        if (message.createdAt)
+            Timestamp.internalBinaryWrite(message.createdAt, writer.tag(4, WireType.LengthDelimited).fork(), options).join();
+        /* google.protobuf.Timestamp updated_at = 5; */
+        if (message.updatedAt)
+            Timestamp.internalBinaryWrite(message.updatedAt, writer.tag(5, WireType.LengthDelimited).fork(), options).join();
+        /* endpoint.EndpointType type = 6; */
+        if (message.type !== 0)
+            writer.tag(6, WireType.Varint).int32(message.type);
+        /* string name = 7; */
+        if (message.name !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.name);
+        /* string description = 8; */
+        if (message.description !== "")
+            writer.tag(8, WireType.LengthDelimited).string(message.description);
+        /* endpoint.SettingRest setting_rest = 101; */
+        if (message.settings.oneofKind === "settingRest")
+            SettingRest.internalBinaryWrite(message.settings.settingRest, writer.tag(101, WireType.LengthDelimited).fork(), options).join();
+        /* endpoint.SettingCron setting_cron = 102; */
+        if (message.settings.oneofKind === "settingCron")
+            SettingCron.internalBinaryWrite(message.settings.settingCron, writer.tag(102, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -517,36 +602,39 @@ class Variable$Type extends MessageType<Variable> {
  */
 export const Variable = new Variable$Type();
 // @generated message type with reflection information, may provide speed optimized methods
-class Setting$Type extends MessageType<Setting> {
+class SettingRest$Type extends MessageType<SettingRest> {
     constructor() {
-        super("endpoint.Setting", [
-            { no: 1, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+        super("endpoint.SettingRest", [
+            { no: 1, name: "method", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "path", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "timeout_ms", kind: "scalar", T: 3 /*ScalarType.INT64*/, L: 0 /*LongType.BIGINT*/ },
             { no: 4, name: "num_workers", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 5, name: "request", kind: "message", T: () => SettingRequest }
+            { no: 5, name: "query", kind: "map", K: 9 /*ScalarType.STRING*/, V: { kind: "message", T: () => Variable } },
+            { no: 6, name: "json", kind: "map", K: 9 /*ScalarType.STRING*/, V: { kind: "message", T: () => Variable } }
         ]);
     }
-    create(value?: PartialMessage<Setting>): Setting {
+    create(value?: PartialMessage<SettingRest>): SettingRest {
         const message = globalThis.Object.create((this.messagePrototype!));
-        message.name = "";
-        message.description = "";
+        message.method = "";
+        message.path = "";
         message.timeoutMs = 0n;
         message.numWorkers = 0;
+        message.query = {};
+        message.json = {};
         if (value !== undefined)
-            reflectionMergePartial<Setting>(this, message, value);
+            reflectionMergePartial<SettingRest>(this, message, value);
         return message;
     }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: Setting): Setting {
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: SettingRest): SettingRest {
         let message = target ?? this.create(), end = reader.pos + length;
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
-                case /* string name */ 1:
-                    message.name = reader.string();
+                case /* string method */ 1:
+                    message.method = reader.string();
                     break;
-                case /* string description */ 2:
-                    message.description = reader.string();
+                case /* string path */ 2:
+                    message.path = reader.string();
                     break;
                 case /* int64 timeout_ms */ 3:
                     message.timeoutMs = reader.int64().toBigInt();
@@ -554,8 +642,11 @@ class Setting$Type extends MessageType<Setting> {
                 case /* int32 num_workers */ 4:
                     message.numWorkers = reader.int32();
                     break;
-                case /* endpoint.SettingRequest request */ 5:
-                    message.request = SettingRequest.internalBinaryRead(reader, reader.uint32(), options, message.request);
+                case /* map<string, endpoint.Variable> query */ 5:
+                    this.binaryReadMap5(message.query, reader, options);
+                    break;
+                case /* map<string, endpoint.Variable> json */ 6:
+                    this.binaryReadMap6(message.json, reader, options);
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -568,113 +659,61 @@ class Setting$Type extends MessageType<Setting> {
         }
         return message;
     }
-    internalBinaryWrite(message: Setting, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
-        /* string name = 1; */
-        if (message.name !== "")
-            writer.tag(1, WireType.LengthDelimited).string(message.name);
-        /* string description = 2; */
-        if (message.description !== "")
-            writer.tag(2, WireType.LengthDelimited).string(message.description);
+    private binaryReadMap5(map: SettingRest["query"], reader: IBinaryReader, options: BinaryReadOptions): void {
+        let len = reader.uint32(), end = reader.pos + len, key: keyof SettingRest["query"] | undefined, val: SettingRest["query"][any] | undefined;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case 1:
+                    key = reader.string();
+                    break;
+                case 2:
+                    val = Variable.internalBinaryRead(reader, reader.uint32(), options);
+                    break;
+                default: throw new globalThis.Error("unknown map entry field for field endpoint.SettingRest.query");
+            }
+        }
+        map[key ?? ""] = val ?? Variable.create();
+    }
+    private binaryReadMap6(map: SettingRest["json"], reader: IBinaryReader, options: BinaryReadOptions): void {
+        let len = reader.uint32(), end = reader.pos + len, key: keyof SettingRest["json"] | undefined, val: SettingRest["json"][any] | undefined;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case 1:
+                    key = reader.string();
+                    break;
+                case 2:
+                    val = Variable.internalBinaryRead(reader, reader.uint32(), options);
+                    break;
+                default: throw new globalThis.Error("unknown map entry field for field endpoint.SettingRest.json");
+            }
+        }
+        map[key ?? ""] = val ?? Variable.create();
+    }
+    internalBinaryWrite(message: SettingRest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string method = 1; */
+        if (message.method !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.method);
+        /* string path = 2; */
+        if (message.path !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.path);
         /* int64 timeout_ms = 3; */
         if (message.timeoutMs !== 0n)
             writer.tag(3, WireType.Varint).int64(message.timeoutMs);
         /* int32 num_workers = 4; */
         if (message.numWorkers !== 0)
             writer.tag(4, WireType.Varint).int32(message.numWorkers);
-        /* endpoint.SettingRequest request = 5; */
-        if (message.request)
-            SettingRequest.internalBinaryWrite(message.request, writer.tag(5, WireType.LengthDelimited).fork(), options).join();
-        let u = options.writeUnknownFields;
-        if (u !== false)
-            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
-        return writer;
-    }
-}
-/**
- * @generated MessageType for protobuf message endpoint.Setting
- */
-export const Setting = new Setting$Type();
-// @generated message type with reflection information, may provide speed optimized methods
-class SettingRequest$Type extends MessageType<SettingRequest> {
-    constructor() {
-        super("endpoint.SettingRequest", [
-            { no: 1, name: "query", kind: "map", K: 9 /*ScalarType.STRING*/, V: { kind: "message", T: () => Variable } },
-            { no: 2, name: "json", kind: "map", K: 9 /*ScalarType.STRING*/, V: { kind: "message", T: () => Variable } }
-        ]);
-    }
-    create(value?: PartialMessage<SettingRequest>): SettingRequest {
-        const message = globalThis.Object.create((this.messagePrototype!));
-        message.query = {};
-        message.json = {};
-        if (value !== undefined)
-            reflectionMergePartial<SettingRequest>(this, message, value);
-        return message;
-    }
-    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: SettingRequest): SettingRequest {
-        let message = target ?? this.create(), end = reader.pos + length;
-        while (reader.pos < end) {
-            let [fieldNo, wireType] = reader.tag();
-            switch (fieldNo) {
-                case /* map<string, endpoint.Variable> query */ 1:
-                    this.binaryReadMap1(message.query, reader, options);
-                    break;
-                case /* map<string, endpoint.Variable> json */ 2:
-                    this.binaryReadMap2(message.json, reader, options);
-                    break;
-                default:
-                    let u = options.readUnknownField;
-                    if (u === "throw")
-                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
-                    let d = reader.skip(wireType);
-                    if (u !== false)
-                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
-            }
-        }
-        return message;
-    }
-    private binaryReadMap1(map: SettingRequest["query"], reader: IBinaryReader, options: BinaryReadOptions): void {
-        let len = reader.uint32(), end = reader.pos + len, key: keyof SettingRequest["query"] | undefined, val: SettingRequest["query"][any] | undefined;
-        while (reader.pos < end) {
-            let [fieldNo, wireType] = reader.tag();
-            switch (fieldNo) {
-                case 1:
-                    key = reader.string();
-                    break;
-                case 2:
-                    val = Variable.internalBinaryRead(reader, reader.uint32(), options);
-                    break;
-                default: throw new globalThis.Error("unknown map entry field for field endpoint.SettingRequest.query");
-            }
-        }
-        map[key ?? ""] = val ?? Variable.create();
-    }
-    private binaryReadMap2(map: SettingRequest["json"], reader: IBinaryReader, options: BinaryReadOptions): void {
-        let len = reader.uint32(), end = reader.pos + len, key: keyof SettingRequest["json"] | undefined, val: SettingRequest["json"][any] | undefined;
-        while (reader.pos < end) {
-            let [fieldNo, wireType] = reader.tag();
-            switch (fieldNo) {
-                case 1:
-                    key = reader.string();
-                    break;
-                case 2:
-                    val = Variable.internalBinaryRead(reader, reader.uint32(), options);
-                    break;
-                default: throw new globalThis.Error("unknown map entry field for field endpoint.SettingRequest.json");
-            }
-        }
-        map[key ?? ""] = val ?? Variable.create();
-    }
-    internalBinaryWrite(message: SettingRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
-        /* map<string, endpoint.Variable> query = 1; */
+        /* map<string, endpoint.Variable> query = 5; */
         for (let k of globalThis.Object.keys(message.query)) {
-            writer.tag(1, WireType.LengthDelimited).fork().tag(1, WireType.LengthDelimited).string(k);
+            writer.tag(5, WireType.LengthDelimited).fork().tag(1, WireType.LengthDelimited).string(k);
             writer.tag(2, WireType.LengthDelimited).fork();
             Variable.internalBinaryWrite(message.query[k], writer, options);
             writer.join().join();
         }
-        /* map<string, endpoint.Variable> json = 2; */
+        /* map<string, endpoint.Variable> json = 6; */
         for (let k of globalThis.Object.keys(message.json)) {
-            writer.tag(2, WireType.LengthDelimited).fork().tag(1, WireType.LengthDelimited).string(k);
+            writer.tag(6, WireType.LengthDelimited).fork().tag(1, WireType.LengthDelimited).string(k);
             writer.tag(2, WireType.LengthDelimited).fork();
             Variable.internalBinaryWrite(message.json[k], writer, options);
             writer.join().join();
@@ -686,9 +725,64 @@ class SettingRequest$Type extends MessageType<SettingRequest> {
     }
 }
 /**
- * @generated MessageType for protobuf message endpoint.SettingRequest
+ * @generated MessageType for protobuf message endpoint.SettingRest
  */
-export const SettingRequest = new SettingRequest$Type();
+export const SettingRest = new SettingRest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class SettingCron$Type extends MessageType<SettingCron> {
+    constructor() {
+        super("endpoint.SettingCron", [
+            { no: 1, name: "cron", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "timeout_ms", kind: "scalar", T: 3 /*ScalarType.INT64*/, L: 0 /*LongType.BIGINT*/ }
+        ]);
+    }
+    create(value?: PartialMessage<SettingCron>): SettingCron {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.cron = "";
+        message.timeoutMs = 0n;
+        if (value !== undefined)
+            reflectionMergePartial<SettingCron>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: SettingCron): SettingCron {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string cron */ 1:
+                    message.cron = reader.string();
+                    break;
+                case /* int64 timeout_ms */ 2:
+                    message.timeoutMs = reader.int64().toBigInt();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: SettingCron, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string cron = 1; */
+        if (message.cron !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.cron);
+        /* int64 timeout_ms = 2; */
+        if (message.timeoutMs !== 0n)
+            writer.tag(2, WireType.Varint).int64(message.timeoutMs);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message endpoint.SettingCron
+ */
+export const SettingCron = new SettingCron$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class Workflow$Type extends MessageType<Workflow> {
     constructor() {

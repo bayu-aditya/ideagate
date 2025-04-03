@@ -102,6 +102,94 @@ func (x *GetListEndpointResponse) GetEndpoints() []*endpoint.Endpoint {
 	return nil
 }
 
+type GetWorkflowRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	EntrypointId  string                 `protobuf:"bytes,1,opt,name=entrypoint_id,json=entrypointId,proto3" json:"entrypoint_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetWorkflowRequest) Reset() {
+	*x = GetWorkflowRequest{}
+	mi := &file_client_controller_v1_service_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetWorkflowRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetWorkflowRequest) ProtoMessage() {}
+
+func (x *GetWorkflowRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_client_controller_v1_service_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetWorkflowRequest.ProtoReflect.Descriptor instead.
+func (*GetWorkflowRequest) Descriptor() ([]byte, []int) {
+	return file_client_controller_v1_service_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetWorkflowRequest) GetEntrypointId() string {
+	if x != nil {
+		return x.EntrypointId
+	}
+	return ""
+}
+
+type GetWorkflowResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Workflow      *endpoint.Workflow     `protobuf:"bytes,1,opt,name=workflow,proto3" json:"workflow,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetWorkflowResponse) Reset() {
+	*x = GetWorkflowResponse{}
+	mi := &file_client_controller_v1_service_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetWorkflowResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetWorkflowResponse) ProtoMessage() {}
+
+func (x *GetWorkflowResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_client_controller_v1_service_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetWorkflowResponse.ProtoReflect.Descriptor instead.
+func (*GetWorkflowResponse) Descriptor() ([]byte, []int) {
+	return file_client_controller_v1_service_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetWorkflowResponse) GetWorkflow() *endpoint.Workflow {
+	if x != nil {
+		return x.Workflow
+	}
+	return nil
+}
+
 var File_client_controller_v1_service_proto protoreflect.FileDescriptor
 
 const file_client_controller_v1_service_proto_rawDesc = "" +
@@ -109,9 +197,14 @@ const file_client_controller_v1_service_proto_rawDesc = "" +
 	"\"client/controller/v1/service.proto\x12\x02v1\x1a\x1ccore/endpoint/endpoint.proto\"\x18\n" +
 	"\x16GetListEndpointRequest\"K\n" +
 	"\x17GetListEndpointResponse\x120\n" +
-	"\tendpoints\x18\x01 \x03(\v2\x12.endpoint.EndpointR\tendpoints2_\n" +
+	"\tendpoints\x18\x01 \x03(\v2\x12.endpoint.EndpointR\tendpoints\"9\n" +
+	"\x12GetWorkflowRequest\x12#\n" +
+	"\rentrypoint_id\x18\x01 \x01(\tR\fentrypointId\"E\n" +
+	"\x13GetWorkflowResponse\x12.\n" +
+	"\bworkflow\x18\x01 \x01(\v2\x12.endpoint.WorkflowR\bworkflow2\x9f\x01\n" +
 	"\x11ControllerService\x12J\n" +
-	"\x0fGetListEndpoint\x12\x1a.v1.GetListEndpointRequest\x1a\x1b.v1.GetListEndpointResponseB\x89\x01\n" +
+	"\x0fGetListEndpoint\x12\x1a.v1.GetListEndpointRequest\x1a\x1b.v1.GetListEndpointResponse\x12>\n" +
+	"\vGetWorkflow\x12\x16.v1.GetWorkflowRequest\x1a\x17.v1.GetWorkflowResponseB\x89\x01\n" +
 	"\x06com.v1B\fServiceProtoP\x01ZIgithub.com/bayu-aditya/ideagate/backend/model/gen-go/client/controller/v1\xa2\x02\x03VXX\xaa\x02\x02V1\xca\x02\x02V1\xe2\x02\x0eV1\\GPBMetadata\xea\x02\x02V1b\x06proto3"
 
 var (
@@ -126,21 +219,27 @@ func file_client_controller_v1_service_proto_rawDescGZIP() []byte {
 	return file_client_controller_v1_service_proto_rawDescData
 }
 
-var file_client_controller_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_client_controller_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_client_controller_v1_service_proto_goTypes = []any{
 	(*GetListEndpointRequest)(nil),  // 0: v1.GetListEndpointRequest
 	(*GetListEndpointResponse)(nil), // 1: v1.GetListEndpointResponse
-	(*endpoint.Endpoint)(nil),       // 2: endpoint.Endpoint
+	(*GetWorkflowRequest)(nil),      // 2: v1.GetWorkflowRequest
+	(*GetWorkflowResponse)(nil),     // 3: v1.GetWorkflowResponse
+	(*endpoint.Endpoint)(nil),       // 4: endpoint.Endpoint
+	(*endpoint.Workflow)(nil),       // 5: endpoint.Workflow
 }
 var file_client_controller_v1_service_proto_depIdxs = []int32{
-	2, // 0: v1.GetListEndpointResponse.endpoints:type_name -> endpoint.Endpoint
-	0, // 1: v1.ControllerService.GetListEndpoint:input_type -> v1.GetListEndpointRequest
-	1, // 2: v1.ControllerService.GetListEndpoint:output_type -> v1.GetListEndpointResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	4, // 0: v1.GetListEndpointResponse.endpoints:type_name -> endpoint.Endpoint
+	5, // 1: v1.GetWorkflowResponse.workflow:type_name -> endpoint.Workflow
+	0, // 2: v1.ControllerService.GetListEndpoint:input_type -> v1.GetListEndpointRequest
+	2, // 3: v1.ControllerService.GetWorkflow:input_type -> v1.GetWorkflowRequest
+	1, // 4: v1.ControllerService.GetListEndpoint:output_type -> v1.GetListEndpointResponse
+	3, // 5: v1.ControllerService.GetWorkflow:output_type -> v1.GetWorkflowResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_client_controller_v1_service_proto_init() }
@@ -154,7 +253,7 @@ func file_client_controller_v1_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_client_controller_v1_service_proto_rawDesc), len(file_client_controller_v1_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

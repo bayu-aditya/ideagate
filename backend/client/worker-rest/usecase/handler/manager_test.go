@@ -26,47 +26,48 @@ var _ = Describe("Manager - Process", func() {
 
 			mockEndpoint := &pbEndpoint.Endpoint{
 				Id: "mock_endpoint_id",
-				Workflow: &pbEndpoint.Workflow{
-					Steps: []*pbEndpoint.Step{
-						{
-							Id:   constant.StepIdStart,
-							Type: pbEndpoint.StepType_STEP_TYPE_START,
-						},
-						{
-							Id:   "sleep_1",
-							Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
-							Action: &pbEndpoint.Action{
-								Sleep: &pbEndpoint.ActionSleep{
-									TimeoutMs: 1000,
-								},
-							},
-						},
-						{
-							Id:   "sleep_2",
-							Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
-							Action: &pbEndpoint.Action{
-								Sleep: &pbEndpoint.ActionSleep{
-									TimeoutMs: 500,
-								},
-							},
-						},
-						{
-							Id:   "end",
-							Type: pbEndpoint.StepType_STEP_TYPE_END,
-							Action: &pbEndpoint.Action{
-								End: &pbEndpoint.ActionEnd{},
+			}
+
+			mockWorkflow := &pbEndpoint.Workflow{
+				Steps: []*pbEndpoint.Step{
+					{
+						Id:   constant.StepIdStart,
+						Type: pbEndpoint.StepType_STEP_TYPE_START,
+					},
+					{
+						Id:   "sleep_1",
+						Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+						Action: &pbEndpoint.Action{
+							Sleep: &pbEndpoint.ActionSleep{
+								TimeoutMs: 1000,
 							},
 						},
 					},
-					Edges: []*pbEndpoint.Edge{
-						{Id: "edge_1", Source: constant.StepIdStart, Dest: "sleep_1"},
-						{Id: "edge_2", Source: "sleep_1", Dest: "sleep_2"},
-						{Id: "edge_3", Source: "sleep_2", Dest: constant.StepIdEnd},
+					{
+						Id:   "sleep_2",
+						Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+						Action: &pbEndpoint.Action{
+							Sleep: &pbEndpoint.ActionSleep{
+								TimeoutMs: 500,
+							},
+						},
 					},
+					{
+						Id:   "end",
+						Type: pbEndpoint.StepType_STEP_TYPE_END,
+						Action: &pbEndpoint.Action{
+							End: &pbEndpoint.ActionEnd{},
+						},
+					},
+				},
+				Edges: []*pbEndpoint.Edge{
+					{Id: "edge_1", Source: constant.StepIdStart, Dest: "sleep_1"},
+					{Id: "edge_2", Source: "sleep_1", Dest: "sleep_2"},
+					{Id: "edge_3", Source: "sleep_2", Dest: constant.StepIdEnd},
 				},
 			}
 
-			manager, err := newManager(mockCtxGin, mockEndpoint)
+			manager, err := newManager(mockCtxGin, mockEndpoint, mockWorkflow)
 			if err != nil {
 				t.Error("new manager failed", err)
 			}
@@ -85,88 +86,90 @@ var _ = Describe("Manager - Process", func() {
 				httpRecorder     = httptest.NewRecorder()
 				mockDataEndpoint = &pbEndpoint.Endpoint{
 					Id: "mock_endpoint_id",
-					Setting: &pbEndpoint.Setting{
-						NumWorkers: 1,
-						TimeoutMs:  8100,
+					Settings: &pbEndpoint.Endpoint_SettingRest{
+						SettingRest: &pbEndpoint.SettingRest{
+							NumWorkers: 1,
+							TimeoutMs:  8100,
+						},
 					},
-					Workflow: &pbEndpoint.Workflow{
-						Steps: []*pbEndpoint.Step{
-							{
-								Id:   constant.StepIdStart,
-								Type: pbEndpoint.StepType_STEP_TYPE_START,
-							},
-							{
-								Id:   "sleep_1",
-								Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
-								Action: &pbEndpoint.Action{
-									Sleep: &pbEndpoint.ActionSleep{
-										TimeoutMs: 3000,
-									},
-								},
-							},
-							{
-								Id:   "sleep_2",
-								Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
-								Action: &pbEndpoint.Action{
-									Sleep: &pbEndpoint.ActionSleep{
-										TimeoutMs: 3000,
-									},
-								},
-							},
-							{
-								Id:   "sleep_3",
-								Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
-								Action: &pbEndpoint.Action{
-									Sleep: &pbEndpoint.ActionSleep{
-										TimeoutMs: 1000,
-									},
-								},
-							},
-							{
-								Id:   "sleep_4",
-								Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
-								Action: &pbEndpoint.Action{
-									Sleep: &pbEndpoint.ActionSleep{
-										TimeoutMs: 1000,
-									},
-								},
-							},
-							{
-								Id:   "sleep_5",
-								Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
-								Action: &pbEndpoint.Action{
-									Sleep: &pbEndpoint.ActionSleep{
-										TimeoutMs: 500,
-									},
-								},
-							},
-							{
-								Id:   "sleep_6",
-								Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
-								Action: &pbEndpoint.Action{
-									Sleep: &pbEndpoint.ActionSleep{
-										TimeoutMs: 1500,
-									},
-								},
-							},
-							{
-								Id:   "end",
-								Type: pbEndpoint.StepType_STEP_TYPE_END,
-								Action: &pbEndpoint.Action{
-									End: &pbEndpoint.ActionEnd{},
+				}
+				mockWorkflow = &pbEndpoint.Workflow{
+					Steps: []*pbEndpoint.Step{
+						{
+							Id:   constant.StepIdStart,
+							Type: pbEndpoint.StepType_STEP_TYPE_START,
+						},
+						{
+							Id:   "sleep_1",
+							Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+							Action: &pbEndpoint.Action{
+								Sleep: &pbEndpoint.ActionSleep{
+									TimeoutMs: 3000,
 								},
 							},
 						},
-						Edges: []*pbEndpoint.Edge{
-							{Id: "edge_1", Source: constant.StepIdStart, Dest: "sleep_1"},
-							{Id: "edge_2", Source: "sleep_1", Dest: "sleep_2"},
-							{Id: "edge_3", Source: "sleep_2", Dest: "sleep_5"},
-							{Id: "edge_4", Source: constant.StepIdStart, Dest: "sleep_3"},
-							{Id: "edge_5", Source: "sleep_3", Dest: "sleep_4"},
-							{Id: "edge_6", Source: "sleep_4", Dest: "sleep_5"},
-							{Id: "edge_7", Source: "sleep_5", Dest: "sleep_6"},
-							{Id: "edge_4", Source: "sleep_6", Dest: constant.StepIdEnd},
+						{
+							Id:   "sleep_2",
+							Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+							Action: &pbEndpoint.Action{
+								Sleep: &pbEndpoint.ActionSleep{
+									TimeoutMs: 3000,
+								},
+							},
 						},
+						{
+							Id:   "sleep_3",
+							Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+							Action: &pbEndpoint.Action{
+								Sleep: &pbEndpoint.ActionSleep{
+									TimeoutMs: 1000,
+								},
+							},
+						},
+						{
+							Id:   "sleep_4",
+							Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+							Action: &pbEndpoint.Action{
+								Sleep: &pbEndpoint.ActionSleep{
+									TimeoutMs: 1000,
+								},
+							},
+						},
+						{
+							Id:   "sleep_5",
+							Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+							Action: &pbEndpoint.Action{
+								Sleep: &pbEndpoint.ActionSleep{
+									TimeoutMs: 500,
+								},
+							},
+						},
+						{
+							Id:   "sleep_6",
+							Type: pbEndpoint.StepType_STEP_TYPE_SLEEP,
+							Action: &pbEndpoint.Action{
+								Sleep: &pbEndpoint.ActionSleep{
+									TimeoutMs: 1500,
+								},
+							},
+						},
+						{
+							Id:   "end",
+							Type: pbEndpoint.StepType_STEP_TYPE_END,
+							Action: &pbEndpoint.Action{
+								End: &pbEndpoint.ActionEnd{},
+							},
+						},
+					},
+					Edges: []*pbEndpoint.Edge{
+						{Id: "edge_1", Source: constant.StepIdStart, Dest: "sleep_1"},
+						{Id: "edge_2", Source: "sleep_1", Dest: "sleep_2"},
+						{Id: "edge_3", Source: "sleep_2", Dest: "sleep_5"},
+						{Id: "edge_4", Source: constant.StepIdStart, Dest: "sleep_3"},
+						{Id: "edge_5", Source: "sleep_3", Dest: "sleep_4"},
+						{Id: "edge_6", Source: "sleep_4", Dest: "sleep_5"},
+						{Id: "edge_7", Source: "sleep_5", Dest: "sleep_6"},
+						{Id: "edge_4", Source: "sleep_6", Dest: constant.StepIdEnd},
 					},
 				}
 			)
@@ -180,10 +183,14 @@ var _ = Describe("Manager - Process", func() {
 			})
 
 			It("single worker: 10 secs", func() {
-				mockDataEndpoint.Setting.NumWorkers = 1
-				mockDataEndpoint.Setting.TimeoutMs = 10100 // must be finished around 10 secs
+				mockDataEndpoint.Settings = &pbEndpoint.Endpoint_SettingRest{
+					SettingRest: &pbEndpoint.SettingRest{
+						NumWorkers: 1,
+						TimeoutMs:  10100, // must be finished around 10 secs
+					},
+				}
 
-				manager, err := newManager(mockCtxGin, mockDataEndpoint)
+				manager, err := newManager(mockCtxGin, mockDataEndpoint, mockWorkflow)
 				if err != nil {
 					t.Error("new manager failed", err)
 				}
@@ -193,10 +200,14 @@ var _ = Describe("Manager - Process", func() {
 			})
 
 			It("multiple worker: 8 secs", func() {
-				mockDataEndpoint.Setting.NumWorkers = 3
-				mockDataEndpoint.Setting.TimeoutMs = 8100 // must be finished around 8 secs
+				mockDataEndpoint.Settings = &pbEndpoint.Endpoint_SettingRest{
+					SettingRest: &pbEndpoint.SettingRest{
+						NumWorkers: 3,
+						TimeoutMs:  8100, // must be finished around 8 secs
+					},
+				}
 
-				manager, err := newManager(mockCtxGin, mockDataEndpoint)
+				manager, err := newManager(mockCtxGin, mockDataEndpoint, mockWorkflow)
 				if err != nil {
 					t.Error("new manager failed", err)
 				}

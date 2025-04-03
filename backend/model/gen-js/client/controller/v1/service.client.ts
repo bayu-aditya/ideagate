@@ -4,6 +4,8 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { ControllerService } from "./service";
+import type { GetWorkflowResponse } from "./service";
+import type { GetWorkflowRequest } from "./service";
 import { stackIntercept } from "@protobuf-ts/runtime-rpc";
 import type { GetListEndpointResponse } from "./service";
 import type { GetListEndpointRequest } from "./service";
@@ -17,6 +19,10 @@ export interface IControllerServiceClient {
      * @generated from protobuf rpc: GetListEndpoint(v1.GetListEndpointRequest) returns (v1.GetListEndpointResponse);
      */
     getListEndpoint(input: GetListEndpointRequest, options?: RpcOptions): UnaryCall<GetListEndpointRequest, GetListEndpointResponse>;
+    /**
+     * @generated from protobuf rpc: GetWorkflow(v1.GetWorkflowRequest) returns (v1.GetWorkflowResponse);
+     */
+    getWorkflow(input: GetWorkflowRequest, options?: RpcOptions): UnaryCall<GetWorkflowRequest, GetWorkflowResponse>;
 }
 /**
  * @generated from protobuf service v1.ControllerService
@@ -33,5 +39,12 @@ export class ControllerServiceClient implements IControllerServiceClient, Servic
     getListEndpoint(input: GetListEndpointRequest, options?: RpcOptions): UnaryCall<GetListEndpointRequest, GetListEndpointResponse> {
         const method = this.methods[0], opt = this._transport.mergeOptions(options);
         return stackIntercept<GetListEndpointRequest, GetListEndpointResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: GetWorkflow(v1.GetWorkflowRequest) returns (v1.GetWorkflowResponse);
+     */
+    getWorkflow(input: GetWorkflowRequest, options?: RpcOptions): UnaryCall<GetWorkflowRequest, GetWorkflowResponse> {
+        const method = this.methods[1], opt = this._transport.mergeOptions(options);
+        return stackIntercept<GetWorkflowRequest, GetWorkflowResponse>("unary", this._transport, method, opt, input);
     }
 }

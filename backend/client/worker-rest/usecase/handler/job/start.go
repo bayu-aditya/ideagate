@@ -12,7 +12,7 @@ type start struct {
 
 func (j *start) Start() (output StartOutput, err error) {
 	// Parse request query and json
-	queries, jsons, err := j.parseReqQueryJson(j.Input.GinCtx, j.Input.Endpoint.GetSetting().GetRequest())
+	queries, jsons, err := j.parseReqQueryJson(j.Input.GinCtx, j.Input.Endpoint.GetSettingRest())
 	if err != nil {
 		return
 	}
@@ -54,7 +54,7 @@ func (j *start) Start() (output StartOutput, err error) {
 	return
 }
 
-func (j *start) parseReqQueryJson(c *gin.Context, setting *pbEndpoint.SettingRequest) (dataQuery, dataJson map[string]any, err error) {
+func (j *start) parseReqQueryJson(c *gin.Context, setting *pbEndpoint.SettingRest) (dataQuery, dataJson map[string]any, err error) {
 	// construct dataQuery parameters
 	query := map[string]string{}
 	if err = c.BindQuery(&query); err != nil {
